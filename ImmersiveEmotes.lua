@@ -433,19 +433,20 @@ function ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(
 	if IsUnitPlayer("reticleover") then
 		local unitTitle = GetUnitTitle("reticleover")
 		if IsUnitFriend("reticleover") then
-			ImmersiveEmotes.UpdateSmartEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND)
+			ImmersiveEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND)
 		elseif playerTitles[unitTitle] ~= nil then
 			if GetUnitTitle("player") == playerTitles[unitTitle] then
-				ImmersiveEmotes.UpdateSmartEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME)
-			else ImmersiveEmotes.UpdateSmartEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_EPIC)
+				ImmersiveEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME)
+			else ImmersiveEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_EPIC)
 			end
-		else ImmersiveEmotes.UpdateSmartEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL)
+		else ImmersiveEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL)
 		end
-	elseif not IsUnitPlayer("reticleover") and currSmartEmotes["EventName"] == eventEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND]["EventName"]
-		or currSmartEmotes["EventName"] == eventEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC]["EventName"]
-		or currSmartEmotes["EventName"] == eventEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME]["EventName"]
-		or currSmartEmotes["EventName"] == eventEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL]["EventName"] then
-		ImmersiveEmotes.SetDefaultEmotes()
+	elseif not IsUnitPlayer("reticleover") and eventLatchedEmotes["isEnabled"] and
+		emoteFromLatched["EventName"] == eventLatchedEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND]["EventName"]
+		or emoteFromLatched["EventName"] == eventLatchedEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC]["EventName"]
+		or emoteFromLatched["EventName"] == eventLatchedEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME]["EventName"]
+		or emoteFromLatched["EventName"] == eventLatchedEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL]["EventName"] then
+		eventLatchedEmotes["isEnabled"] = false
 	end
 end
 
