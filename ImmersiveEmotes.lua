@@ -14,6 +14,7 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_
 local defaultEmotes
 local eventEmotes
 local lastEventTimeStamp
+local emoteFromLatched = {}
 local currSmartEmotes = {}
 local currEventTableName
 local playerTitles = {
@@ -63,11 +64,17 @@ end
 
 
 function ImmersiveEmotes.PerformSmartEmote()
-	d(GetMapInfo(GetCurrentMapIndex()))
-	
-	d(GetPlayerLocationName())
-	local randomNumber = math.random(#currSmartEmotes["Emotes"])
-	local smartEmoteIndex = currSmartEmotes["Emotes"][randomNumber]
+	--d(GetMapInfo(GetCurrentMapIndex()))
+	--d(GetPlayerLocationName())
+	local randomNumber
+	local smartEmoteIndex
+	if eventLatchedEmotes["isEnabled"] then
+		randomNumber = math.random(#emoteFromLatched["Emotes"])
+		smartEmoteIndex = emoteFromLatched["Emotes"][randomNumber]
+	else
+		randomNumber = math.random(#currSmartEmotes["Emotes"])
+		smartEmoteIndex = currSmartEmotes["Emotes"][randomNumber]
+	end
 	PlayEmoteByIndex(smartEmoteIndex)
 end
 
@@ -96,7 +103,7 @@ function ImmersiveEmotes.UpdateLatchedEmoteTable(eventCode)
 	if eventLatchedEmotes[eventCode] == nil then return end
 	--d(eventCode)
 	--local randomNumber = math.random(#eventEmotes[eventCode])
-	currSmartEmotes = eventLatchedEmotes[eventCode]
+	emoteFromLatched = eventLatchedEmotes[eventCode]
 	if not eventLatchedEmotes["isEnabled"] then
 		eventLatchedEmotes["isEnabled"] = true
 	end
@@ -450,9 +457,10 @@ function ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_POWER_UPDATE(eventCode,
 		local lowerThreshold = powerEffectiveMax*(.2)
 		local upperThreshold = powerEffectiveMax*(.5)
 		if powerValue <= lowerThreshold then 
-			ImmersiveEmotes.UpdateSmartEmoteTable(EVENT_POWER_UPDATE_STAMINA)
-		elseif powerValue >= upperThreshold and currSmartEmotes["EventName"] == eventEmotes[EVENT_POWER_UPDATE_STAMINA]["EventName"] then
-			ImmersiveEmotes.SetDefaultEmotes()
+			ImmersiveEmotes.UpdateLatchedEmoteTable(EVENT_POWER_UPDATE_STAMINA)
+		elseif powerValue >= upperThreshold and eventLatchedEmotes["isEnabled"]
+		 and emoteFromLatched["EventName"] == eventLatchedEmotes[EVENT_POWER_UPDATE_STAMINA]["EventName"] then
+			eventLatchedEmotes["isEnabled"] = false
 		end
 	end
 end
@@ -460,6 +468,7 @@ end
 
 function ImmersiveEmotes.InitializeEmotes()
 	ImmersiveEmotes.CreateEmoteEventTable()
+	ImmersiveEmotes.CreateLatchedEmoteEventTable()
 	ImmersiveEmotes.CreateDefaultEmoteTable()
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LEVEL_UPDATE, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_NOT_SWIMMING, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
