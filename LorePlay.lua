@@ -6,17 +6,10 @@ LorePlay.player = "player"
 
 
 function LorePlay.OnAddOnLoaded(event, addonName)
-	-- The goal for this is to initialize chat
 	if addonName ~= LorePlay.name then return end
 	LorePlay.InitializeChat()
     LorePlay.InitializeEmotes()
     EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
-	--[[
-	if addonName == LorePlay.name then
-    	LorePlay.InitializeChat()
-    	LorePlay.InitializeEmotes()
-  	end
-  	]]--
 end
 
 

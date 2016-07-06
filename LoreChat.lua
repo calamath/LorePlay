@@ -1,21 +1,11 @@
---[[ Welcome to LoreChat, Soulless One! The purpose of this addon is to provide more roleplayability within
-     the game, including chat features, different reactive emotes, and more! ]]--
-
 local LoreChat = LorePlay
 LoreChat.tabName = "|c8c7037LoreChat"
 local tabs = {}
---[[ UNCOMMENT IF FAILS
-LoreChat = {}
-LoreChat.version = 1
-LoreChat.savedVariables = ZO_SavedVars:New("LoreChatSavedVars", LoreChat.version, nil, {})
-local emotes = {}
-local tabs = {}
-]]--
 
 
 --[[ CREATE A FUNCTION FOR SETTINGS ON WHETHER TO ENABLE OR DISABLE ZONE IN LORECHAT TAB ]] --
 function LoreChat.UpdateChannelTypesForTab(containerNumber, tabIndex)
-	-- Hijacking English Zone as the Roleplay/LoreChat tab
+	-- Recycling English Zone as the Roleplay/LoreChat tab since not popular
 	tabs[tabIndex].isEnZoneChecked 
 		= IsChatContainerTabCategoryEnabled(containerNumber, tabIndex, CHAT_CATEGORY_ZONE_ENGLISH)
 	tabs[tabIndex].isZoneChecked 
