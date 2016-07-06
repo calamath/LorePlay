@@ -75,16 +75,6 @@ end
 
 function ImmersiveEmotes.SetDefaultEmotes()
 	currSmartEmotes = defaultEmotes
-	--[[
-	local now = GetTimeStamp()
-	local resetDurInSecs = currSmartEmotes["Duration"]/1000
-	d("Last time stamp: "..lastEventTimeStamp)
-	d("Current time stamp: "..now)
-	if GetDiffBetweenTimeStamps(now, lastEventTimeStamp) >= resetDurInSecs then
-		d("This worked!")
-		currSmartEmotes = defaultEmotes
-	end
-	]]--
 end
 
 
