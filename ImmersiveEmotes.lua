@@ -358,6 +358,7 @@ function ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_LOOT_RECEIVED(eventCode
 end
 ]]--
 
+
 function ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_TRADE_CANCELED(eventCode)
 	ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
 end
