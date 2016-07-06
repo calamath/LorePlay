@@ -13,10 +13,15 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME = "EVENT_RETICLE_TARGET_CHANGED_
 local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL"
 local defaultEmotes
 local eventEmotes
+local eventLatchedEmotes
 local lastEventTimeStamp
+local currLatchedEvent
+local existsPreviousEvent
+local lastLatchedEvent
 local emoteFromLatched = {}
 local currSmartEmotes = {}
 local currEventTableName
+
 local playerTitles = {
 	["Emperor"] = "Emperor",
 	["Empress"] = "Empress",
@@ -64,8 +69,6 @@ end
 
 
 function ImmersiveEmotes.PerformSmartEmote()
-	--d(GetMapInfo(GetCurrentMapIndex()))
-	--d(GetPlayerLocationName())
 	local randomNumber
 	local smartEmoteIndex
 	if eventLatchedEmotes["isEnabled"] then
@@ -89,18 +92,16 @@ function ImmersiveEmotes.CheckToSwitchToDefaultEmotes()
 	if currSmartEmotes == defaultEmotes then return end
 	local now = GetTimeStamp()
 	local resetDurInSecs = currSmartEmotes["Duration"]/1000
-	--d("Last time stamp: "..lastEventTimeStamp)
-	--d("Current time stamp: "..now)
 	if GetDiffBetweenTimeStamps(now, lastEventTimeStamp) >= resetDurInSecs then
 		ImmersiveEmotes.SetDefaultEmotes()
 	end
 end
 
 
---[[ Make the type of location be influential in what happens? ]]--
 function ImmersiveEmotes.UpdateLatchedEmoteTable(eventCode)
 	if eventCode == nil then return end
 	if eventLatchedEmotes[eventCode] == nil then return end
+	currLatchedEvent = eventCode
 	--d(eventCode)
 	--local randomNumber = math.random(#eventEmotes[eventCode])
 	emoteFromLatched = eventLatchedEmotes[eventCode]
@@ -112,7 +113,7 @@ end
 
 
 --[[ Make the type of location be influential in what happens? ]]--
-function ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+function ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 	if eventCode == nil then return end
 	if eventEmotes[eventCode] == nil then return end
 	--d(eventCode)
@@ -154,7 +155,13 @@ function ImmersiveEmotes.CreateLatchedEmoteEventTable()
 			["EventName"] = "EVENT_POWER_UPDATE_STAMINA",
 			["Emotes"] = {
 				[1] = 114
-			}
+			},
+			["Switch"] = function() 
+			local currentStam, _, effectiveMaxStam = GetUnitPower(LorePlay.player, POWERTYPE_STAMINA)
+			if currentStam < effectiveMaxStam*(.55) then
+				return true
+			end
+			end
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND] = {
 			["EventName"] = "EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND",
@@ -196,8 +203,6 @@ end
 function ImmersiveEmotes.CreateEmoteEventTable()
 	-- Duration in miliseconds that the emote should be playable
 	local defaultDuration = 30000
-	--eventEmotes[EVENT_LOOT_RECEIVED] = {}
-	--eventEmotes[EVENT_LOOT_RECEIVED] = emotes[EMOTE_CATEGORY_CHEERS_AND_JEERS]
 	eventEmotes = {
 		[EVENT_LEVEL_UPDATE] = {
 			["EventName"] = "EVENT_LEVEL_UPDATE",
@@ -233,13 +238,6 @@ function ImmersiveEmotes.CreateEmoteEventTable()
 				[2] = 125,
 				[3] = 212,
 				[4] = 213
-			},
-			["Duration"] = defaultDuration
-		},
-		[EVENT_POWER_UPDATE_STAMINA] = {
-			["EventName"] = "EVENT_POWER_UPDATE_STAMINA",
-			["Emotes"] = {
-				[1] = 114
 			},
 			["Duration"] = defaultDuration
 		},
@@ -305,42 +303,6 @@ function ImmersiveEmotes.CreateEmoteEventTable()
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
-		[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND] = {
-			["EventName"] = "EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND",
-			["Emotes"] = {
-				[1] = 70,
-				[2] = 72,
-				[3] = 8,
-				[4] = 137
-			},
-			["Duration"] = defaultDuration/2
-		},
-		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC] = {
-			["EventName"] = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC",
-			["Emotes"] = {
-				[1] = 142,
-				[2] = 67
-			},
-			["Duration"] = defaultDuration/3
-		},
-		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME] = {
-			["EventName"] = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME",
-			["Emotes"] = {
-				[2] = 56,
-				[3] = 57,
-				[4] = 58
-			},
-			["Duration"] = defaultDuration/3
-		},
-		[EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL] = {
-			["EventName"] = "EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL",
-			["Emotes"] = {
-				[1] = 56,
-				[2] = 136,
-				[3] = 137
-			},
-			["Duration"] = defaultDuration/3
-		},
 		[EVENT_SKILL_POINTS_CHANGED] = {
 			["EventName"] = "EVENT_SKILL_POINTS_CHANGED",
 			["Emotes"] = {
@@ -356,41 +318,41 @@ end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE(eventCode)
-	ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+	ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING(eventCode)
-	ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+	ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE(eventCode)
-	ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+	ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
 	if not inCombat then
-		ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+		ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 	end
 end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED(eventCode, mounted)
 	if not mounted then
-		ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+		ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 	end
 end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE(eventCode, categoryIndex, collectionIndex, bookIndex, guildIndex, skillType, skillIndex, rank, previousXP, currentXP)
-	ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+	ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED(eventCode)
-	ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+	ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 end
 
 
@@ -415,22 +377,29 @@ end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED(eventCode)
-	ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+	ImmersiveEmotes.UpdateTTLEmoteTable(eventCode)
 end
 
 
 function ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED(eventCode, pointsBefore, pointsNow, partialPointsBefore, partialPointsNow)
 	if currSmartEmotes["EventName"] == eventEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
 	if partialPointsNow > partialPointsBefore then
-		ImmersiveEmotes.UpdateSmartEmoteTable(EVENT_SKILL_POINTS_CHANGED)
+		ImmersiveEmotes.UpdateTTLEmoteTable(EVENT_SKILL_POINTS_CHANGED)
 	elseif pointsNow > pointsBefore then
-		ImmersiveEmotes.UpdateSmartEmoteTable(EVENT_SKILL_POINTS_CHANGED)
+		ImmersiveEmotes.UpdateTTLEmoteTable(EVENT_SKILL_POINTS_CHANGED)
 	end
 end
 
 
-function ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(eventCode)
+function ImmersiveEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(eventCode)
 	if IsUnitPlayer("reticleover") then
+		if currLatchedEvent ~= nil and currLatchedEvent ~= EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL
+		and currLatchedEvent ~= EVENT_RETICLE_TARGET_CHANGED_TO_EPIC
+		and currLatchedEvent ~= EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME
+		and currLatchedEvent ~= EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND then
+			existsPreviousEvent = true
+			lastLatchedEvent = currLatchedEvent
+		end
 		local unitTitle = GetUnitTitle("reticleover")
 		if IsUnitFriend("reticleover") then
 			ImmersiveEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND)
@@ -446,17 +415,22 @@ function ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(
 		or emoteFromLatched["EventName"] == eventLatchedEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC]["EventName"]
 		or emoteFromLatched["EventName"] == eventLatchedEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME]["EventName"]
 		or emoteFromLatched["EventName"] == eventLatchedEmotes[EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL]["EventName"] then
-		eventLatchedEmotes["isEnabled"] = false
+			if existsPreviousEvent and eventLatchedEmotes[lastLatchedEvent].Switch() then
+				ImmersiveEmotes.UpdateLatchedEmoteTable(lastLatchedEvent)
+			else
+				eventLatchedEmotes["isEnabled"] = false
+			end
+			existsPreviousEvent = false
 	end
 end
 
 
 -- Stamina bar
-function ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_POWER_UPDATE(eventCode, unitTag, powerIndex, powerType, powerValue, powerMax, powerEffectiveMax)
+function ImmersiveEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE(eventCode, unitTag, powerIndex, powerType, powerValue, powerMax, powerEffectiveMax)
 	if unitTag ~= LorePlay.player then return end
 	if powerType == POWERTYPE_STAMINA then
 		local lowerThreshold = powerEffectiveMax*(.2)
-		local upperThreshold = powerEffectiveMax*(.5)
+		local upperThreshold = powerEffectiveMax*(.55)
 		if powerValue <= lowerThreshold then 
 			ImmersiveEmotes.UpdateLatchedEmoteTable(EVENT_POWER_UPDATE_STAMINA)
 		elseif powerValue >= upperThreshold and eventLatchedEmotes["isEnabled"]
@@ -473,18 +447,18 @@ function ImmersiveEmotes.InitializeEmotes()
 	ImmersiveEmotes.CreateDefaultEmoteTable()
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LEVEL_UPDATE, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_NOT_SWIMMING, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
-	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_POWER_UPDATE, ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_POWER_UPDATE)
+	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_POWER_UPDATE, ImmersiveEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_TRADE_CANCELED, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_TRADE_SUCCEEDED, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_HIGH_FALL_DAMAGE, ImmersiveEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOW_FALL_DAMAGE, ImmersiveEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_SKILL_POINTS_CHANGED, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED)
-	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_RETICLE_TARGET_CHANGED, ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED)
+	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_RETICLE_TARGET_CHANGED, ImmersiveEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, ImmersiveEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
 	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOOT_RECEIVED, ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_LOOT_RECEIVED)
-	ImmersiveEmotes.UpdateSmartEmoteTable(EVENT_STARTUP)
+	ImmersiveEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
 end
 
 LorePlay = ImmersiveEmotes
