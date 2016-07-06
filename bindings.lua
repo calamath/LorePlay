@@ -1,0 +1,1 @@
+ZO_CreateStringId("SI_BINDING_NAME_PERFORM_SMART_EMOTE", "Perform Smart Emote")
