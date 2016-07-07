@@ -7,14 +7,12 @@ LorePlay.player = "player"
 
 function LorePlay.OnAddOnLoaded(event, addonName)
 	if addonName ~= LorePlay.name then return end
-	LorePlay.InitializeChat()
     LorePlay.InitializeEmotes()
     EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
 end
 
 
 function LorePlay.OnPlayerActivated(event)
-	CHAT_SYSTEM:SetChannel(CHAT_CHANNEL_ZONE_LANGUAGE_1)
 	zo_callLater(function() CHAT_SYSTEM:AddMessage("Welcome to LorePlay, Soulless One!") end, 50)
 	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
 end

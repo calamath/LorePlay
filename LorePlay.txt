@@ -4,8 +4,7 @@
 ## SavedVariables: LorePlaySavedVars
 
 LorePlay.lua
-LoreChat.lua
-ImmersiveEmotes.lua
+SmartEmotes.lua
 bindings.xml
 bindings.lua
 
