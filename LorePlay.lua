@@ -13,6 +13,7 @@ end
 
 
 function LorePlay.OnPlayerActivated(event)
+	LorePlay.SetInitialDefaultEmotes()
 	zo_callLater(function() CHAT_SYSTEM:AddMessage("Welcome to LorePlay, Soulless One!") end, 50)
 	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
 end

@@ -6,7 +6,12 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND = "EVENT_RETICLE_TARGET_CHANGED_TO_
 local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC"
 local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME"
 local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL"
+--local emotes, eventName, duration = "Emotes", "EventName", "Duration"
 local defaultEmotes
+local defaultEmotesByRegion
+local zoneToRegionEmotes
+local defaultEmotesByCity
+local defaultEmotesForDungeons
 local eventTTLEmotes
 local eventLatchedEmotes
 local lastEventTimeStamp
@@ -68,9 +73,13 @@ function SmartEmotes.PerformSmartEmote()
 	if eventLatchedEmotes["isEnabled"] then
 		randomNumber = math.random(#emoteFromLatched["Emotes"])
 		smartEmoteIndex = emoteFromLatched["Emotes"][randomNumber]
-	else
+	elseif eventTTLEmotes["isEnabled"] then
 		randomNumber = math.random(#emoteFromTTL["Emotes"])
 		smartEmoteIndex = emoteFromTTL["Emotes"][randomNumber]
+	else
+		SmartEmotes.UpdateDefaultEmotesTable()
+		randomNumber = math.random(#defaultEmotes["Emotes"])
+		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
 	PlayEmoteByIndex(smartEmoteIndex)
 	d("Location: "..GetPlayerLocationName())
@@ -79,18 +88,18 @@ function SmartEmotes.PerformSmartEmote()
 end
 
 
-function SmartEmotes.SetDefaultEmotes()
-	emoteFromTTL = defaultEmotes
+function SmartEmotes.DisableTTLEmotes()
+	if eventTTLEmotes["isEnabled"] then
+		eventTTLEmotes["isEnabled"] = false
+	end
 end
 
 
-function SmartEmotes.CheckToSwitchToDefaultEmotes()
-	-- Some events will override the natural switch to default
-	if emoteFromTTL == defaultEmotes then return end
+function SmartEmotes.CheckToDisableTTLEmotes()
 	local now = GetTimeStamp()
 	local resetDurInSecs = emoteFromTTL["Duration"]/1000
 	if GetDiffBetweenTimeStamps(now, lastEventTimeStamp) >= resetDurInSecs then
-		SmartEmotes.SetDefaultEmotes()
+		SmartEmotes.DisableTTLEmotes()
 	end
 end
 
@@ -98,13 +107,10 @@ end
 function SmartEmotes.UpdateLatchedEmoteTable(eventCode)
 	if eventCode == nil then return end
 	if eventLatchedEmotes[eventCode] == nil then return end
-	--d(eventCode)
-	--local randomNumber = math.random(#eventEmotes[eventCode])
 	emoteFromLatched = eventLatchedEmotes[eventCode]
 	if not eventLatchedEmotes["isEnabled"] then
 		eventLatchedEmotes["isEnabled"] = true
 	end
-	--zo_callLater(ImmersiveEmotes.SetDefaultEmotes, eventEmotes[eventCode]["Duration"])
 end
 
 
@@ -112,21 +118,145 @@ end
 function SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	if eventCode == nil then return end
 	if eventTTLEmotes[eventCode] == nil then return end
-	--d(eventCode)
 	lastEventTimeStamp = GetTimeStamp()
-	--local randomNumber = math.random(#eventEmotes[eventCode])
+	if not eventTTLEmotes["isEnabled"] then 
+		eventTTLEmotes["isEnabled"] = true
+	end
 	emoteFromTTL = eventTTLEmotes[eventCode]
-	zo_callLater(SmartEmotes.CheckToSwitchToDefaultEmotes, eventTTLEmotes[eventCode]["Duration"])
-	--zo_callLater(ImmersiveEmotes.SetDefaultEmotes, eventEmotes[eventCode]["Duration"])
+	zo_callLater(SmartEmotes.CheckToDisableTTLEmotes, eventTTLEmotes[eventCode]["Duration"])
+end
+
+
+function SmartEmotes.CreateEmotesByRegionTable()
+	defaultEmotesByRegion = {
+		["ad1"] = { --Summerset
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ad2"] = { --Valenwood
+			["Emotes"] = {
+				[1] = 129 -- thumbs
+			}
+		},
+		["ep1"] = { --Skyrim
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ep2"] = { --Morrowind
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ep3"] = { --Shadowfen
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["dc1"] = { --deserty
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["dc2"] = { --foresty
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ch"] = { --Coldharbour
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ip"] = { --imperial
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		}
+	}
+end
+
+
+function SmartEmotes.CreateZoneToRegionEmotesTable()
+	zoneToRegionEmotes = {
+		["Auridon"] = defaultEmotesByRegion["ad1"],
+		["Grahtwood"] = defaultEmotesByRegion["ad2"],
+		["Greenshade"] = defaultEmotesByRegion["ad2"],
+		["Khenarthi's Roost"] = defaultEmotesByRegion["ad1"]
+	}
+end
+
+
+function SmartEmotes.CreateEmotesByCityTable()
+	defaultEmotesByCity = {
+		["Elden Root"] = { 
+			["Emotes"] = {
+				[1] = 203 -- lookup
+			}
+		},
+		["Skywatch"] = { 
+			["Emotes"] = {
+				[1] = 182 -- dance altmer
+			}
+		},
+		["ep1"] = { --Skyrim
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ep2"] = { --Morrowind
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ep3"] = { --Shadowfen
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["dc1"] = { --deserty
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["dc2"] = { --foresty
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ch"] = { --Coldharbour
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		},
+		["ip"] = { --imperial
+			["Emotes"] = {
+				[1] = 25 -- cheer
+			}
+		}
+	}
+end
+
+
+function SmartEmotes.CreateDungeonTable()
+	defaultEmotesForDungeons = {
+		["Emotes"] = {
+			[1] = 63
+		}
+	}
+end
+
+
+
+function SmartEmotes.CreateDefaultEmoteTables()
+	SmartEmotes.CreateEmotesByRegionTable()
+	SmartEmotes.CreateZoneToRegionEmotesTable()
+	SmartEmotes.CreateEmotesByCityTable()
+	SmartEmotes.CreateDungeonTable()
 end
 
 --[[
-function ImmersiveEmotes.CreateDefaultEmoteTables()
-
-end
-]]--
-
-
 function SmartEmotes.CreateDefaultEmoteTable()
 	defaultEmotes = {
 		["Emotes"] = {
@@ -147,6 +277,7 @@ function SmartEmotes.CreateDefaultEmoteTable()
 		}
 	}
 end
+]]--
 
 
 function SmartEmotes.CreateLatchedEmoteEventTable()
@@ -206,6 +337,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 	-- Duration in miliseconds that the emote should be playable
 	local defaultDuration = 30000
 	eventTTLEmotes = {
+		["isEnabled"] = false,
 		[EVENT_LEVEL_UPDATE] = {
 			["EventName"] = EVENT_LEVEL_UPDATE,
 			["Emotes"] = {
@@ -231,7 +363,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[1] = 96,
 				[2] = 91
 			},
-			["Duration"] = defaultDuration*4
+			["Duration"] = 2000 --defaultDuration*4
 		},
 		[EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE] = {
 			["EventName"] = EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE,
@@ -319,6 +451,45 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 end
 
 
+function SmartEmotes.IfPlayerInZoneSetDefault(zoneName)
+	if zoneToRegionEmotes[zoneName] ~= nil then
+		if defaultEmotes ~= zoneToRegionEmotes[zoneName] then
+			defaultEmotes = zoneToRegionEmotes[zoneName]
+			--SmartEmotes.TryToUpdateDefaultEmotes()
+		end
+		return true
+	end
+	return false
+end
+
+
+function SmartEmotes.IfPlayerInCitySetDefault(POI)
+	if defaultEmotesByCity[POI] ~= nil then
+		if  defaultEmotes ~= defaultEmotesByCity[POI] then
+			defaultEmotes = defaultEmotesByCity[POI]
+			--SmartEmotes.TryToUpdateDefaultEmotes()
+		end
+		return true
+	end
+	return false
+end
+
+
+
+function SmartEmotes.IfPlayerInDungeonSetDefault(POI, zoneName)
+	if defaultEmotesByCity[POI] == nil then
+		if zoneToRegionEmotes[zoneName] == nil then
+			if defaultEmotesForDungeons ~= defaultEmotes then
+				defaultEmotes = defaultEmotesForDungeons
+				--SmartEmotes.TryToUpdateDefaultEmotes()
+			end 
+			return true
+		end
+	end
+	return false
+end
+
+
 -- Here we pass in event codes
 function SmartEmotes.DoesEmoteFromLatchedEqualEvent(...)
 	if not eventLatchedEmotes["isEnabled"] then return false end
@@ -344,6 +515,41 @@ function SmartEmotes.DoesPreviousLatchedEventExist(...)
 	return existsPreviousEvent
 end
 
+
+function SmartEmotes.SetInitialDefaultEmotes()
+	local firstZone = GetPlayerActiveZoneName()
+	if zoneToRegionEmotes[firstZone] ~= nil then
+		defaultEmotes = zoneToRegionEmotes[firstZone]
+	else d("This shouldn't happen")
+	end
+end
+
+
+function SmartEmotes.UpdateDefaultEmotesTable()
+	local location = GetPlayerLocationName()
+	local zoneName = GetPlayerActiveZoneName()
+	d("ZONENAME:"..zoneName)
+	zo_callLater(function() d("Delayed zone: "..zoneName) end, 15000)
+	if SmartEmotes.IfPlayerInCitySetDefault(location) then return
+	elseif SmartEmotes.IfPlayerInZoneSetDefault(zoneName) then return
+	elseif SmartEmotes.IfPlayerInDungeonSetDefault(location, zoneName) then return
+	end
+end
+
+
+
+--[[
+function SmartEmotes.UpdateDefaultEmotesTable_For_EVENT_ZONE_CHANGED(eventCode)
+	local location = GetPlayerLocationName()
+	local zoneName = GetPlayerActiveZoneName()
+	d("ZONENAME:"..zoneName)
+	zo_callLater(function() d("Delayed zone: "..zoneName) end, 15000)
+	if SmartEmotes.IfPlayerInCitySetDefault(location) then return
+	elseif SmartEmotes.IfPlayerInZoneSetDefault(zoneName) then return
+	elseif SmartEmotes.IfPlayerInDungeonSetDefault(location, zoneName) then return
+	end
+end
+]]--
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE(eventCode)
@@ -470,7 +676,8 @@ end
 function SmartEmotes.InitializeEmotes()
 	SmartEmotes.CreateTTLEmoteEventTable()
 	SmartEmotes.CreateLatchedEmoteEventTable()
-	SmartEmotes.CreateDefaultEmoteTable()
+	--SmartEmotes.CreateDefaultEmoteTable()
+	SmartEmotes.CreateDefaultEmoteTables()
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LEVEL_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_NOT_SWIMMING, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_POWER_UPDATE, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE)
@@ -483,6 +690,7 @@ function SmartEmotes.InitializeEmotes()
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
+	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_ZONE_CHANGED, SmartEmotes.UpdateDefaultEmotesTable_For_EVENT_ZONE_CHANGED)
 	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOOT_RECEIVED, ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_LOOT_RECEIVED)
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
 end
