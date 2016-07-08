@@ -6,7 +6,6 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND = "EVENT_RETICLE_TARGET_CHANGED_TO_
 local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC"
 local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME"
 local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL"
---local emotes, eventName, duration = "Emotes", "EventName", "Duration"
 local defaultEmotes
 local defaultEmotesByRegion
 local zoneToRegionEmotes
@@ -82,9 +81,6 @@ function SmartEmotes.PerformSmartEmote()
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
 	PlayEmoteByIndex(smartEmoteIndex)
-	d("Location: "..GetPlayerLocationName())
-	d("Name: "..name.." UIMapType: "..UIMapType.." MapContentType: "..MapContentType)
-	d("Active zone name: "..GetPlayerActiveZoneName())
 end
 
 
@@ -131,47 +127,147 @@ function SmartEmotes.CreateEmotesByRegionTable()
 	defaultEmotesByRegion = {
 		["ad1"] = { --Summerset
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 191,
+				[2] = 191,
+				[3] = 210,
+				[4] = 174,
+				[5] = 174,
+				[6] = 11,
+				[7] = 121,
+				[8] = 38,
+				[9] = 52,
+				[10] = 9,
+				[11] = 91,
+				[12] = 210
 			}
 		},
 		["ad2"] = { --Valenwood
 			["Emotes"] = {
-				[1] = 129 -- thumbs
+				[1] = 210,
+				[2] = 119,
+				[3] = 102,
+				[4] = 201,
+				[5] = 202,
+				[6] = 99,
+				[7] = 121,
+				[8] = 38,
+				[9] = 52,
+				[10] = 9,
+				[11] = 91,
+				[12] = 210,
+				[13] = 123,
+				[14] = 104,
+				[15] = 104
 			}
 		},
 		["ep1"] = { --Skyrim
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 8,
+				[2] = 169,
+				[3] = 64,
+				[4] = 215,
+				[5] = 52,
+				[6] = 38,
+				[7] = 9,
+				[8] = 64,
+				[9] = 215,
+				[10] = 104
 			}
 		},
 		["ep2"] = { --Morrowind
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 52,
+				[2] = 201,
+				[3] = 169,
+				[4] = 178,
+				[5] = 120,
+				[6] = 91,
+				[7] = 9,
+				[8] = 110
 			}
 		},
 		["ep3"] = { --Shadowfen
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 52,
+				[2] = 201,
+				[3] = 169,
+				[4] = 178,
+				[5] = 202,
+				[6] = 38,
+				[7] = 9,
+				[8] = 91,
+				[9] = 104
 			}
 		},
 		["dc1"] = { --deserty
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 52,
+				[2] = 201,
+				[3] = 11,
+				[4] = 110,
+				[5] = 122,
+				[6] = 91,
+				[7] = 38,
+				[8] = 9,
+				[9] = 91,
+				[10] = 95,
+				[11] = 95,
+				[12] = 110
 			}
 		},
 		["dc2"] = { --foresty
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 52,
+				[2] = 119,
+				[3] = 201,
+				[4] = 99,
+				[5] = 121,
+				[6] = 38,
+				[7] = 9,
+				[8] = 91,
+				[9] = 123,
+				[10] = 104
 			}
 		},
 		["ch"] = { --Coldharbour
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 63,
+				[2] = 27,
+				[3] = 122,
+				[4] = 52,
+				[5] = 102,
+				[6] = 104
 			}
 		},
 		["ip"] = { --imperial
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 52,
+				[2] = 34,
+				[3] = 148,
+				[4] = 110,
+				[5] = 38,
+				[6] = 9,
+				[7] = 91
+			}
+		},
+		["other"] = { --other
+			["Emotes"] = {
+				[1] = 203,
+				[2] = 54,
+				[3] = 83,
+				[4] = 91,
+				[5] = 191,
+				[6] = 40,
+				[7] = 110,
+				[8] = 177,
+				[9] = 178,
+				[10] = 174,
+				[11] = 201,
+				[12] = 138,
+				[13] = 99,
+				[14] = 121,
+				[15] = 52,
+				[16] = 9
 			}
 		}
 	}
@@ -183,7 +279,31 @@ function SmartEmotes.CreateZoneToRegionEmotesTable()
 		["Auridon"] = defaultEmotesByRegion["ad1"],
 		["Grahtwood"] = defaultEmotesByRegion["ad2"],
 		["Greenshade"] = defaultEmotesByRegion["ad2"],
-		["Khenarthi's Roost"] = defaultEmotesByRegion["ad1"]
+		["Khenarthi's Roost"] = defaultEmotesByRegion["ad1"],
+		["Malabal Tor"] = defaultEmotesByRegion["ad2"],
+		["Reaper's March"] = defaultEmotesByRegion["ad2"],
+		["Alik'r Desert"] = defaultEmotesByRegion["dc1"],
+		["Bangkorai"] = defaultEmotesByRegion["dc1"],
+		["Betnikh"] = defaultEmotesByRegion["dc2"],
+		["Glenumbra"] = defaultEmotesByRegion["dc2"],
+		["Rivenspire"] = defaultEmotesByRegion["dc2"],
+		["Stormhaven"] = defaultEmotesByRegion["dc2"],
+		["Stros M'Kai"] = defaultEmotesByRegion["dc1"],
+		["Bal Foyen"] = defaultEmotesByRegion["ep2"],
+		["Bleakrock Isle"] = defaultEmotesByRegion["ep2"],
+		["Deshaan"] = defaultEmotesByRegion["ep2"],
+		["Eastmarch"] = defaultEmotesByRegion["ep1"],
+		["The Rift"] = defaultEmotesByRegion["ep1"],
+		["Shadowfen"] = defaultEmotesByRegion["ep3"],
+		["Stonefalls"] = defaultEmotesByRegion["ep2"],
+		["Coldharbour"] = defaultEmotesByRegion["ch"],
+		["Craglorn"] = defaultEmotesByRegion["other"],
+		["Cyrodiil"] = defaultEmotesByRegion["ip"],
+		["Gold Coast"] = defaultEmotesByRegion["other"],
+		["Hew's Bane"] = defaultEmotesByRegion["other"],
+		["Murkmire"] = defaultEmotesByRegion["ep3"],
+		["Bangkorai"] = defaultEmotesByRegion["dc1"],
+		["Wrothgar"] = defaultEmotesByRegion["other"],
 	}
 end
 
@@ -192,47 +312,88 @@ function SmartEmotes.CreateEmotesByCityTable()
 	defaultEmotesByCity = {
 		["Elden Root"] = { 
 			["Emotes"] = {
-				[1] = 203 -- lookup
+				[1] = 203,
+				[2] = 203,
+				[3] = 203,
+				[4] = 203,
+				[5] = 177,
+				[6] = 174,
+				[7] = 202,
+				[8] = 99,
+				[9] = 8,
+				[10] = 52
+
 			}
 		},
 		["Skywatch"] = { 
 			["Emotes"] = {
-				[1] = 182 -- dance altmer
+				[1] = 174,
+				[2] = 8,
+				[3] = 38,
+				[4] = 191,
+				[5] = 210,
+				[6] = 11,
+				[7] = 121,
+				[8] = 52,
+				[9] = 9,
+				[10] = 91
 			}
 		},
-		["ep1"] = { --Skyrim
+		["Mournhold"] = {
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 174,
+				[2] = 8,
+				[3] = 52,
+				[4] = 52,
+				[5] = 203,
+				[6] = 203,
+				[7] = 121
+
 			}
 		},
-		["ep2"] = { --Morrowind
+		["Windhelm"] = { 
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 8,
+				[2] = 139,
+				[3] = 163,
+				[4] = 169,
+				[5] = 5,
+				[6] = 79,
+				[7] = 209,
+				[8] = 64,
+				[9] = 174,
+				[10] = 52
 			}
 		},
-		["ep3"] = { --Shadowfen
+		["Riften"] = { 
 			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 8,
+				[2] = 139,
+				[3] = 163,
+				[4] = 169,
+				[5] = 5,
+				[6] = 79,
+				[7] = 209,
+				[8] = 64,
+				[10] = 52
 			}
 		},
-		["dc1"] = { --deserty
+		["Wayrest"] = {
 			["Emotes"] = {
-				[1] = 25 -- cheer
-			}
-		},
-		["dc2"] = { --foresty
-			["Emotes"] = {
-				[1] = 25 -- cheer
-			}
-		},
-		["ch"] = { --Coldharbour
-			["Emotes"] = {
-				[1] = 25 -- cheer
-			}
-		},
-		["ip"] = { --imperial
-			["Emotes"] = {
-				[1] = 25 -- cheer
+				[1] = 25,
+				[2] = 52,
+				[3] = 201,
+				[4] = 11,
+				[5] = 110,
+				[6] = 122,
+				[7] = 91,
+				[8] = 38,
+				[9] = 9,
+				[10] = 91,
+				[11] = 95,
+				[12] = 95,
+				[13] = 203,
+				[14] = 203
 			}
 		}
 	}
@@ -242,11 +403,16 @@ end
 function SmartEmotes.CreateDungeonTable()
 	defaultEmotesForDungeons = {
 		["Emotes"] = {
-			[1] = 63
+			[1] = 63,
+			[2] = 1,
+			[3] = 101,
+			[4] = 102,
+			[5] = 52,
+			[6] = 22,
+			[7] = 171
 		}
 	}
 end
-
 
 
 function SmartEmotes.CreateDefaultEmoteTables()
@@ -255,29 +421,6 @@ function SmartEmotes.CreateDefaultEmoteTables()
 	SmartEmotes.CreateEmotesByCityTable()
 	SmartEmotes.CreateDungeonTable()
 end
-
---[[
-function SmartEmotes.CreateDefaultEmoteTable()
-	defaultEmotes = {
-		["Emotes"] = {
-			[1] = 203,
-			[2] = 54,
-			[3] = 83,
-			[4] = 91,
-			[5] = 191,
-			[6] = 40,
-			[7] = 110,
-			[8] = 177,
-			[9] = 178,
-			[10] = 174,
-			[11] = 201,
-			[12] = 138,
-			[13] = 99,
-			[14] = 121
-		}
-	}
-end
-]]--
 
 
 function SmartEmotes.CreateLatchedEmoteEventTable()
@@ -309,7 +452,9 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
 			["Emotes"] = {
 				[1] = 142,
-				[2] = 67
+				[2] = 67,
+				[3] = 214,
+				[4] = 24
 			}
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME] = {
@@ -345,7 +490,9 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[2] = 8,
 				[3] = 82,
 				[4] = 165,
-				[5] = 25
+				[5] = 25,
+				[6] = 129,
+				[7] = 97
 			},
 			["Duration"] = defaultDuration*4
 		},
@@ -363,7 +510,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[1] = 96,
 				[2] = 91
 			},
-			["Duration"] = 2000 --defaultDuration*4
+			["Duration"] = defaultDuration*2
 		},
 		[EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE] = {
 			["EventName"] = EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE,
@@ -380,7 +527,10 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Emotes"] = {
 				[1] = 115,
 				[3] = 149,
-				[4] = 12
+				[4] = 12,
+				[5] = 168,
+				[6] = 133,
+				[7] = 80,
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -389,7 +539,8 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Emotes"] = {
 				[1] = 133,
 				[2] = 80,
-				[3] = 33
+				[3] = 33,
+				[4] = 149
 			},
 			["Duration"] = defaultDuration/2
 		},
@@ -398,8 +549,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Emotes"] = {
 				[1] = 91,
 				[2] = 110,
-				[3] = 203,
-				[4] = 80
+				[3] = 80
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -412,7 +562,8 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[4] = 179,
 				[5] = 52,
 				[6] = 119,
-				[7] = 200
+				[7] = 200,
+				[8] = 39
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -433,7 +584,10 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[5] = 81,
 				[6] = 156,
 				[7] = 32,
-				[8] = 62
+				[8] = 62,
+				[9] = 44,
+				[10] = 44,
+				[11] = 44
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -455,7 +609,6 @@ function SmartEmotes.IfPlayerInZoneSetDefault(zoneName)
 	if zoneToRegionEmotes[zoneName] ~= nil then
 		if defaultEmotes ~= zoneToRegionEmotes[zoneName] then
 			defaultEmotes = zoneToRegionEmotes[zoneName]
-			--SmartEmotes.TryToUpdateDefaultEmotes()
 		end
 		return true
 	end
@@ -467,7 +620,6 @@ function SmartEmotes.IfPlayerInCitySetDefault(POI)
 	if defaultEmotesByCity[POI] ~= nil then
 		if  defaultEmotes ~= defaultEmotesByCity[POI] then
 			defaultEmotes = defaultEmotesByCity[POI]
-			--SmartEmotes.TryToUpdateDefaultEmotes()
 		end
 		return true
 	end
@@ -481,7 +633,6 @@ function SmartEmotes.IfPlayerInDungeonSetDefault(POI, zoneName)
 		if zoneToRegionEmotes[zoneName] == nil then
 			if defaultEmotesForDungeons ~= defaultEmotes then
 				defaultEmotes = defaultEmotesForDungeons
-				--SmartEmotes.TryToUpdateDefaultEmotes()
 			end 
 			return true
 		end
@@ -516,40 +667,14 @@ function SmartEmotes.DoesPreviousLatchedEventExist(...)
 end
 
 
-function SmartEmotes.SetInitialDefaultEmotes()
-	local firstZone = GetPlayerActiveZoneName()
-	if zoneToRegionEmotes[firstZone] ~= nil then
-		defaultEmotes = zoneToRegionEmotes[firstZone]
-	else d("This shouldn't happen")
-	end
-end
-
-
 function SmartEmotes.UpdateDefaultEmotesTable()
 	local location = GetPlayerLocationName()
 	local zoneName = GetPlayerActiveZoneName()
-	d("ZONENAME:"..zoneName)
-	zo_callLater(function() d("Delayed zone: "..zoneName) end, 15000)
 	if SmartEmotes.IfPlayerInCitySetDefault(location) then return
 	elseif SmartEmotes.IfPlayerInZoneSetDefault(zoneName) then return
 	elseif SmartEmotes.IfPlayerInDungeonSetDefault(location, zoneName) then return
 	end
 end
-
-
-
---[[
-function SmartEmotes.UpdateDefaultEmotesTable_For_EVENT_ZONE_CHANGED(eventCode)
-	local location = GetPlayerLocationName()
-	local zoneName = GetPlayerActiveZoneName()
-	d("ZONENAME:"..zoneName)
-	zo_callLater(function() d("Delayed zone: "..zoneName) end, 15000)
-	if SmartEmotes.IfPlayerInCitySetDefault(location) then return
-	elseif SmartEmotes.IfPlayerInZoneSetDefault(zoneName) then return
-	elseif SmartEmotes.IfPlayerInDungeonSetDefault(location, zoneName) then return
-	end
-end
-]]--
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE(eventCode)
@@ -676,7 +801,6 @@ end
 function SmartEmotes.InitializeEmotes()
 	SmartEmotes.CreateTTLEmoteEventTable()
 	SmartEmotes.CreateLatchedEmoteEventTable()
-	--SmartEmotes.CreateDefaultEmoteTable()
 	SmartEmotes.CreateDefaultEmoteTables()
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LEVEL_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_NOT_SWIMMING, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
@@ -690,7 +814,6 @@ function SmartEmotes.InitializeEmotes()
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_ZONE_CHANGED, SmartEmotes.UpdateDefaultEmotesTable_For_EVENT_ZONE_CHANGED)
 	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOOT_RECEIVED, ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_LOOT_RECEIVED)
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
 end
