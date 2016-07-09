@@ -152,12 +152,11 @@ function SmartEmotes.CreateEmotesByRegionTable()
 				[7] = 121,
 				[8] = 38,
 				[9] = 52,
-				[10] = 9,
+				[10] = 104,
 				[11] = 91,
 				[12] = 210,
 				[13] = 123,
-				[14] = 104,
-				[15] = 104
+				[14] = 104
 			}
 		},
 		["ep1"] = { --Skyrim
@@ -693,6 +692,7 @@ end
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
+	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
 	if not inCombat then
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	end
