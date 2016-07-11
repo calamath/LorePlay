@@ -5,6 +5,7 @@
 
 LorePlay.lua
 SmartEmotes.lua
+IdleEmotes.lua
 bindings.xml
 bindings.lua
 

@@ -8,6 +8,7 @@ LorePlay.player = "player"
 function LorePlay.OnAddOnLoaded(event, addonName)
 	if addonName ~= LorePlay.name then return end
     LorePlay.InitializeEmotes()
+    LorePlay.InitializeIdle()
     EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
 end
 
