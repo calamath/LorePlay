@@ -17,10 +17,6 @@ local lastEventTimeStamp
 local existsPreviousEvent
 local lastLatchedEvent
 local emoteFromLatched
---[[ IDLE EMOTES
-local idleCounter = 0 --reset if reaches 6 (2 secs each tick)
-local isPlayerIdle = false
-]]--
 local emoteFromTTL = {}
 local playerTitles = {
 	["Emperor"] = "Emperor",
@@ -33,8 +29,7 @@ local playerTitles = {
 	["Tamriel Hero"] = "Tamriel Hero"
 }
 
-SmartEmotes.isPlayerInCombat = false
-SmartEmotes.isSmartEmoting = false
+SmartEmotes.didSmartEmote = false
 
 
 --local myStrings = {}
@@ -88,7 +83,7 @@ function SmartEmotes.PerformSmartEmote()
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
 	PlayEmoteByIndex(smartEmoteIndex)
-	SmartEmotes.isSmartEmoting = true
+	SmartEmotes.didSmartEmote = true
 end
 
 
@@ -118,7 +113,6 @@ function SmartEmotes.UpdateLatchedEmoteTable(eventCode)
 end
 
 
---[[ Make the type of location be influential in what happens? ]]--
 function SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	if eventCode == nil then return end
 	if eventTTLEmotes[eventCode] == nil then return end
@@ -639,43 +633,6 @@ function SmartEmotes.IsPlayerInDungeon(POI, zoneName)
 end
 
 
---[[
-function SmartEmotes.IfPlayerInZoneSetDefault(zoneName)
-	if zoneToRegionEmotes[zoneName] ~= nil then
-		if defaultEmotes ~= zoneToRegionEmotes[zoneName] then
-			defaultEmotes = zoneToRegionEmotes[zoneName]
-		end
-		return true
-	end
-	return false
-end
-
-
-function SmartEmotes.IfPlayerInCitySetDefault(POI)
-	if defaultEmotesByCity[POI] ~= nil then
-		if  defaultEmotes ~= defaultEmotesByCity[POI] then
-			defaultEmotes = defaultEmotesByCity[POI]
-		end
-		return true
-	end
-	return false
-end
-
-
-
-function SmartEmotes.IfPlayerInDungeonSetDefault(POI, zoneName)
-	if defaultEmotesByCity[POI] == nil then
-		if zoneToRegionEmotes[zoneName] == nil then
-			if defaultEmotesForDungeons ~= defaultEmotes then
-				defaultEmotes = defaultEmotesForDungeons
-			end 
-			return true
-		end
-	end
-	return false
-end
-]]--
-
 -- Here we pass in event codes
 function SmartEmotes.DoesEmoteFromLatchedEqualEvent(...)
 	if not eventLatchedEmotes["isEnabled"] then return false end
@@ -716,77 +673,6 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 end
 
 
---[[
-function SmartEmotes.UpdateDefaultEmotesTable()
-	local location = GetPlayerLocationName()
-	local zoneName = GetPlayerActiveZoneName()
-	if SmartEmotes.IfPlayerInCitySetDefault(location) then return
-	elseif SmartEmotes.IfPlayerInZoneSetDefault(zoneName) then return
-	elseif SmartEmotes.IfPlayerInDungeonSetDefault(location, zoneName) then return
-	end
-end
-]]--
-
---[[ IDLE EMOTES
-function SmartEmotes.PerformIdleEmote()
-	PlayEmoteByIndex(199)
-end
-
-
-function SmartEmotes.UpdateStealthState(eventCode, unitTag, stealthState)
-	if unitTag ~= LorePlay.player then return end
-	if stealthState ~= STEALTH_STATE_NONE then
-		isPlayerStealthed = true
-	else
-		isPlayerStealthed = false
-	end
-end
-
-
-function SmartEmotes.IsPlayerIdle()
-	if not IsPlayerMoving() and not isPlayerInCombat then
-		if isPlayerStealthed == nil then
-			SmartEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, LorePlay.player, GetUnitStealthState(LorePlay.player))
-		end
-		if not isPlayerStealthed then
-			return true
-		end
-	end
-	return false
-end
-
-
-function SmartEmotes.SetIdleCounter()
-	local idleTime = 6
-	if not SmartEmotes.IsPlayerIdle() then
-		idleCounter = 0
-	elseif idleCounter == idleTime then
-		return
-	else 
-		idleCounter = idleCounter + 1
-	end
-end
-
-
-function SmartEmotes.ShouldBeginIdleEmote()
-	local idleTime = 6 -- 6 ticks of 2 seconds each means idle
-	SmartEmotes.SetIdleCounter()
-	if idleCounter < idleTime then
-		return false
-	else
-		return true
-	end
-end
-
-
-function SmartEmotes.BeginIdleTimer()
-	if SmartEmotes.ShouldBeginIdleEmote() then
-		SmartEmotes.PerformIdleEmote()
-	end
-end
-]]--
-
-
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE(eventCode)
 	SmartEmotes.UpdateTTLEmoteTable(eventCode)
 end
@@ -804,18 +690,21 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
 	if not inCombat then
-		SmartEmotes.isPlayerInCombat = false
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
 		if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	else
-		SmartEmotes.isPlayerInCombat = true
+		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	end
 end
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED(eventCode, mounted)
 	if not mounted then
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
+	else
+		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	end
 end
 
@@ -928,12 +817,6 @@ function SmartEmotes.InitializeEmotes()
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
-	
-
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED, SmartEmotes.UpdateStealthState)
-	--EVENT_MANAGER:RegisterForUpdate(LorePlay.name, 2000, SmartEmotes.BeginIdleTimer)
-
-
 	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOOT_RECEIVED, ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_LOOT_RECEIVED)
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
 end

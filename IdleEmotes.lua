@@ -1,11 +1,58 @@
 local IdleEmotes = LorePlay
 
-local idleTime = 6 -- 6 ticks of 2 seconds each means idle
-local idleCounter = 0 -- if reaches idletime, then player is away (2 secs each tick)
+IdleEmotes.idleTime = 15000 -- time in miliseconds to check whether player is idle
 local isPlayerStealthed
+local currentPlayerX, currentPlayerY
+local idleTable
+
+
+
+function IdleEmotes.CreateIdleEmotesTable()
+	idleTable = {
+		["Zone"] = {
+			[1] = 
+		},
+		["City"] = {
+			[1] = 
+		},
+		["Dungeon"] = {
+			[1] = 
+		}
+	}
+end
+
+
+function IdleEmotes.GetLocation()
+	local location = GetPlayerLocationName()
+	local zoneName = GetPlayerActiveZoneName()
+
+	if LorePlay.IsPlayerInCity(location) then
+		return "City"
+	elseif LorePlay.IsPlayerInZone(zoneName) then
+		return "Zone"
+	elseif LorePlay.IsPlayerInDungeon(location, zoneName) then
+		return "Dungeon"
+	end
+end
+
 
 function IdleEmotes.PerformIdleEmote()
-	PlayEmoteByIndex(199)
+	if IsPlayerMoving() then return end
+	local location = IdleEmotes.GetLocation()
+	local randomEmote = math.random(#idleTable[location])
+	local currIdleEmote = idleTable[location][randomEmote]
+	PlayEmoteByIndex(currIdleEmote)
+end
+
+
+function IdleEmotes.DidPlayerMove()
+	local newX, newY = GetMapPlayerPosition(LorePlay.player)
+	if newX ~= currentPlayerX or newY ~= currentPlayerY then
+		currentPlayerX = newX
+		currentPlayerY = newY
+		return true
+	end
+	return false
 end
 
 
@@ -20,57 +67,48 @@ end
 
 
 function IdleEmotes.IsCharacterIdle()
-	if not LorePlay.isSmartEmoting then
-		if not IsPlayerMoving() and not LorePlay.isPlayerInCombat then
+	if not LorePlay.didSmartEmote then
+		if not IdleEmotes.DidPlayerMove() then
 			if isPlayerStealthed == nil then
 				IdleEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, LorePlay.player, GetUnitStealthState(LorePlay.player))
 			end
 			if not isPlayerStealthed then
-				return true
+				local interactionType = GetInteractionType()
+				--d(interactionType)
+  				if interactionType == INTERACTION_NONE then
+					return true
+				end
 			end
 		end
 	else
-		LorePlay.isSmartEmoting = false
-	end
-	return false
-end
-
-
-function IdleEmotes.SetIdleCounter()
-	if not IdleEmotes.IsCharacterIdle() then
-		idleCounter = 0
-	else
-		idleCounter = idleCounter + 1
-	end
-	--[[
-	elseif idleCounter < idleTime then
-		idleCounter = idleCounter + 1
-	else
-		idleCounter = 0
-	end
-	]]--
-end
-
-
-function IdleEmotes.IsPlayerAway()
-	IdleEmotes.SetIdleCounter()
-	if idleCounter >= idleTime then
-		return true
+		LorePlay.didSmartEmote = false
 	end
 	return false
 end
 
 
 function IdleEmotes.CheckToPerformIdleEmote()
-	if IdleEmotes.IsPlayerAway() and idleCounter%idleTime == 0 then --modulo to deal with small movements in-between checks
+	if IdleEmotes.IsCharacterIdle() then
 		IdleEmotes.PerformIdleEmote()
 	end
 end
 
 
+function IdleEmotes.OnChatterEvent(eventCode)
+	if eventCode == EVENT_CHATTER_BEGIN then
+		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+	else
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", IdleEmotes.idleTime, IdleEmotes.CheckToPerformIdleEmote)
+	end
+end
+
+
 function IdleEmotes.InitializeIdle()
+	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
-	EVENT_MANAGER:RegisterForUpdate(LorePlay.name, 2000, IdleEmotes.CheckToPerformIdleEmote)
+	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
+	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
+	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", IdleEmotes.idleTime, IdleEmotes.CheckToPerformIdleEmote)
 end
 
 LorePlay = IdleEmotes
