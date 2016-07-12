@@ -1,22 +1,51 @@
 local IdleEmotes = LorePlay
 
-IdleEmotes.idleTime = 15000 -- time in miliseconds to check whether player is idle
+IdleEmotes.idleTime = 15000 -- time period in miliseconds to check whether player is idle
 local isPlayerStealthed
 local currentPlayerX, currentPlayerY
 local idleTable
-
+local didIdleEmote = false
 
 
 function IdleEmotes.CreateIdleEmotesTable()
 	idleTable = {
 		["Zone"] = {
-			[1] = 
+			[1] = 99,
+			[2] = 119,
+			[3] = 120,
+			[4] = 121,
+			[5] = 123,
+			[6] = 85,
+			[7] = 116,
+			[8] = 118,
+			[9] = 10,
+			[10] = 172,
+			[11] = 84,
+			[12] = 102,
+			[13] = 15,
+			[14] = 201
 		},
 		["City"] = {
-			[1] = 
+			[1] = 202,
+			[2] = 72,
+			[3] = 7,
+			[4] = 6,
+			[5] = 5,
+			[6] = 195,
+			[7] = 8,
+			[8] = 174,
+			[9] = 107
 		},
 		["Dungeon"] = {
-			[1] = 
+			[1] = 6,
+			[2] = 52,
+			[3] = 104,
+			[4] = 1,
+			[5] = 1,
+			[6] = 122,
+			[7] = 101,
+			[8] = 154,
+			[9] = 195
 		}
 	}
 end
@@ -37,11 +66,16 @@ end
 
 
 function IdleEmotes.PerformIdleEmote()
+	if didIdleEmote then
+		didIdleEmote = false
+		return
+	end
 	if IsPlayerMoving() then return end
 	local location = IdleEmotes.GetLocation()
 	local randomEmote = math.random(#idleTable[location])
 	local currIdleEmote = idleTable[location][randomEmote]
 	PlayEmoteByIndex(currIdleEmote)
+	didIdleEmote = true
 end
 
 
@@ -104,6 +138,7 @@ end
 
 
 function IdleEmotes.InitializeIdle()
+	IdleEmotes.CreateIdleEmotesTable()
 	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)

@@ -32,10 +32,8 @@ local playerTitles = {
 SmartEmotes.didSmartEmote = false
 
 
---local myStrings = {}
-
-
 --[[ USE TO ACHIEVE MASTER LIST IN SAVED VARS
+--local myStrings = {}
 local function StoreMyEmotesIntoSavedVars()
 	local emoteString = ""
 	local emoteString2 = ""
@@ -67,7 +65,7 @@ end
 
 
 function SmartEmotes.PerformSmartEmote()
-	local name, UIMapType, MapContentType, _ = GetMapInfo(GetCurrentMapIndex())
+	--local name, UIMapType, MapContentType, _ = GetMapInfo(GetCurrentMapIndex())
 
 	local randomNumber
 	local smartEmoteIndex
@@ -169,10 +167,10 @@ function SmartEmotes.CreateEmotesByRegionTable()
 				[4] = 215,
 				[5] = 52,
 				[6] = 38,
-				[7] = 9,
+				[7] = 104,
 				[8] = 64,
 				[9] = 215,
-				[10] = 104
+				[10] = 169
 			}
 		},
 		["ep2"] = { --Morrowind
@@ -588,7 +586,8 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[8] = 62,
 				[9] = 44,
 				[10] = 44,
-				[11] = 44
+				[11] = 44,
+				[12] = 152
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -663,6 +662,7 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 	local location = GetPlayerLocationName()
 	local zoneName = GetPlayerActiveZoneName()
 
+	-- Must remain in this order for proper detection
 	if SmartEmotes.IsPlayerInCity(location) then
 		defaultEmotes = defaultEmotesByCity[location]
 	elseif SmartEmotes.IsPlayerInZone(zoneName) then
