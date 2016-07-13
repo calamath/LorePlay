@@ -59,7 +59,8 @@ local function StoreMyEmotesIntoSavedVars()
 
 	myStrings[1] = emoteString
 	myStrings[2] = emoteString2
-	LorePlay.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", LorePlay.version, nil, myStrings)
+	-- Update the saved vars before using this
+	LorePlay.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", LorePlay.savedVarsVersion, nil, myStrings)
 end
 ]]--
 
@@ -80,6 +81,10 @@ function SmartEmotes.PerformSmartEmote()
 		randomNumber = math.random(#defaultEmotes["Emotes"])
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
+
+	d(LorePlay.savedVariables.isIdleEmotesOn)
+
+
 	PlayEmoteByIndex(smartEmoteIndex)
 	SmartEmotes.didSmartEmote = true
 end
@@ -690,21 +695,30 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
 	if not inCombat then
-		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
+		if LorePlay.savedVariables.isIdleEmotesOn then
+			d(LorePlay.savedVariables.isIdleEmotesOn)
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
+		end
 		if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	else
-		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+		if LorePlay.savedVariables.isIdleEmotesOn then
+			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+		end
 	end
 end
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED(eventCode, mounted)
 	if not mounted then
-		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
+		if LorePlay.savedVariables.isIdleEmotesOn then
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
+		end
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	else
-		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+		if LorePlay.savedVariables.isIdleEmotesOn then
+			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+		end
 	end
 end
 

@@ -138,6 +138,7 @@ end
 
 
 function IdleEmotes.InitializeIdle()
+	if not LorePlay.savedVariables.isIdleEmotesOn then return end
 	IdleEmotes.CreateIdleEmotesTable()
 	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)

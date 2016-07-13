@@ -1,12 +1,14 @@
 LorePlay = {}
-LorePlay.version = 1
---LorePlay.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", LorePlay.version, nil, {})
+LorePlay.majorVersion = 1
+LorePlay.minorVersion = 2
+LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion
 LorePlay.name = "LorePlay"
 LorePlay.player = "player"
 
 
 function LorePlay.OnAddOnLoaded(event, addonName)
 	if addonName ~= LorePlay.name then return end
+	LorePlay.InitializeSettings()
     LorePlay.InitializeEmotes()
     LorePlay.InitializeIdle()
     EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
