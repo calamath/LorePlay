@@ -66,8 +66,6 @@ end
 
 
 function SmartEmotes.PerformSmartEmote()
-	--local name, UIMapType, MapContentType, _ = GetMapInfo(GetCurrentMapIndex())
-
 	local randomNumber
 	local smartEmoteIndex
 	if eventLatchedEmotes["isEnabled"] then
@@ -81,10 +79,7 @@ function SmartEmotes.PerformSmartEmote()
 		randomNumber = math.random(#defaultEmotes["Emotes"])
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
-
-	d(LorePlay.savedVariables.isIdleEmotesOn)
-
-
+	--d(LorePlay.savedVariables.isIdleEmotesOn)
 	PlayEmoteByIndex(smartEmoteIndex)
 	SmartEmotes.didSmartEmote = true
 end
@@ -313,6 +308,8 @@ end
 
 
 function SmartEmotes.CreateEmotesByCityTable()
+--[[ MAKE GENERAL CITY GABLE AND HAVE ALL OTHER CITIES INSIDE defaultEmotesByCity POINT TO IT ]]
+
 	defaultEmotesByCity = {
 		["Elden Root"] = { 
 			["Emotes"] = {
@@ -696,7 +693,7 @@ end
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
 	if not inCombat then
 		if LorePlay.savedVariables.isIdleEmotesOn then
-			d(LorePlay.savedVariables.isIdleEmotesOn)
+			--d(LorePlay.savedVariables.isIdleEmotesOn)
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
 		end
 		if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end

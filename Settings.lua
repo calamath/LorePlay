@@ -22,26 +22,24 @@ function Settings.LoadSettings()
 		[1] = {
 			type = "header",
 			name = "Smart Emotes",
-			width = "full",	--or "half" (optional)
+			width = "full",
 		},
 		[2] = {
 			type = "description",
-			--title = "My Title",	--(optional)
-			title = nil,	--(optional)
+			title = nil,
 			text = "|cFF0000Don't forget to bind your SmartEmotes button!|r\nContextual, appropriate emotes to perform at the touch of a button.",
-			width = "full",	--or "half" (optional)
+			width = "full",
 		},
 		[3] = {
 			type = "header",
 			name = "Idle Emotes",
-			width = "full",	--or "half" (optional)
+			width = "full",
 		},
 		[4] = {
 			type = "description",
-			--title = "My Title",	--(optional)
-			title = nil,	--(optional)
-			text = "Contextual, automatic emotes that occur when you go idle or AFK.",
-			width = "full",	--or "half" (optional)
+			title = nil,
+			text = "Contextual, automatic emotes that occur when you go idle or AFK (Not moving, not fighting, not stealthing).",
+			width = "full",
 		},
 		[5] = {
 			type = "checkbox",
@@ -49,8 +47,8 @@ function Settings.LoadSettings()
 			tooltip = "Turns on/off the automatic emotes that occur when you go idle or AFK.",
 			getFunc = function() return Settings.savedVariables.isIdleEmotesOn end,
 			setFunc = function(setting) Settings.savedVariables.isIdleEmotesOn = setting ReloadUI() end,
-			width = "full",	--or "half" (optional)
-			warning = "Will ReloadUI.",	--(optional)
+			width = "full",
+			warning = "Will ReloadUI.",
 		},
 	}
 
