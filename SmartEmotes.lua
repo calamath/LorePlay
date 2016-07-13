@@ -326,6 +326,21 @@ function SmartEmotes.CreateEmotesByCityTable()
 
 			}
 		},
+		["Elden Root Services"] = { 
+			["Emotes"] = {
+				[1] = 203,
+				[2] = 203,
+				[3] = 203,
+				[4] = 203,
+				[5] = 177,
+				[6] = 174,
+				[7] = 202,
+				[8] = 99,
+				[9] = 8,
+				[10] = 52
+
+			}
+		},
 		["Skywatch"] = { 
 			["Emotes"] = {
 				[1] = 174,
