@@ -2,11 +2,19 @@ local Settings = LorePlay
 local LAM2
 
 local defaultSettingsTable = {
-	isIdleEmotesOn = true
+	isIdleEmotesOn = true,
+	maraSpouseName = ""
 }
 
 
-function Settings.LoadSettings()
+function Settings.LoadSavedSettings()
+	Settings.savedSettingsTable = defaultSettingsTable
+	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
+	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
+end
+
+
+function Settings.LoadMenuSettings()
 	local panelData = {
 		type = "panel",
 		name = LorePlay.name,
@@ -27,28 +35,46 @@ function Settings.LoadSettings()
 		[2] = {
 			type = "description",
 			title = nil,
-			text = "|cFF0000Don't forget to bind your SmartEmotes button!|r\nContextual, appropriate emotes to perform at the touch of a button.",
+			text = "|cFF0000Don't forget to bind your SmartEmotes button!|r\nContextual, appropriate emotes to perform at the touch of a button.\n",
 			width = "full",
 		},
 		[3] = {
+			type = "editbox",
+			name = "Significant Other's Character Name",
+			tooltip = "For those who have wed with the Ring of Mara, entering the exact character name of your loved one allows for special emotes between you two!\n(Note: Must be friends!)",
+			getFunc = function() return Settings.savedSettingsTable.maraSpouseName end,
+			setFunc = function(input)
+				Settings.savedSettingsTable.maraSpouseName = input
+				Settings.savedVariables.maraSpouseName = Settings.savedSettingsTable.maraSpouseName
+			end,
+			isMultiline = false,
+			width = "full",
+			default = "",
+		},
+		[4] = {
 			type = "header",
 			name = "Idle Emotes",
 			width = "full",
 		},
-		[4] = {
+		[5] = {
 			type = "description",
 			title = nil,
-			text = "Contextual, automatic emotes that occur when you go idle or AFK (Not moving, not fighting, not stealthing).",
+			text = "Contextual, automatic emotes that occur when you go idle or AFK (Not moving, not fighting, not stealthing).\n",
 			width = "full",
 		},
-		[5] = {
+		[6] = {
 			type = "checkbox",
 			name = "Toggle IdleEmotes On/Off",
-			tooltip = "Turns on/off the automatic emotes that occur when you go idle or AFK.",
-			getFunc = function() return Settings.savedVariables.isIdleEmotesOn end,
-			setFunc = function(setting) Settings.savedVariables.isIdleEmotesOn = setting ReloadUI() end,
+			tooltip = "Turns on/off the automatic, contextual emotes that occur when you go idle or AFK.",
+			getFunc = function() return Settings.savedSettingsTable.isIdleEmotesOn end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.isIdleEmotesOn = setting
+				Settings.savedVariables.isIdleEmotesOn = Settings.savedSettingsTable.isIdleEmotesOn
+				if not Settings.savedSettingsTable.isIdleEmotesOn then LorePlay.UnregisterIdleEvents() end
+				LorePlay.InitializeIdle()
+				--ReloadUI() 
+			end,
 			width = "full",
-			warning = "Will ReloadUI.",
 		},
 	}
 
@@ -59,8 +85,9 @@ end
 
 function Settings.InitializeSettings()
 	Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", LorePlay.majorVersion, nil, defaultSettingsTable)
+	Settings.LoadSavedSettings()
 	LAM2 = LibStub("LibAddonMenu-2.0")
-	Settings.LoadSettings()
+	Settings.LoadMenuSettings()
 end
 
 LorePlay = Settings

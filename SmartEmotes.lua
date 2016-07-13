@@ -6,6 +6,7 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND = "EVENT_RETICLE_TARGET_CHANGED_TO_
 local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC"
 local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME"
 local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL"
+local EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE = "EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE"
 local defaultEmotes
 local defaultEmotesByRegion
 local zoneToRegionEmotes
@@ -79,7 +80,6 @@ function SmartEmotes.PerformSmartEmote()
 		randomNumber = math.random(#defaultEmotes["Emotes"])
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
-	--d(LorePlay.savedVariables.isIdleEmotesOn)
 	PlayEmoteByIndex(smartEmoteIndex)
 	SmartEmotes.didSmartEmote = true
 end
@@ -464,6 +464,21 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 				[4] = 137
 			}
 		},
+		[EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE] = {
+			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE,
+			["Emotes"] = {
+				[1] = 70,
+				[2] = 72,
+				[3] = 8,
+				[4] = 137,
+				[5] = 21,
+				[6] = 147,
+				[7] = 39,
+				[8] = 214,
+				[9] = 166,
+				[10] = 21
+			}
+		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC] = {
 			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
 			["Emotes"] = {
@@ -707,14 +722,14 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
 	if not inCombat then
-		if LorePlay.savedVariables.isIdleEmotesOn then
+		if LorePlay.savedSettingsTable.isIdleEmotesOn then
 			--d(LorePlay.savedVariables.isIdleEmotesOn)
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
 		end
 		if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	else
-		if LorePlay.savedVariables.isIdleEmotesOn then
+		if LorePlay.savedSettingsTable.isIdleEmotesOn then
 			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 		end
 	end
@@ -723,12 +738,12 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED(eventCode, mounted)
 	if not mounted then
-		if LorePlay.savedVariables.isIdleEmotesOn then
+		if LorePlay.savedSettingsTable.isIdleEmotesOn then
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
 		end
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	else
-		if LorePlay.savedVariables.isIdleEmotesOn then
+		if LorePlay.savedSettingsTable.isIdleEmotesOn then
 			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 		end
 	end
@@ -780,16 +795,29 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED(eventCod
 end
 
 
+function SmartEmotes.IsTargetSpouse()
+	if GetUnitNameHighlightedByReticle() == LorePlay.savedSettingsTable.maraSpouseName then
+		return true
+	end
+	return false
+end
+
+
+
 function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(eventCode)
 	if IsUnitPlayer("reticleover") then
 		if SmartEmotes.DoesPreviousLatchedEventExist(EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL,
 		EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND, EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
-		EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME) then
+		EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME, EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE) then
 			lastLatchedEvent = emoteFromLatched["EventName"]
 		end
 		local unitTitle = GetUnitTitle("reticleover")
 		if IsUnitFriend("reticleover") then
-			SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND)
+			if SmartEmotes.IsTargetSpouse() then
+				SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE)
+			else
+				SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND)
+			end
 		elseif playerTitles[unitTitle] ~= nil then
 			if GetUnitTitle("player") == playerTitles[unitTitle] then
 				SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME)
@@ -800,7 +828,7 @@ function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(ev
 	elseif not IsUnitPlayer("reticleover") and 
 		SmartEmotes.DoesEmoteFromLatchedEqualEvent(EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL,
 		EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND, EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
-		EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME) then
+		EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME, EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE) then
 			if existsPreviousEvent and eventLatchedEmotes[lastLatchedEvent].Switch() then
 				SmartEmotes.UpdateLatchedEmoteTable(lastLatchedEvent)
 			else

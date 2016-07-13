@@ -136,14 +136,27 @@ function IdleEmotes.OnChatterEvent(eventCode)
 end
 
 
-function IdleEmotes.InitializeIdle()
-	if not LorePlay.savedVariables.isIdleEmotesOn then return end
-	IdleEmotes.CreateIdleEmotesTable()
-	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
+function IdleEmotes.UnregisterIdleEvents()
+	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED)
+	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN)
+	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_CHATTER_END)
+	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+end
+
+
+function IdleEmotes.RegisterIdleEvents()
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", IdleEmotes.idleTime, IdleEmotes.CheckToPerformIdleEmote)
+end
+
+
+function IdleEmotes.InitializeIdle()
+	if not LorePlay.savedSettingsTable.isIdleEmotesOn then return end
+	IdleEmotes.CreateIdleEmotesTable()
+	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
+	IdleEmotes.RegisterIdleEvents()
 end
 
 LorePlay = IdleEmotes
