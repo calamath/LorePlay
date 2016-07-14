@@ -485,7 +485,8 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 				[1] = 142,
 				[2] = 67,
 				[3] = 214,
-				[4] = 24
+				[4] = 24,
+				[5] = 175
 			}
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME] = {
