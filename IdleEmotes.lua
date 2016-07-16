@@ -44,7 +44,8 @@ function IdleEmotes.CreateIdleEmotesTable()
 			[5] = 1,
 			[6] = 122,
 			[7] = 101,
-			[8] = 154
+			[8] = 154,
+			[9] = 1
 		}
 	}
 end
