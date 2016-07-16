@@ -65,6 +65,7 @@ end
 
 
 function IdleEmotes.PerformIdleEmote()
+	-- Doubles the time checked for Idling to allow IdleEmotes to persist longer
 	if didIdleEmote then
 		didIdleEmote = false
 		return

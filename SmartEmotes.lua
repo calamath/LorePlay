@@ -308,7 +308,21 @@ end
 
 
 function SmartEmotes.CreateEmotesByCityTable()
---[[ MAKE GENERAL CITY GABLE AND HAVE ALL OTHER CITIES INSIDE defaultEmotesByCity POINT TO IT ]]
+	local defaultCityToRegionEmotes = {
+		["AD"] = {
+			[1] = 
+		},
+		["EP"] = {
+			[1] = 
+		},
+		["DC"] = {
+			[1] = 
+		},
+		["Other"] = {
+			[1] = 
+		}
+	}
+
 
 	defaultEmotesByCity = {
 		["Elden Root"] = { 
@@ -322,7 +336,8 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[7] = 202,
 				[8] = 99,
 				[9] = 8,
-				[10] = 52
+				[10] = 52,
+				[11] = 184
 
 			}
 		},
@@ -337,11 +352,12 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[7] = 202,
 				[8] = 99,
 				[9] = 8,
-				[10] = 52
+				[10] = 52,
+				[11] = 184
 
 			}
 		},
-		["Skywatch"] = { 
+		["Vulkhel Guard"] = { 
 			["Emotes"] = {
 				[1] = 174,
 				[2] = 8,
@@ -352,7 +368,8 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[7] = 121,
 				[8] = 52,
 				[9] = 9,
-				[10] = 91
+				[10] = 91,
+				[11] = 182
 			}
 		},
 		["Mournhold"] = {
@@ -363,7 +380,8 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[4] = 52,
 				[5] = 203,
 				[6] = 203,
-				[7] = 121
+				[7] = 121,
+				[8] = 185
 
 			}
 		},
@@ -378,7 +396,8 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[7] = 209,
 				[8] = 64,
 				[9] = 174,
-				[10] = 52
+				[10] = 52,
+				[11] = 188
 			}
 		},
 		["Riften"] = { 
@@ -391,7 +410,8 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[6] = 79,
 				[7] = 209,
 				[8] = 64,
-				[10] = 52
+				[10] = 52,
+				[11] = 188
 			}
 		},
 		["Wayrest"] = {
@@ -409,8 +429,114 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[11] = 95,
 				[12] = 95,
 				[13] = 203,
-				[14] = 203
+				[14] = 203,
+				[15] = 181
 			}
+		},
+		["Abah's Landing"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Aldcroft"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Anvil"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["Other"]
+		},
+		["Arenthia"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Baandari Trading Post"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Belkarth"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Camlorn"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Clockwork City"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
+		["Daggerfall"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Davon's Watch"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
+		["Dune"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Ebonheart"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
+		["Elinhir"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Evermore"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Firsthold"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Hallin's Stand"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Haven"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Hollow City"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["Other"]
+		},
+		["Imperial City"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["Other"]
+		},
+		["Kozanset"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Kragenmoor"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
+		["Kvatch"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["Other"]
+		},
+		["Marbruk"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Mistral"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Northpoint"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Orsinium"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Port Hunding"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Rawl'kha"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Sentinel"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Shornhelm"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Silvenar"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Stormhold"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
+		["Tava's Blessing"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Skywatch"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
+		["Woodhearth"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
 		}
 	}
 end
