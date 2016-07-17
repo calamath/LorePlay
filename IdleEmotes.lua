@@ -1,6 +1,6 @@
 local IdleEmotes = LorePlay
 
-IdleEmotes.idleTime = 15000 -- time period in miliseconds to check whether player is idle
+local idleTime = 15000 -- time period in miliseconds to check whether player is idle
 local isPlayerStealthed
 local currentPlayerX, currentPlayerY
 local idleTable
@@ -129,11 +129,39 @@ function IdleEmotes.CheckToPerformIdleEmote()
 end
 
 
+function IdleEmotes.OnPlayerCombatStateEvent(eventCode, inCombat)
+	if not inCombat then
+		if LorePlay.savedSettingsTable.isIdleEmotesOn then
+			--d(LorePlay.savedVariables.isIdleEmotesOn)
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, LorePlay.CheckToPerformIdleEmote)
+		end
+	else
+		if LorePlay.savedSettingsTable.isIdleEmotesOn then
+			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+		end
+	end
+end
+
+
+
+function IdleEmotes.OnMountedEvent(eventCode, mounted)
+	if not mounted then
+		if LorePlay.savedSettingsTable.isIdleEmotesOn then
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+		end
+	else
+		if LorePlay.savedSettingsTable.isIdleEmotesOn then
+			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+		end
+	end
+end
+
+
 function IdleEmotes.OnChatterEvent(eventCode)
 	if eventCode == EVENT_CHATTER_BEGIN then
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	else
-		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", IdleEmotes.idleTime, IdleEmotes.CheckToPerformIdleEmote)
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 	end
 end
 
@@ -147,10 +175,12 @@ end
 
 
 function IdleEmotes.RegisterIdleEvents()
+	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
+	LPEventHandler.RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
-	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", IdleEmotes.idleTime, IdleEmotes.CheckToPerformIdleEmote)
+	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 end
 
 

@@ -21,6 +21,7 @@ libs\LibAddonMenu-2.0\controls\texture.lua
 libs\LibAddonMenu-2.0\controls\iconpicker.lua
 
 LorePlay.lua
+LPEventHandler.lua
 SmartEmotes.lua
 IdleEmotes.lua
 bindings.xml
