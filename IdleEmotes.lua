@@ -16,14 +16,12 @@ function IdleEmotes.CreateIdleEmotesTable()
 			[4] = 121,
 			[5] = 123,
 			[6] = 85,
-			[7] = 116,
-			[8] = 118,
+			[7] = 201,
+			[8] = 15,
 			[9] = 10,
 			[10] = 172,
 			[11] = 84,
-			[12] = 102,
-			[13] = 15,
-			[14] = 201
+			[12] = 102
 		},
 		["City"] = {
 			[1] = 202,
@@ -133,7 +131,7 @@ function IdleEmotes.OnPlayerCombatStateEvent(eventCode, inCombat)
 	if not inCombat then
 		if LorePlay.savedSettingsTable.isIdleEmotesOn then
 			--d(LorePlay.savedVariables.isIdleEmotesOn)
-			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, LorePlay.CheckToPerformIdleEmote)
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
 	else
 		if LorePlay.savedSettingsTable.isIdleEmotesOn then
@@ -167,11 +165,16 @@ end
 
 
 function IdleEmotes.UnregisterIdleEvents()
-	LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, LorePlay.OnMountedEvent)
-	LPEventHandler.UnregisterForEvent(EVENT_PLAYER_COMBAT_STATE, LorePlay.OnPlayerCombatStateEvent)
+	LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
+	LPEventHandler.UnregisterForEvent(EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
+	LPEventHandler.UnregisterForEvent(EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
+	LPEventHandler.UnregisterForEvent(EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
+	LPEventHandler.UnregisterForEvent(EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
+	--[[
 	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED)
 	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN)
 	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_CHATTER_END)
+	]]--
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 end
 
@@ -179,9 +182,15 @@ end
 function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
 	LPEventHandler.RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
+	LPEventHandler.RegisterForEvent(EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
+	LPEventHandler.RegisterForEvent(EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
+	LPEventHandler.RegisterForEvent(EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
+
+	--[[
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
 	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
+	]]--
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 end
 

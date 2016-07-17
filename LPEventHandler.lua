@@ -12,15 +12,17 @@ eventToFunctionTable = {
 	[EVENT_LOW_FALL_DAMAGE] = {},
 	[EVENT_SKILL_POINTS_CHANGED] = {},
 	[EVENT_RETICLE_TARGET_CHANGED] = {},
-	[EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE] = {}
+	[EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE] = {},
+	[EVENT_STEALTH_STATE_CHANGED] = {},
+	[EVENT_CHATTER_BEGIN] = {},
+	[EVENT_CHATTER_END] = {}
 }
 
 
 
 local function CallEventFunctions(eventCode, ...)
-	if #eventToFunctionTable[eventCode] == nil then return end
+	if #eventToFunctionTable[eventCode] == 0 then return end
 	local numOfFuncs = #eventToFunctionTable[eventCode]
-	--local arg = {...}
 	for i = 1, numOfFuncs, 1 do
 		eventToFunctionTable[eventCode][i](eventCode, ...)
 		--d("Function called!")
@@ -28,10 +30,9 @@ local function CallEventFunctions(eventCode, ...)
 end
 
 
-
 function LPEventHandler.UnregisterForEvent(eventCode, functionName)
 	if eventCode == nil or functionName == nil then return end
-	if #eventToFunctionTable[eventCode] ~= nil then
+	if #eventToFunctionTable[eventCode] ~= 0 then
 		local numOfFuncs = #eventToFunctionTable[eventCode]
 		local didUnregister = false
 		for i = 1, numOfFuncs, 1 do
@@ -39,10 +40,14 @@ function LPEventHandler.UnregisterForEvent(eventCode, functionName)
 				eventToFunctionTable[eventCode][i] = eventToFunctionTable[eventCode][numOfFuncs]
 				eventToFunctionTable[eventCode][numOfFuncs] = nil
 				didUnregister = true
+				numOfFuncs = numOfFuncs - 1
+				if numOfFuncs == 0 then
+					EVENT_MANAGER:UnregisterForEvent(LorePlay.name, eventCode)
+				end
 				break
 			end
 		end
-		if not didUnregister then d("No "..tostring(functionName).." for event "..eventCode) end
+		if not didUnregister then d("Function trying to be removed isn't registered with event "..eventCode) end
 	else
 		d("No function registered yet for "..eventCode)
 	end
@@ -51,8 +56,9 @@ end
 
 function LPEventHandler.RegisterForEvent(eventCode, functionName)
 	if eventCode == nil or functionName == nil then return end
-	if #eventToFunctionTable[eventCode] ~= nil then
+	if #eventToFunctionTable[eventCode] ~= 0 then
 		local numOfFuncs = #eventToFunctionTable[eventCode]
+		--zo_callLater(function() d("Event "..eventCode.." NOT registered!") d("Num of registered funcs "..numOfFuncs) d("Contents of "..tostring(eventToFunctionTable[eventCode])) end, 2000)
 		for i = 1, numOfFuncs, 1 do
 			if eventToFunctionTable[eventCode][i] == functionName then
 				d("Function already registered for event "..eventCode)
@@ -62,11 +68,13 @@ function LPEventHandler.RegisterForEvent(eventCode, functionName)
 		eventToFunctionTable[eventCode][numOfFuncs + 1] = functionName
 	else
 		eventToFunctionTable[eventCode][1] = functionName
+		EVENT_MANAGER:RegisterForEvent(LorePlay.name, eventCode, CallEventFunctions)
+		--zo_callLater(function() d("Event registered!") end, 5000)
 	end
 end
 
 
-
+--[[
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_NOT_SWIMMING, CallEventFunctions)
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, CallEventFunctions)
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, CallEventFunctions)
@@ -79,3 +87,4 @@ EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOW_FALL_DAMAGE, CallEventFu
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_SKILL_POINTS_CHANGED, CallEventFunctions)
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_RETICLE_TARGET_CHANGED, CallEventFunctions)
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, CallEventFunctions)
+]]--
