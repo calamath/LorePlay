@@ -167,6 +167,8 @@ end
 
 
 function IdleEmotes.UnregisterIdleEvents()
+	LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, LorePlay.OnMountedEvent)
+	LPEventHandler.UnregisterForEvent(EVENT_PLAYER_COMBAT_STATE, LorePlay.OnPlayerCombatStateEvent)
 	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED)
 	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN)
 	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_CHATTER_END)

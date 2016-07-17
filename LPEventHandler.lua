@@ -23,14 +23,29 @@ local function CallEventFunctions(eventCode, ...)
 	--local arg = {...}
 	for i = 1, numOfFuncs, 1 do
 		eventToFunctionTable[eventCode][i](eventCode, ...)
-		d("Function called!")
+		--d("Function called!")
 	end
 end
 
 
 
 function LPEventHandler.UnregisterForEvent(eventCode, functionName)
-if eventCode == nil or functionName == nil then return end
+	if eventCode == nil or functionName == nil then return end
+	if #eventToFunctionTable[eventCode] ~= nil then
+		local numOfFuncs = #eventToFunctionTable[eventCode]
+		local didUnregister = false
+		for i = 1, numOfFuncs, 1 do
+			if eventToFunctionTable[eventCode][i] == functionName then
+				eventToFunctionTable[eventCode][i] = eventToFunctionTable[eventCode][numOfFuncs]
+				eventToFunctionTable[eventCode][numOfFuncs] = nil
+				didUnregister = true
+				break
+			end
+		end
+		if not didUnregister then d("No "..tostring(functionName).." for event "..eventCode) end
+	else
+		d("No function registered yet for "..eventCode)
+	end
 end
 
 
@@ -40,7 +55,7 @@ function LPEventHandler.RegisterForEvent(eventCode, functionName)
 		local numOfFuncs = #eventToFunctionTable[eventCode]
 		for i = 1, numOfFuncs, 1 do
 			if eventToFunctionTable[eventCode][i] == functionName then
-				d("Function already registered for "..eventCode)
+				d("Function already registered for event "..eventCode)
 				return
 			end
 		end
