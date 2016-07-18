@@ -3,12 +3,32 @@ local IdleEmotes = LorePlay
 local idleTime = 15000 -- time period in miliseconds to check whether player is idle
 local isPlayerStealthed
 local currentPlayerX, currentPlayerY
-local idleTable
+local emoteFromEvent
+local defaultIdleTable
+local eventIdleTable
 local didIdleEmote = false
 
 
-function IdleEmotes.CreateIdleEmotesTable()
-	idleTable = {
+function IdleEmotes.CreateEventIdleEmotesTable()
+	eventIdleTable = {
+		["isEnabled"] = false,
+		[EVENT_TRADE_INVITE_ACCEPTED] = {
+			[1] = 76,
+			[2] = 35,
+			[3] = 19,
+			[4] = 36,
+			[5] = 50,
+			[6] = 41,
+			[7] = 153,
+			[8] = 15,
+			[9] = 154
+		}
+	}
+end
+
+
+function IdleEmotes.CreateDefaultIdleEmotesTable()
+	defaultIdleTable = {
 		["Zone"] = {
 			[1] = 99,
 			[2] = 119,
@@ -64,17 +84,32 @@ end
 
 
 function IdleEmotes.PerformIdleEmote()
-	-- Doubles the time checked for Idling to allow IdleEmotes to persist longer
-	if didIdleEmote then
-		didIdleEmote = false
-		return
-	end
 	if IsPlayerMoving() then return end
-	local location = IdleEmotes.GetLocation()
-	local randomEmote = math.random(#idleTable[location])
-	local currIdleEmote = idleTable[location][randomEmote]
+	local randomEmote
+	local currIdleEmote
+	if eventIdleTable["isEnabled"] then
+		randomEmote = math.random(#emoteFromEvent)
+		currIdleEmote = emoteFromEvent[randomEmote]
+	else
+		-- Doubles the time checked for Idling to allow IdleEmotes to persist longer
+		if didIdleEmote then
+			didIdleEmote = false
+			return
+		end
+		local location = IdleEmotes.GetLocation()
+		randomEmote = math.random(#defaultIdleTable[location])
+		currIdleEmote = defaultIdleTable[location][randomEmote]
+	end
 	PlayEmoteByIndex(currIdleEmote)
 	didIdleEmote = true
+end
+
+
+function IdleEmotes.UpdateEmoteFromEvent(eventCode)
+	emoteFromEvent = eventIdleTable[eventCode]
+	if not eventIdleTable["isEnabled"] then
+		eventIdleTable["isEnabled"] = true
+	end
 end
 
 
@@ -127,10 +162,25 @@ function IdleEmotes.CheckToPerformIdleEmote()
 end
 
 
+function IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED(eventCode)
+	if eventCode ~= EVENT_TRADE_INVITE_ACCEPTED then return end
+	IdleEmotes.UpdateEmoteFromEvent(eventCode)
+end
+
+
+function IdleEmotes.OnTradeEvent_For_TRADE_CESSATION(eventCode)
+	--if eventCode ~= EVENT_TRADE_SUCCEEDED or eventCode ~= EVENT_TRADE_CANCELED then return end
+	--d("You got this far!"..eventCode)
+	if emoteFromEvent == eventIdleTable[EVENT_TRADE_INVITE_ACCEPTED] then
+		--d("Emote from event WAS trade invite accepted")
+		eventIdleTable["isEnabled"] = false
+	end
+end
+
+
 function IdleEmotes.OnPlayerCombatStateEvent(eventCode, inCombat)
 	if not inCombat then
 		if LorePlay.savedSettingsTable.isIdleEmotesOn then
-			--d(LorePlay.savedVariables.isIdleEmotesOn)
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
 	else
@@ -139,7 +189,6 @@ function IdleEmotes.OnPlayerCombatStateEvent(eventCode, inCombat)
 		end
 	end
 end
-
 
 
 function IdleEmotes.OnMountedEvent(eventCode, mounted)
@@ -170,11 +219,9 @@ function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler.UnregisterForEvent(EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
 	LPEventHandler.UnregisterForEvent(EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
 	LPEventHandler.UnregisterForEvent(EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
-	--[[
-	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED)
-	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN)
-	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, EVENT_CHATTER_END)
-	]]--
+	LPEventHandler.UnregisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
+	LPEventHandler.UnregisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler.UnregisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 end
 
@@ -185,19 +232,17 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler.RegisterForEvent(EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
 	LPEventHandler.RegisterForEvent(EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
 	LPEventHandler.RegisterForEvent(EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
-
-	--[[
-	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
-	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
-	EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
-	]]--
+	LPEventHandler.RegisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
+	LPEventHandler.RegisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler.RegisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 end
 
 
 function IdleEmotes.InitializeIdle()
 	if not LorePlay.savedSettingsTable.isIdleEmotesOn then return end
-	IdleEmotes.CreateIdleEmotesTable()
+	IdleEmotes.CreateDefaultIdleEmotesTable()
+	IdleEmotes.CreateEventIdleEmotesTable()
 	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
 	IdleEmotes.RegisterIdleEvents()
 end

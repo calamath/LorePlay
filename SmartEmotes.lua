@@ -705,7 +705,6 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 end
 
 
-
 function SmartEmotes.CreateTTLEmoteEventTable()
 	-- Duration in miliseconds that the emote should be playable
 	local defaultDuration = 30000
@@ -798,9 +797,10 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 		[EVENT_TRADE_SUCCEEDED] = {
 			["EventName"] = EVENT_TRADE_SUCCEEDED,
 			["Emotes"] = {
-				[1] = 151
+				[1] = 151,
+				[2] = 130
 			},
-			["Duration"] = defaultDuration*(2/3)
+			["Duration"] = defaultDuration/2
 		},
 		[EVENT_TRADE_CANCELED] = {
 			["EventName"] = EVENT_TRADE_CANCELED,
@@ -818,7 +818,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[11] = 44,
 				[12] = 152
 			},
-			["Duration"] = defaultDuration*(2/3)
+			["Duration"] = defaultDuration/2
 		},
 		[EVENT_SKILL_POINTS_CHANGED] = {
 			["EventName"] = EVENT_SKILL_POINTS_CHANGED,
@@ -850,10 +850,22 @@ function SmartEmotes.IsPlayerInCity(POI)
 end
 
 
-
 function SmartEmotes.IsPlayerInDungeon(POI, zoneName)
 	if defaultEmotesByCity[POI] == nil then
 		if zoneToRegionEmotes[zoneName] == nil then 
+			return true
+		end
+	end
+	return false
+end
+
+
+-- Here we pass in event codes
+function SmartEmotes.DoesEmoteFromTTLEqualEvent(...)
+	if not eventTTLEmotes["isEnabled"] then return false end
+	local arg = {...}
+	for i = 1, #arg, 1 do
+		if emoteFromTTL["EventName"] == eventTTLEmotes[arg[i]]["EventName"] then
 			return true
 		end
 	end
@@ -925,45 +937,11 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode
 end
 
 
---[[
-function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
-	if not inCombat then
-		if LorePlay.savedSettingsTable.isIdleEmotesOn then
-			--d(LorePlay.savedVariables.isIdleEmotesOn)
-			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
-		end
-		if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
-		SmartEmotes.UpdateTTLEmoteTable(eventCode)
-	else
-		if LorePlay.savedSettingsTable.isIdleEmotesOn then
-			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
-		end
-	end
-end
-]]--
-
-
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED(eventCode, mounted)
 	if not mounted then
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	end
 end
-
-
---[[
-function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED(eventCode, mounted)
-	if not mounted then
-		if LorePlay.savedSettingsTable.isIdleEmotesOn then
-			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.idleTime, LorePlay.CheckToPerformIdleEmote)
-		end
-		SmartEmotes.UpdateTTLEmoteTable(eventCode)
-	else
-		if LorePlay.savedSettingsTable.isIdleEmotesOn then
-			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
-		end
-	end
-end
-]]--
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE(eventCode, categoryIndex, collectionIndex, bookIndex, guildIndex, skillType, skillIndex, rank, previousXP, currentXP)
@@ -1020,8 +998,8 @@ function SmartEmotes.IsTargetSpouse()
 end
 
 
-
 function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(eventCode)
+	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then return end
 	if IsUnitPlayer("reticleover") then
 		if SmartEmotes.DoesPreviousLatchedEventExist(EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL,
 		EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND, EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
@@ -1072,35 +1050,27 @@ function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE(eventCode, u
 end
 
 
+function SmartEmotes.RegisterSmartEvents()
+	LPEventHandler.RegisterForEvent(EVENT_LEVEL_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
+	LPEventHandler.RegisterForEvent(EVENT_PLAYER_NOT_SWIMMING, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
+	LPEventHandler.RegisterForEvent(EVENT_POWER_UPDATE, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE)
+	LPEventHandler.RegisterForEvent(EVENT_TRADE_CANCELED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED)
+	LPEventHandler.RegisterForEvent(EVENT_TRADE_SUCCEEDED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED)
+	LPEventHandler.RegisterForEvent(EVENT_HIGH_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
+	LPEventHandler.RegisterForEvent(EVENT_LOW_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
+	LPEventHandler.RegisterForEvent(EVENT_SKILL_POINTS_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED)
+	LPEventHandler.RegisterForEvent(EVENT_RETICLE_TARGET_CHANGED, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED)
+	LPEventHandler.RegisterForEvent(EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
+	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
+	LPEventHandler.RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
+end
+
+
 function SmartEmotes.InitializeEmotes()
 	SmartEmotes.CreateTTLEmoteEventTable()
 	SmartEmotes.CreateLatchedEmoteEventTable()
 	SmartEmotes.CreateDefaultEmoteTables()
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LEVEL_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
-	LPEventHandler.RegisterForEvent(EVENT_LEVEL_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
-	LPEventHandler.RegisterForEvent(EVENT_PLAYER_NOT_SWIMMING, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_NOT_SWIMMING, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
-	LPEventHandler.RegisterForEvent(EVENT_POWER_UPDATE, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_POWER_UPDATE, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE)
-	LPEventHandler.RegisterForEvent(EVENT_TRADE_CANCELED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_TRADE_CANCELED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED)
-	LPEventHandler.RegisterForEvent(EVENT_TRADE_SUCCEEDED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_TRADE_SUCCEEDED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED)
-	LPEventHandler.RegisterForEvent(EVENT_HIGH_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_HIGH_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
-	LPEventHandler.RegisterForEvent(EVENT_LOW_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOW_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
-	LPEventHandler.RegisterForEvent(EVENT_SKILL_POINTS_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_SKILL_POINTS_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED)
-	LPEventHandler.RegisterForEvent(EVENT_RETICLE_TARGET_CHANGED, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_RETICLE_TARGET_CHANGED, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED)
-	LPEventHandler.RegisterForEvent(EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
-	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
-	LPEventHandler.RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
-	--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOOT_RECEIVED, ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_LOOT_RECEIVED)
+	SmartEmotes.RegisterSmartEvents()
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
 end
 

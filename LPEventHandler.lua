@@ -15,7 +15,8 @@ eventToFunctionTable = {
 	[EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE] = {},
 	[EVENT_STEALTH_STATE_CHANGED] = {},
 	[EVENT_CHATTER_BEGIN] = {},
-	[EVENT_CHATTER_END] = {}
+	[EVENT_CHATTER_END] = {},
+	[EVENT_TRADE_INVITE_ACCEPTED] = {}
 }
 
 
@@ -72,19 +73,3 @@ function LPEventHandler.RegisterForEvent(eventCode, functionName)
 		--zo_callLater(function() d("Event registered!") end, 5000)
 	end
 end
-
-
---[[
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_NOT_SWIMMING, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LEVEL_UPDATE, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_POWER_UPDATE, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_TRADE_CANCELED, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_TRADE_SUCCEEDED, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_HIGH_FALL_DAMAGE, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LOW_FALL_DAMAGE, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_SKILL_POINTS_CHANGED, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_RETICLE_TARGET_CHANGED, CallEventFunctions)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, CallEventFunctions)
-]]--
