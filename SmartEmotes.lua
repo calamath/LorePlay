@@ -27,7 +27,8 @@ local playerTitles = {
 	["Ophidian Overlord"] = "Ophidian Overlord",
 	["Savior of Nirn"] = "Savior of Nirn",
 	["Daedric Lord Slayer"] = "Daedric Lord Slayer",
-	["Tamriel Hero"] = "Tamriel Hero"
+	["Tamriel Hero"] = "Tamriel Hero",
+	["Maelstrom Arena Champion"] = "Maelstrom Arena Champion"
 }
 
 SmartEmotes.didSmartEmote = false
@@ -324,7 +325,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 			[12] = 72,
 			[13] = 182,
 			[14] = 187,
-			[15] = 52
+			[15] = 52,
+			[16] = 8,
+			[17] = 79
 		},
 		["EP"] = {
 			[1] = 174,
@@ -341,7 +344,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 			[12] = 72,
 			[13] = 188,
 			[14] = 183,
-			[15] = 100
+			[15] = 100,
+			[16] = 8,
+			[17] = 79
 		},
 		["DC"] = {
 			[1] = 25,
@@ -359,7 +364,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 			[13] = 181,
 			[14] = 5,
 			[15] = 189,
-			[16] = 190
+			[16] = 190,
+			[17] = 8,
+			[18] = 79
 		},
 		["Other"] = {
 			[1] = 177,
@@ -371,7 +378,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 			[7] = 6,
 			[8] = 7,
 			[9] = 211,
-			[10] = 100
+			[10] = 100,
+			[11] = 8,
+			[12] = 79
 		}
 	}
 
@@ -392,7 +401,8 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[11] = 184,
 				[12] = 5,
 				[13] = 6,
-				[14] = 7
+				[14] = 7,
+				[15] = 79
 			}
 		},
 		["Elden Root Services"] = { 
@@ -410,7 +420,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[11] = 184,
 				[12] = 5,
 				[13] = 6,
-				[14] = 7
+				[14] = 7,
+				[15] = 79,
+				[16] = 8
 			}
 		},
 		["Vulkhel Guard"] = { 
@@ -428,7 +440,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[11] = 182,
 				[12] = 5,
 				[13] = 6,
-				[14] = 7
+				[14] = 7,
+				[15] = 79,
+				[16] = 8
 			}
 		},
 		["Mournhold"] = {
@@ -443,7 +457,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[8] = 185,
 				[9] = 5,
 				[10] = 6,
-				[11] = 7
+				[11] = 7,
+				[12] = 79,
+				[13] = 8
 			}
 		},
 		["Windhelm"] = { 
@@ -460,7 +476,8 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[10] = 52,
 				[11] = 188,
 				[12] = 6,
-				[13] = 7
+				[13] = 7,
+				[14] = 8
 			}
 		},
 		["Riften"] = { 
@@ -476,7 +493,8 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[10] = 52,
 				[11] = 188,
 				[12] = 6,
-				[13] = 7
+				[13] = 7,
+				[14] = 8
 			}
 		},
 		["Wayrest"] = {
@@ -498,7 +516,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[15] = 181,
 				[16] = 5,
 				[17] = 6,
-				[18] = 7
+				[18] = 7,
+				[19] = 8,
+				[20] = 79
 			}
 		},
 		["Abah's Landing"] = { 
@@ -682,7 +702,8 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 				[2] = 67,
 				[3] = 214,
 				[4] = 24,
-				[5] = 175
+				[5] = 175,
+				[6] = 142
 			}
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME] = {
@@ -753,11 +774,11 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["EventName"] = EVENT_HIGH_FALL_DAMAGE,
 			["Emotes"] = {
 				[1] = 115,
-				[3] = 149,
-				[4] = 12,
-				[5] = 168,
-				[6] = 133,
-				[7] = 80,
+				[2] = 149,
+				[3] = 12,
+				[4] = 168,
+				[5] = 133,
+				[6] = 80
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},

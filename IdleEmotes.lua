@@ -52,7 +52,8 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 			[6] = 195,
 			[7] = 8,
 			[8] = 174,
-			[9] = 107
+			[9] = 107,
+			[10] = 79
 		},
 		["Dungeon"] = {
 			[1] = 195,
@@ -91,7 +92,7 @@ function IdleEmotes.PerformIdleEmote()
 		randomEmote = math.random(#emoteFromEvent)
 		currIdleEmote = emoteFromEvent[randomEmote]
 	else
-		-- Doubles the time checked for Idling to allow IdleEmotes to persist longer
+		-- Doubles the time checked for Idling to allow current IdleEmote to persist longer
 		if didIdleEmote then
 			didIdleEmote = false
 			return
@@ -169,10 +170,7 @@ end
 
 
 function IdleEmotes.OnTradeEvent_For_TRADE_CESSATION(eventCode)
-	--if eventCode ~= EVENT_TRADE_SUCCEEDED or eventCode ~= EVENT_TRADE_CANCELED then return end
-	--d("You got this far!"..eventCode)
 	if emoteFromEvent == eventIdleTable[EVENT_TRADE_INVITE_ACCEPTED] then
-		--d("Emote from event WAS trade invite accepted")
 		eventIdleTable["isEnabled"] = false
 	end
 end
