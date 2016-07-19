@@ -977,24 +977,6 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 end
 
 
-
-
---[[
-function SmartEmotes.UpdateDefaultEmotesTable()
-	local location = GetPlayerLocationName()
-	local zoneName = GetPlayerActiveZoneName()
-
-	-- Must remain in this order for proper detection
-	if SmartEmotes.IsPlayerInCity(location) then
-		defaultEmotes = defaultEmotesByCity[location]
-	elseif SmartEmotes.IsPlayerInZone(zoneName) then
-		defaultEmotes = zoneToRegionEmotes[zoneName]
-	elseif SmartEmotes.IsPlayerInDungeon(location, zoneName) then
-		defaultEmotes = defaultEmotesForDungeons
-	end
-end
-]]--
-
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE(eventCode)
 	SmartEmotes.UpdateTTLEmoteTable(eventCode)
 end
