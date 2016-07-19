@@ -21,12 +21,12 @@ libs\LibAddonMenu-2.0\controls\texture.lua
 libs\LibAddonMenu-2.0\controls\iconpicker.lua
 
 LorePlay.lua
-LPEventHandler.lua
-SmartEmotes.lua
-IdleEmotes.lua
-bindings.xml
-bindings.lua
-Settings.lua
+code\LPEventHandler.lua
+code\SmartEmotes.lua
+code\IdleEmotes.lua
+bindings\bindings.xml
+bindings\bindings.lua
+code\Settings.lua
 
 
 ; DISCLOSURE:
