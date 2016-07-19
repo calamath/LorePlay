@@ -7,6 +7,8 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC = "EVENT_RETICLE_TARGET_CHANGED_TO_EP
 local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME"
 local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL"
 local EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE = "EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE"
+local EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT"
+local EVENT_PLAYER_COMBAT_STATE_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_INCOMBAT"
 local defaultEmotes
 local defaultEmotesByRegion
 local zoneToRegionEmotes
@@ -647,11 +649,31 @@ function SmartEmotes.CreateDungeonTable()
 end
 
 
+function SmartEmotes.CreateDolmenTable()
+	defaultEmotesForDolmens = {
+		["Emotes"] = {
+			[1] = 63,
+			[2] = 110,
+			[3] = 101,
+			[4] = 102,
+			[5] = 52,
+			[6] = 22,
+			[7] = 171,
+			[8] = 63,
+			[9] = 22,
+			[10] = 110,
+			[11] = 152
+		}
+	}
+end
+
+
 function SmartEmotes.CreateDefaultEmoteTables()
 	SmartEmotes.CreateEmotesByRegionTable()
 	SmartEmotes.CreateZoneToRegionEmotesTable()
 	SmartEmotes.CreateEmotesByCityTable()
 	SmartEmotes.CreateDungeonTable()
+	SmartEmotes.CreateDolmenTable()
 end
 
 
@@ -801,8 +823,8 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
-		[EVENT_PLAYER_COMBAT_STATE] = {
-			["EventName"] = EVENT_PLAYER_COMBAT_STATE,
+		[EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT] = {
+			["EventName"] = EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT,
 			["Emotes"] = {
 				[1] = 78,
 				[2] = 162,
@@ -812,6 +834,16 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[6] = 119,
 				[7] = 200,
 				[8] = 39
+			},
+			["Duration"] = defaultDuration*(2/3)
+		},
+		[EVENT_PLAYER_COMBAT_STATE_INCOMBAT] = {
+			["EventName"] = EVENT_PLAYER_COMBAT_STATE_INCOMBAT,
+			["Emotes"] = {
+				[1] = 27,
+				[2] = 160,
+				[3] = 164,
+				[4] = 106
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -881,6 +913,14 @@ function SmartEmotes.IsPlayerInDungeon(POI, zoneName)
 end
 
 
+function SmartEmotes.IsPlayerInDolmen(POI)
+	if PlainStringFind(POI, "Dolmen") then
+		return true
+	end
+	return false
+end
+
+
 -- Here we pass in event codes
 function SmartEmotes.DoesEmoteFromTTLEqualEvent(...)
 	if not eventTTLEmotes["isEnabled"] then return false end
@@ -927,6 +967,8 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 	-- Must remain in this order for proper detection
 	if SmartEmotes.IsPlayerInCity(location) then
 		defaultEmotes = defaultEmotesByCity[location]
+	elseif SmartEmotes.IsPlayerInDolmen(location) then
+		defaultEmotes = defaultEmotesForDolmens
 	elseif SmartEmotes.IsPlayerInZone(zoneName) then
 		defaultEmotes = zoneToRegionEmotes[zoneName]
 	elseif SmartEmotes.IsPlayerInDungeon(location, zoneName) then
@@ -934,6 +976,24 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 	end
 end
 
+
+
+
+--[[
+function SmartEmotes.UpdateDefaultEmotesTable()
+	local location = GetPlayerLocationName()
+	local zoneName = GetPlayerActiveZoneName()
+
+	-- Must remain in this order for proper detection
+	if SmartEmotes.IsPlayerInCity(location) then
+		defaultEmotes = defaultEmotesByCity[location]
+	elseif SmartEmotes.IsPlayerInZone(zoneName) then
+		defaultEmotes = zoneToRegionEmotes[zoneName]
+	elseif SmartEmotes.IsPlayerInDungeon(location, zoneName) then
+		defaultEmotes = defaultEmotesForDungeons
+	end
+end
+]]--
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE(eventCode)
 	SmartEmotes.UpdateTTLEmoteTable(eventCode)
@@ -951,9 +1011,11 @@ end
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
+	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
 	if not inCombat then
-		if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
-		SmartEmotes.UpdateTTLEmoteTable(eventCode)
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT)
+	else
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_INCOMBAT)
 	end
 end
 
