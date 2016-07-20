@@ -92,7 +92,7 @@ function Settings.LoadMenuSettings()
 		[8] = {
 			type = "description",
 			title = nil,
-			text = "Test stuff blah blah blah.\n", --[[ MAKE SURE TO UPDATE BEFORE LAUNCHING ]]--
+			text = "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically equip his/her favorite (or a random) costume anytime he/she enters a city, and unequip upon exiting.\n",
 			width = "full",
 		},
 		[9] = {
@@ -113,7 +113,7 @@ function Settings.LoadMenuSettings()
 		},
 		[10] = {
 			type = "checkbox",
-			name = "Allow Activation While Mounted",
+			name = "Allow Equip While Mounted",
 			tooltip = "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.",
 			getFunc = function() return Settings.savedSettingsTable.canActivateLWClothesWhileMounted end,
 			setFunc = function(setting) 
@@ -125,13 +125,14 @@ function Settings.LoadMenuSettings()
 		[11] = {
 			type = "checkbox",
 			name = "Use Favorite Costume",
-			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to randomly picking from the defaults randomly.",
+			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to picking from the defaults randomly.",
 			getFunc = function() return Settings.savedSettingsTable.isUsingFavoriteCostume end,
 			setFunc = function(setting) 
 				Settings.savedSettingsTable.isUsingFavoriteCostume = setting
 				Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume 
 			end,
 			width = "full",
+			default = false,
 		},
 		[12] = {
 		type = "button",
@@ -139,11 +140,12 @@ function Settings.LoadMenuSettings()
 		tooltip = "Sets the current costume your character is wearing as his/her favorite costume, allowing him/her to automatically put it on/off when entering/exiting cities.",
 		func = function()
 			local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+			if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
 			Settings.savedSettingsTable.favoriteCostumeId = collectibleId
 			Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
-			CHAT_SYSTEM:AddMessage("Favorite costume set as: "..GetCollectibleName(collectibleId))
+			CHAT_SYSTEM:AddMessage("Favorite costume set as '"..GetCollectibleName(collectibleId).."'")
 			end,
-		width = "half",	--or "half" (optional)
+		width = "half",
 		},
 		[13] = {
 		type = "button",
@@ -153,9 +155,9 @@ function Settings.LoadMenuSettings()
 			local collectibleName = GetCollectibleName(GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME))
 			Settings.savedSettingsTable.favoriteCostumeId = nil
 			Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
-			CHAT_SYSTEM:AddMessage("Favorite costume is no longer: "..collectibleName)
+			CHAT_SYSTEM:AddMessage("Favorite costume is no longer '"..collectibleName.."'")
 			end,
-		width = "half",	--or "half" (optional)
+		width = "half",
 		},
 	}
 

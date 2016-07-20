@@ -60,7 +60,6 @@ function LPEventHandler.RegisterForEvent(eventCode, functionName)
 	if eventCode == nil or functionName == nil then return end
 	if #eventToFunctionTable[eventCode] ~= 0 then
 		local numOfFuncs = #eventToFunctionTable[eventCode]
-		--zo_callLater(function() d("Event "..eventCode.." NOT registered!") d("Num of registered funcs "..numOfFuncs) d("Contents of "..tostring(eventToFunctionTable[eventCode])) end, 2000)
 		for i = 1, numOfFuncs, 1 do
 			if eventToFunctionTable[eventCode][i] == functionName then
 				d("Function already registered for event "..eventCode)
@@ -71,6 +70,5 @@ function LPEventHandler.RegisterForEvent(eventCode, functionName)
 	else
 		eventToFunctionTable[eventCode][1] = functionName
 		EVENT_MANAGER:RegisterForEvent(LorePlay.name, eventCode, CallEventFunctions)
-		--zo_callLater(function() d("Event registered!") end, 5000)
 	end
 end

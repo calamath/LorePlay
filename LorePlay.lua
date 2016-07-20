@@ -1,7 +1,7 @@
 LorePlay = {}
 LorePlay.majorVersion = 1
-LorePlay.minorVersion = 2
-LorePlay.bugVersion = 4
+LorePlay.minorVersion = 3
+LorePlay.bugVersion = 0
 LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LorePlay.bugVersion
 LorePlay.name = "LorePlay"
 LorePlay.player = "player"
@@ -20,9 +20,7 @@ end
 function LorePlay.OnPlayerActivated(event)
 	zo_callLater(function() CHAT_SYSTEM:AddMessage("Welcome to LorePlay, Soulless One!") end, 50)
 	LPEventHandler.UnregisterForEvent(event, LorePlay.OnPlayerActivated)
-	--EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
 end
 
 
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_ADD_ON_LOADED, LorePlay.OnAddOnLoaded)
---EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, LorePlay.OnPlayerActivated)

@@ -10,12 +10,6 @@ local Appearance, Costumes, Hats, Polymorphs, Skins = 3, 1, 2, 3, 4 -- DLC = 1, 
 LoreWear.loreWearClothesActive = false
 
 
---[[
-function LoreWear.ToggleLoreWear()
-end
-]]--
-
-
 local function GetRandomLoreWearCostumeID()
 	local randomNumber
 	local id
@@ -41,6 +35,9 @@ local function EquipLoreWearClothes()
 	local currentCollectible
 	if LorePlay.savedSettingsTable.isUsingFavoriteCostume and LorePlay.savedSettingsTable.favoriteCostumeId then
 		currentCollectible = LorePlay.savedSettingsTable.favoriteCostumeId
+	elseif LorePlay.savedSettingsTable.isUsingFavoriteCostume and not LorePlay.savedSettingsTable.favoriteCostumeId then
+		currentCollectible = GetRandomLoreWearCostumeID()
+		CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Costume' is enabled, but you haven't set a favorite costume! Go to your addon settings to set a favorite costume.")
 	else
 		currentCollectible = GetRandomLoreWearCostumeID()
 	end
@@ -93,7 +90,6 @@ function LoreWear.ToggleLoreWearClothes()
 	else
 		EquipLoreWearClothes()
 	end
-	--d("Toggled!")
 end
 
 
@@ -130,9 +126,9 @@ local function UpdateLocation(eventCode)
 	if isInCity then
 		if currentCostumeID == 0 then
 			LoreWear.ToggleLoreWearClothes()
-		elseif not LoreWear.loreWearClothesActive then
+		elseif not LoreWear.loreWearClothesActive then	--This is to check for whether the player was wearing clothes but not activated from my addon
 			lastUsedCollectible = currentCostumeID
-			LoreWear.loreWearClothesActive = true -- This is to check for whether the player was wearing clothes but not activated from my addon
+			LoreWear.loreWearClothesActive = true
 		end
 	else
 		if currentCostumeID ~= 0 then
@@ -156,15 +152,15 @@ local function OnMountedStateChanged(eventCode, mounted)
 		isMounted = true
 	else 
 		isMounted = false
-		if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
-			zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1000)
-		end
+		zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1250)
 	end
 end
 
 
 function LoreWear.UnregisterLoreWearEvents()
-	LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
+	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
+		LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
+	end
 	LPEventHandler.UnregisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
 	LPEventHandler.UnregisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 end
