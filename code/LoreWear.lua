@@ -6,6 +6,7 @@ local isMounted
 local lastUsedCollectible
 local collectiblesMenu
 local lastTimeStamp
+local wasLastLocationCity
 local Appearance, Costumes, Hats, Polymorphs, Skins = 3, 1, 2, 3, 4 -- DLC = 1, Upgrade = 2, Appearance = 3, Assistants = 4, etc. Subcategories are also sequential
 LoreWear.loreWearClothesActive = false
 
@@ -118,11 +119,35 @@ end
 ]]--
 
 
+local function ShouldUpdateLocation(isInCity)
+	if wasLastLocationCity == nil then
+		wasLastLocationCity = isInCity
+		return true
+	end
+	if isInCity then
+		if wasLastLocationCity then 
+			return false
+		else 
+			wasLastLocationCity = true
+			return wasLastLocationCity
+		end
+	else
+		if not wasLastLocationCity then
+			return false
+		else 
+			wasLastLocationCity = false
+			return true
+		end
+	end
+end
+
+
 local function UpdateLocation(eventCode)
 	local location = GetPlayerLocationName()
 	local isInCity = LorePlay.IsPlayerInCity(location)
 	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	-- If not wearing clothing and in city, then definitely toggle clothes
+	if not ShouldUpdateLocation(isInCity) then return end
 	if isInCity then
 		if currentCostumeID == 0 then
 			LoreWear.ToggleLoreWearClothes()

@@ -98,7 +98,7 @@ function Settings.LoadMenuSettings()
 		[9] = {
 			type = "checkbox",
 			name = "Toggle LoreWear On/Off",
-			tooltip = "Turns on/off the automatic, contextual clothing that will be put on when entering cities.",
+			tooltip = "Turns on/off the automatic, contextual clothing that will be put on when entering cities.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)",
 			getFunc = function() return Settings.savedSettingsTable.isLoreWearOn end,
 			setFunc = function(setting) 
 				Settings.savedSettingsTable.isLoreWearOn = setting
@@ -115,7 +115,13 @@ function Settings.LoadMenuSettings()
 			type = "checkbox",
 			name = "Allow Equip While Mounted",
 			tooltip = "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.",
-			getFunc = function() return Settings.savedSettingsTable.canActivateLWClothesWhileMounted end,
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn then
+					return Settings.savedSettingsTable.canActivateLWClothesWhileMounted
+				else
+					return false
+				end
+			end,
 			setFunc = function(setting) 
 				Settings.savedSettingsTable.canActivateLWClothesWhileMounted = setting
 				Settings.savedVariables.canActivateLWClothesWhileMounted = Settings.savedSettingsTable.canActivateLWClothesWhileMounted 
@@ -126,7 +132,13 @@ function Settings.LoadMenuSettings()
 			type = "checkbox",
 			name = "Use Favorite Costume",
 			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to picking from the defaults randomly.",
-			getFunc = function() return Settings.savedSettingsTable.isUsingFavoriteCostume end,
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn then
+					return Settings.savedSettingsTable.isUsingFavoriteCostume 
+				else
+					return false
+				end
+			end,
 			setFunc = function(setting) 
 				Settings.savedSettingsTable.isUsingFavoriteCostume = setting
 				Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume 
