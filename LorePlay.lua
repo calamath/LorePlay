@@ -6,21 +6,23 @@ LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LoreP
 LorePlay.name = "LorePlay"
 LorePlay.player = "player"
 
-
 function LorePlay.OnAddOnLoaded(event, addonName)
 	if addonName ~= LorePlay.name then return end
 	LorePlay.InitializeSettings()
     LorePlay.InitializeEmotes()
     LorePlay.InitializeIdle()
+    LorePlay.InitializeLoreWear()
     EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
+    LPEventHandler.RegisterForEvent(EVENT_PLAYER_ACTIVATED, LorePlay.OnPlayerActivated)
 end
 
 
 function LorePlay.OnPlayerActivated(event)
 	zo_callLater(function() CHAT_SYSTEM:AddMessage("Welcome to LorePlay, Soulless One!") end, 50)
-	EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
+	LPEventHandler.UnregisterForEvent(event, LorePlay.OnPlayerActivated)
+	--EVENT_MANAGER:UnregisterForEvent(LorePlay.name, event)
 end
 
 
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_ADD_ON_LOADED, LorePlay.OnAddOnLoaded)
-EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, LorePlay.OnPlayerActivated)
+--EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, LorePlay.OnPlayerActivated)

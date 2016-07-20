@@ -1,6 +1,7 @@
 LPEventHandler = {}
 
 eventToFunctionTable = {
+	[EVENT_PLAYER_ACTIVATED] = {},
 	[EVENT_PLAYER_NOT_SWIMMING] = {},
 	[EVENT_MOUNTED_STATE_CHANGED] = {},
 	[EVENT_PLAYER_COMBAT_STATE] = {},
@@ -16,9 +17,9 @@ eventToFunctionTable = {
 	[EVENT_STEALTH_STATE_CHANGED] = {},
 	[EVENT_CHATTER_BEGIN] = {},
 	[EVENT_CHATTER_END] = {},
-	[EVENT_TRADE_INVITE_ACCEPTED] = {}
+	[EVENT_TRADE_INVITE_ACCEPTED] = {},
+	[EVENT_ZONE_CHANGED] = {}
 }
-
 
 
 local function CallEventFunctions(eventCode, ...)

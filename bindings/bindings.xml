@@ -4,6 +4,10 @@
       <Action name="PERFORM_SMART_EMOTE">
         <Down>LorePlay.PerformSmartEmote()</Down>
       </Action>
+      <Action name="SHOW/HIDE_LOREWEAR_CLOTHES">
+        <Down>LorePlay.KeypressToggleLoreWearClothes()</Down>
+      </Action>
     </Category>
   </Layer>
 </Bindings>
+

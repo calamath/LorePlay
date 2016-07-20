@@ -3,6 +3,10 @@ local LAM2
 
 local defaultSettingsTable = {
 	isIdleEmotesOn = true,
+	isLoreWearOn = true,
+	isUsingFavoriteCostume = false,
+	favoriteCostumeId = nil,
+	canActivateLWClothesWhileMounted = false, --[[ HAVEN'T DONE ANYTHING WITH THIS SETTING YET! ]]--
 	maraSpouseName = ""
 }
 
@@ -10,7 +14,11 @@ local defaultSettingsTable = {
 function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable = defaultSettingsTable
 	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
+	Settings.savedSettingsTable.isLoreWearOn = Settings.savedVariables.isLoreWearOn
+	Settings.savedSettingsTable.isUsingFavoriteCostume = Settings.savedVariables.isUsingFavoriteCostume
+	Settings.savedSettingsTable.favoriteCostumeId = Settings.savedVariables.favoriteCostumeId
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
+	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
 end
 
 
@@ -75,6 +83,79 @@ function Settings.LoadMenuSettings()
 				--ReloadUI() 
 			end,
 			width = "full",
+		},
+		[7] = {
+			type = "header",
+			name = "Lore Wear",
+			width = "full",
+		},
+		[8] = {
+			type = "description",
+			title = nil,
+			text = "Test stuff blah blah blah.\n", --[[ MAKE SURE TO UPDATE BEFORE LAUNCHING ]]--
+			width = "full",
+		},
+		[9] = {
+			type = "checkbox",
+			name = "Toggle LoreWear On/Off",
+			tooltip = "Turns on/off the automatic, contextual clothing that will be put on when entering cities.",
+			getFunc = function() return Settings.savedSettingsTable.isLoreWearOn end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.isLoreWearOn = setting
+				Settings.savedVariables.isLoreWearOn = Settings.savedSettingsTable.isLoreWearOn
+				if not Settings.savedSettingsTable.isLoreWearOn then 
+					LorePlay.UnregisterLoreWearEvents()
+				else
+					LorePlay.ReenableLoreWear()
+				end
+			end,
+			width = "full",
+		},
+		[10] = {
+			type = "checkbox",
+			name = "Allow Activation While Mounted",
+			tooltip = "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.",
+			getFunc = function() return Settings.savedSettingsTable.canActivateLWClothesWhileMounted end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.canActivateLWClothesWhileMounted = setting
+				Settings.savedVariables.canActivateLWClothesWhileMounted = Settings.savedSettingsTable.canActivateLWClothesWhileMounted 
+			end,
+			width = "full",
+		},
+		[11] = {
+			type = "checkbox",
+			name = "Use Favorite Costume",
+			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to randomly picking from the defaults randomly.",
+			getFunc = function() return Settings.savedSettingsTable.isUsingFavoriteCostume end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.isUsingFavoriteCostume = setting
+				Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume 
+			end,
+			width = "full",
+		},
+		[12] = {
+		type = "button",
+		name = "Set Favorite Costume",
+		tooltip = "Sets the current costume your character is wearing as his/her favorite costume, allowing him/her to automatically put it on/off when entering/exiting cities.",
+		func = function()
+			local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+			Settings.savedSettingsTable.favoriteCostumeId = collectibleId
+			Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
+			CHAT_SYSTEM:AddMessage("Favorite costume set as: "..GetCollectibleName(collectibleId))
+			end,
+		width = "half",	--or "half" (optional)
+		},
+		[13] = {
+		type = "button",
+		name = "Clear Favorite Costume",
+		tooltip = "Clears the current costume your character has selected as his/her favorite, allowing him/her to automatically put on/off random costumes when entering/exiting cities.",
+		func = function()
+			local collectibleName = GetCollectibleName(GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME))
+			Settings.savedSettingsTable.favoriteCostumeId = nil
+			Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
+			CHAT_SYSTEM:AddMessage("Favorite costume is no longer: "..collectibleName)
+			end,
+		width = "half",	--or "half" (optional)
 		},
 	}
 
