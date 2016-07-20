@@ -6,7 +6,7 @@ local defaultSettingsTable = {
 	isLoreWearOn = true,
 	isUsingFavoriteCostume = false,
 	favoriteCostumeId = nil,
-	canActivateLWClothesWhileMounted = false, --[[ HAVEN'T DONE ANYTHING WITH THIS SETTING YET! ]]--
+	canActivateLWClothesWhileMounted = false,
 	maraSpouseName = ""
 }
 
@@ -80,7 +80,6 @@ function Settings.LoadMenuSettings()
 				Settings.savedVariables.isIdleEmotesOn = Settings.savedSettingsTable.isIdleEmotesOn
 				if not Settings.savedSettingsTable.isIdleEmotesOn then LorePlay.UnregisterIdleEvents() end
 				LorePlay.InitializeIdle()
-				--ReloadUI() 
 			end,
 			width = "full",
 		},
@@ -149,12 +148,14 @@ function Settings.LoadMenuSettings()
 		[12] = {
 		type = "button",
 		name = "Set Favorite Costume",
-		tooltip = "Sets the current costume your character is wearing as his/her favorite costume, allowing him/her to automatically put it on/off when entering/exiting cities.",
+		tooltip = "Sets the current costume your character is wearing as his/her favorite costume, allowing him/her to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
 		func = function()
 			local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 			if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
 			Settings.savedSettingsTable.favoriteCostumeId = collectibleId
 			Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
+			Settings.savedSettingsTable.isUsingFavoriteCostume = true
+			Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
 			CHAT_SYSTEM:AddMessage("Favorite costume set as '"..GetCollectibleName(collectibleId).."'")
 			end,
 		width = "half",
@@ -162,11 +163,14 @@ function Settings.LoadMenuSettings()
 		[13] = {
 		type = "button",
 		name = "Clear Favorite Costume",
-		tooltip = "Clears the current costume your character has selected as his/her favorite, allowing him/her to automatically put on/off random costumes when entering/exiting cities.",
+		tooltip = "Clears the current costume your character has selected as his/her favorite, allowing him/her to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
 		func = function()
-			local collectibleName = GetCollectibleName(GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME))
+			if not Settings.savedSettingsTable.favoriteCostumeId then return end 
+			local collectibleName = GetCollectibleName(Settings.savedSettingsTable.favoriteCostumeId)
 			Settings.savedSettingsTable.favoriteCostumeId = nil
 			Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
+			Settings.savedSettingsTable.isUsingFavoriteCostume = false
+			Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
 			CHAT_SYSTEM:AddMessage("Favorite costume is no longer '"..collectibleName.."'")
 			end,
 		width = "half",
