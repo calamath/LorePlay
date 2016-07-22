@@ -11,8 +11,6 @@ local Appearance, Costumes, Hats, Polymorphs, Skins = 3, 1, 2, 3, 4 -- DLC = 1, 
 LoreWear.loreWearClothesActive = false
 
 
-
-
 local function GetRandomLoreWearCostumeID()
 	local randomNumber
 	local id
@@ -132,6 +130,9 @@ end
 
 local function UpdateUnlockedCostumesOnCollectibleUpdate(eventCode)
 	UpdateUnlockedCostumes()
+	--UpdateUnlockedHats()
+	--UpdateUnlockedPolymorphs()
+	--UpdateUnlockedSkins()
 end
 
 
