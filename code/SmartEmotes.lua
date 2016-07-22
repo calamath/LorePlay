@@ -30,7 +30,8 @@ local playerTitles = {
 	["Savior of Nirn"] = "Savior of Nirn",
 	["Daedric Lord Slayer"] = "Daedric Lord Slayer",
 	["Tamriel Hero"] = "Tamriel Hero",
-	["Maelstrom Arena Champion"] = "Maelstrom Arena Champion"
+	["Maelstrom Arena Champion"] = "Maelstrom Arena Champion",
+	["The Flawless Conqueror"] = "The Flawless Conqueror"
 }
 
 SmartEmotes.didSmartEmote = false

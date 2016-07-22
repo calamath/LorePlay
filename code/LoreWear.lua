@@ -11,6 +11,23 @@ local Appearance, Costumes, Hats, Polymorphs, Skins = 3, 1, 2, 3, 4 -- DLC = 1, 
 LoreWear.loreWearClothesActive = false
 
 
+
+
+local function GetRandomLoreWearCostumeID()
+	local randomNumber
+	local id
+	local numOfUnlockedCostumes = #collectiblesMenu[Appearance][Costumes]
+	if numOfUnlockedCostumes >= 1 then
+		randomNumber = math.random(numOfUnlockedCostumes)
+		id = collectiblesMenu[Appearance][Costumes][randomNumber]
+		return id
+	end
+	return
+end
+
+
+
+--[[
 local function GetRandomLoreWearCostumeID()
 	local randomNumber
 	local id
@@ -30,6 +47,7 @@ local function GetRandomLoreWearCostumeID()
 	end
 	return id
 end
+]]--
 
 
 local function EquipLoreWearClothes()
@@ -101,6 +119,22 @@ function LoreWear.KeypressToggleLoreWearClothes()
 end
 
 
+local function UpdateUnlockedCostumes()
+	local id
+	for i = 1, collectiblesMenu[Appearance][Costumes]["Total"], 1 do
+		id = GetCollectibleId(Appearance,Costumes,i)
+		if IsCollectibleUnlocked(id) then
+			collectiblesMenu[Appearance][Costumes][(#collectiblesMenu[Appearance][Costumes] + 1)] = id
+		end
+	end
+end
+
+
+local function UpdateUnlockedCostumesOnCollectibleUpdate(eventCode)
+	UpdateUnlockedCostumes()
+end
+
+
 local function BuildCollectiblesMenuTable()	
 	collectiblesMenu = {
 		[Appearance] = {
@@ -110,6 +144,7 @@ local function BuildCollectiblesMenuTable()
 			[Skins] = {["Total"] = GetTotalCollectiblesByCategoryType(COLLECTIBLE_CATEGORY_TYPE_SKIN)}
 		}
 	}
+	UpdateUnlockedCostumes()
 end
 
 
@@ -187,6 +222,7 @@ function LoreWear.UnregisterLoreWearEvents()
 		LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	end
 	LPEventHandler.UnregisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
+	LPEventHandler.UnregisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
 	LPEventHandler.UnregisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 end
 
@@ -194,6 +230,7 @@ end
 function LoreWear.RegisterLoreWearEvents()
 	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	LPEventHandler.RegisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
+	LPEventHandler.RegisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
 	LPEventHandler.RegisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 end
 
