@@ -4,6 +4,11 @@ local LAM2
 local defaultSettingsTable = {
 	isIdleEmotesOn = true,
 	isLoreWearOn = true,
+	canPlayInstrumentsInCities = true,
+	canDanceInCities = true,
+	canBeDrunkInCities = true,
+	canExerciseInZone = true,
+	canWorship = true,
 	isUsingFavoriteCostume = false,
 	favoriteCostumeId = nil,
 	canActivateLWClothesWhileMounted = false,
@@ -15,6 +20,11 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable = defaultSettingsTable
 	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
 	Settings.savedSettingsTable.isLoreWearOn = Settings.savedVariables.isLoreWearOn
+	Settings.savedSettingsTable.canPlayInstrumentsInCities = Settings.savedVariables.canPlayInstrumentsInCities
+	Settings.savedSettingsTable.canDanceInCities = Settings.savedVariables.canDanceInCities
+	Settings.savedSettingsTable.canBeDrunkInCities = Settings.savedVariables.canBeDrunkInCities
+	Settings.savedSettingsTable.canExerciseInZone = Settings.savedVariables.canExerciseInZone
+	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
 	Settings.savedSettingsTable.isUsingFavoriteCostume = Settings.savedVariables.isUsingFavoriteCostume
 	Settings.savedSettingsTable.favoriteCostumeId = Settings.savedVariables.favoriteCostumeId
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
@@ -84,17 +94,107 @@ function Settings.LoadMenuSettings()
 			width = "full",
 		},
 		[7] = {
+			type = "checkbox",
+			name = "Can Play Instruments In Cities",
+			tooltip = "Determines whether or not your character can perform instrument emotes when idle in cities.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isIdleEmotesOn then
+					return Settings.savedSettingsTable.canPlayInstrumentsInCities
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.canPlayInstrumentsInCities = setting
+				Settings.savedVariables.canPlayInstrumentsInCities = Settings.savedSettingsTable.canPlayInstrumentsInCities
+				LorePlay.CreateDefaultIdleEmotesTable()
+			end,
+			width = "full",
+		},
+		[8] = {
+			type = "checkbox",
+			name = "Can Dance In Cities",
+			tooltip = "Determines whether or not your character can perform dance emotes when idle in cities.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isIdleEmotesOn then
+					return Settings.savedSettingsTable.canDanceInCities
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.canDanceInCities = setting
+				Settings.savedVariables.canDanceInCities = Settings.savedSettingsTable.canDanceInCities
+				LorePlay.CreateDefaultIdleEmotesTable()
+			end,
+			width = "full",
+		},
+		[9] = {
+			type = "checkbox",
+			name = "Can Be Drunk In Cities",
+			tooltip = "Determines whether or not your character can perform drunken emotes when idle in cities.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isIdleEmotesOn then
+					return Settings.savedSettingsTable.canBeDrunkInCities
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.canBeDrunkInCities = setting
+				Settings.savedVariables.canBeDrunkInCities = Settings.savedSettingsTable.canBeDrunkInCities
+				LorePlay.CreateDefaultIdleEmotesTable()
+			end,
+			width = "full",
+		},
+		[10] = {
+			type = "checkbox",
+			name = "Can Exercise Outside Cities",
+			tooltip = "Determines whether or not your character can perform exercise emotes when idle outside of cities.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isIdleEmotesOn then
+					return Settings.savedSettingsTable.canExerciseInZone
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.canExerciseInZone = setting
+				Settings.savedVariables.canExerciseInZone = Settings.savedSettingsTable.canExerciseInZone
+				LorePlay.CreateDefaultIdleEmotesTable()
+			end,
+			width = "full",
+		},
+		[11] = {
+			type = "checkbox",
+			name = "Can Worship/Pray",
+			tooltip = "Determines whether or not your character can perform prayer and worship emotes when idle in general.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isIdleEmotesOn then
+					return Settings.savedSettingsTable.canWorship
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.canWorship = setting
+				Settings.savedVariables.canWorship = Settings.savedSettingsTable.canWorship
+				LorePlay.CreateDefaultIdleEmotesTable()
+			end,
+			width = "full",
+		},
+		[12] = {
 			type = "header",
 			name = "Lore Wear",
 			width = "full",
 		},
-		[8] = {
+		[13] = {
 			type = "description",
 			title = nil,
 			text = "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically equip his/her favorite (or a random) costume anytime he/she enters a city, and unequip upon exiting.\n",
 			width = "full",
 		},
-		[9] = {
+		[14] = {
 			type = "checkbox",
 			name = "Toggle LoreWear On/Off",
 			tooltip = "Turns on/off the automatic, contextual clothing that will be put on when entering cities.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)",
@@ -110,7 +210,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[10] = {
+		[15] = {
 			type = "checkbox",
 			name = "Allow Equip While Mounted",
 			tooltip = "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.",
@@ -127,7 +227,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[11] = {
+		[16] = {
 			type = "checkbox",
 			name = "Use Favorite Costume",
 			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to picking from the defaults randomly.",
@@ -145,7 +245,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[12] = {
+		[17] = {
 		type = "button",
 		name = "Set Favorite Costume",
 		tooltip = "Sets the current costume your character is wearing as his/her favorite costume, allowing him/her to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
@@ -160,7 +260,7 @@ function Settings.LoadMenuSettings()
 			end,
 		width = "half",
 		},
-		[13] = {
+		[18] = {
 		type = "button",
 		name = "Clear Favorite Costume",
 		tooltip = "Clears the current costume your character has selected as his/her favorite, allowing him/her to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
