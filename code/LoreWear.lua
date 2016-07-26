@@ -37,7 +37,7 @@ local function EquipLoreWearClothes()
 		currentCollectible = GetRandomLoreWearCostumeID()
 	end
 	UseCollectible(currentCollectible)
-	LoreWear.loreWearClothesActive = true
+	--LoreWear.loreWearClothesActive = true
 	lastUsedCollectible = currentCollectible
 end
 
@@ -51,7 +51,7 @@ local function UnequipLoreWearClothes()
 		end
 	end
 	UseCollectible(lastUsedCollectible)
-	LoreWear.loreWearClothesActive = false
+	--LoreWear.loreWearClothesActive = false
 end
 
 
@@ -164,6 +164,31 @@ local function UpdateLocation(eventCode)
 	if not ShouldUpdateLocation(isInCity) then return end
 	if isInCity then
 		if currentCostumeID == 0 then
+			LoreWear.loreWearClothesActive = false
+			LoreWear.ToggleLoreWearClothes()
+		elseif not LoreWear.loreWearClothesActive then	--This is to check for whether the player was wearing clothes but not activated from my addon
+			lastUsedCollectible = currentCostumeID
+			LoreWear.loreWearClothesActive = true
+		end
+	else
+		if currentCostumeID ~= 0 then
+			LoreWear.loreWearClothesActive = true
+			lastUsedCollectible = currentCostumeID
+			LoreWear.ToggleLoreWearClothes()
+		end
+	end
+end
+
+
+--[[
+local function UpdateLocation(eventCode)
+	local location = GetPlayerLocationName()
+	local isInCity = LorePlay.IsPlayerInCity(location)
+	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+	-- If not wearing clothing and in city, then definitely toggle clothes
+	if not ShouldUpdateLocation(isInCity) then return end
+	if isInCity then
+		if currentCostumeID == 0 then
 			LoreWear.ToggleLoreWearClothes()
 		elseif not LoreWear.loreWearClothesActive then	--This is to check for whether the player was wearing clothes but not activated from my addon
 			lastUsedCollectible = currentCostumeID
@@ -178,6 +203,7 @@ local function UpdateLocation(eventCode)
 		end
 	end
 end
+]]--
 
 
 local function OnPlayerIsActivated(eventCode)
@@ -191,7 +217,9 @@ local function OnMountedStateChanged(eventCode, mounted)
 		isMounted = true
 	else 
 		isMounted = false
-		zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1350)
+		if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
+			zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1350)
+		end	
 	end
 end
 
