@@ -630,6 +630,12 @@ function SmartEmotes.CreateEmotesByCityTable()
 			["Emotes"] = defaultCityToRegionEmotes["AD"]
 		}
 	}
+
+	local cityWayshrine
+	for i,_ in pairs(defaultEmotesByCity) do
+		cityWayshrine = i.." Wayshrine"
+		defaultEmotesByCity[cityWayshrine] = defaultEmotesByCity[i]
+	end
 end
 
 

@@ -24,37 +24,15 @@ local function GetRandomLoreWearCostumeID()
 end
 
 
-
---[[
-local function GetRandomLoreWearCostumeID()
-	local randomNumber
-	local id
-	local isValid = false
-	while not isValid do
-		randomNumber = math.random(collectiblesMenu[Appearance][Costumes]["Total"])
-		id = GetCollectibleId(Appearance,Costumes,randomNumber)
-		if collectiblesMenu[Appearance][Costumes][id] == true then isValid = true break
-		else
-			if collectiblesMenu[Appearance][Costumes][id] == nil or IsCollectibleNew(id) then
-				if IsCollectibleUnlocked(id) then 
-					collectiblesMenu[Appearance][Costumes][id] = true 
-					isValid = true 
-				end
-			end
-		end
-	end
-	return id
-end
-]]--
-
-
 local function EquipLoreWearClothes()
 	local currentCollectible
-	if LorePlay.savedSettingsTable.isUsingFavoriteCostume and LorePlay.savedSettingsTable.favoriteCostumeId then
-		currentCollectible = LorePlay.savedSettingsTable.favoriteCostumeId
-	elseif LorePlay.savedSettingsTable.isUsingFavoriteCostume and not LorePlay.savedSettingsTable.favoriteCostumeId then
-		currentCollectible = GetRandomLoreWearCostumeID()
-		CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Costume' is enabled, but you haven't set a favorite costume! Go to your addon settings to set a favorite costume.")
+	if LorePlay.savedSettingsTable.isUsingFavoriteCostume then
+		if LorePlay.savedSettingsTable.favoriteCostumeId then 
+			currentCollectible = LorePlay.savedSettingsTable.favoriteCostumeId
+		else
+			currentCollectible = GetRandomLoreWearCostumeID()
+			CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Costume' is enabled, but you haven't set a favorite costume! Go to your addon settings to set a favorite costume.")
+		end
 	else
 		currentCollectible = GetRandomLoreWearCostumeID()
 	end
@@ -101,7 +79,6 @@ end
 
 
 function LoreWear.ToggleLoreWearClothes()
-	if not CheckToToggleLoreWearClothes() then return end
 	if LoreWear.loreWearClothesActive then
 		UnequipLoreWearClothes() 
 	else
@@ -156,6 +133,7 @@ end
 
 
 local function ShouldUpdateLocation(isInCity)
+	if not CheckToToggleLoreWearClothes() then return false end
 	if wasLastLocationCity == nil then
 		wasLastLocationCity = isInCity
 		return true
@@ -165,7 +143,7 @@ local function ShouldUpdateLocation(isInCity)
 			return false
 		else 
 			wasLastLocationCity = true
-			return wasLastLocationCity
+			return true
 		end
 	else
 		if not wasLastLocationCity then
@@ -213,7 +191,7 @@ local function OnMountedStateChanged(eventCode, mounted)
 		isMounted = true
 	else 
 		isMounted = false
-		zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1250)
+		zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1350)
 	end
 end
 
