@@ -16,10 +16,12 @@ local defaultEmotesByCity
 local defaultEmotesForDungeons
 local eventTTLEmotes
 local eventLatchedEmotes
+local reticleEmotesTable
 local lastEventTimeStamp
 local existsPreviousEvent
 local lastLatchedEvent
 local emoteFromLatched
+local emoteFromReticle
 local emoteFromTTL = {}
 local playerTitles = {
 	["Emperor"] = "Emperor",
@@ -70,6 +72,51 @@ end
 ]]--
 
 
+local function UpdateEmoteFromReticle()
+	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then return end
+	local unitTitle = GetUnitTitle("reticleover")
+	if IsUnitFriend("reticleover") then
+		if SmartEmotes.IsTargetSpouse() then
+			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE]
+		else
+			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND]
+		end
+	elseif playerTitles[unitTitle] ~= nil then
+		if GetUnitTitle("player") == playerTitles[unitTitle] then
+			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME]
+		else 
+			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC]
+		end
+	else 
+		emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL]
+	end
+end
+
+
+function SmartEmotes.PerformSmartEmote()
+	local randomNumber
+	local smartEmoteIndex
+	if IsUnitPlayer("reticleover") then
+		UpdateEmoteFromReticle()
+		randomNumber = math.random(#emoteFromReticle["Emotes"])
+		smartEmoteIndex = emoteFromReticle["Emotes"][randomNumber]
+	elseif eventLatchedEmotes["isEnabled"] then
+		randomNumber = math.random(#emoteFromLatched["Emotes"])
+		smartEmoteIndex = emoteFromLatched["Emotes"][randomNumber]
+	elseif eventTTLEmotes["isEnabled"] then
+		randomNumber = math.random(#emoteFromTTL["Emotes"])
+		smartEmoteIndex = emoteFromTTL["Emotes"][randomNumber]
+	else
+		SmartEmotes.UpdateDefaultEmotesTable()
+		randomNumber = math.random(#defaultEmotes["Emotes"])
+		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
+	end
+	PlayEmoteByIndex(smartEmoteIndex)
+	SmartEmotes.didSmartEmote = true
+end
+
+
+--[[
 function SmartEmotes.PerformSmartEmote()
 	local randomNumber
 	local smartEmoteIndex
@@ -87,6 +134,7 @@ function SmartEmotes.PerformSmartEmote()
 	PlayEmoteByIndex(smartEmoteIndex)
 	SmartEmotes.didSmartEmote = true
 end
+]]--
 
 
 function SmartEmotes.DisableTTLEmotes()
@@ -684,22 +732,8 @@ function SmartEmotes.CreateDefaultEmoteTables()
 end
 
 
-function SmartEmotes.CreateLatchedEmoteEventTable()
-	eventLatchedEmotes = {
-		["isEnabled"] = false,
-
-		[EVENT_POWER_UPDATE_STAMINA] = {
-			["EventName"] = EVENT_POWER_UPDATE_STAMINA,
-			["Emotes"] = {
-				[1] = 114
-			},
-			["Switch"] = function() 
-				local currentStam, _, effectiveMaxStam = GetUnitPower(LorePlay.player, POWERTYPE_STAMINA)
-				if currentStam < effectiveMaxStam*(.55) then
-					return true
-				end
-			end
-		},
+function SmartEmotes.CreateReticleEmoteTable()
+	reticleEmotesTable = {
 		[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND] = {
 			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND,
 			["Emotes"] = {
@@ -751,6 +785,78 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 				[3] = 137
 			}
 		}
+	}
+end
+
+
+function SmartEmotes.CreateLatchedEmoteEventTable()
+	eventLatchedEmotes = {
+		["isEnabled"] = false,
+
+		[EVENT_POWER_UPDATE_STAMINA] = {
+			["EventName"] = EVENT_POWER_UPDATE_STAMINA,
+			["Emotes"] = {
+				[1] = 114
+			},
+			["Switch"] = function() 
+				local currentStam, _, effectiveMaxStam = GetUnitPower(LorePlay.player, POWERTYPE_STAMINA)
+				if currentStam < effectiveMaxStam*(.55) then
+					return true
+				end
+			end
+		}--[[,
+		[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND] = {
+			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND,
+			["Emotes"] = {
+				[1] = 70,
+				[2] = 72,
+				[3] = 8,
+				[4] = 137
+			}
+		},
+		[EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE] = {
+			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE,
+			["Emotes"] = {
+				[1] = 70,
+				[2] = 72,
+				[3] = 8,
+				[4] = 137,
+				[5] = 21,
+				[6] = 147,
+				[7] = 39,
+				[8] = 214,
+				[9] = 166,
+				[10] = 21
+			}
+		},
+		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC] = {
+			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
+			["Emotes"] = {
+				[1] = 142,
+				[2] = 67,
+				[3] = 214,
+				[4] = 24,
+				[5] = 175,
+				[6] = 142
+			}
+		},
+		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME] = {
+			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME,
+			["Emotes"] = {
+				[2] = 56,
+				[3] = 57,
+				[4] = 58
+			}
+		},
+		[EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL] = {
+			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL,
+			["Emotes"] = {
+				[1] = 56,
+				[2] = 136,
+				[3] = 137
+			}
+		}
+		]]--
 	}
 end
 
@@ -1070,6 +1176,7 @@ function SmartEmotes.IsTargetSpouse()
 end
 
 
+--[[
 function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(eventCode)
 	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then return end
 	if IsUnitPlayer("reticleover") then
@@ -1104,6 +1211,7 @@ function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(ev
 			existsPreviousEvent = false
 	end
 end
+]]--
 
 
 -- Stamina bar
@@ -1131,7 +1239,7 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler.RegisterForEvent(EVENT_HIGH_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
 	LPEventHandler.RegisterForEvent(EVENT_LOW_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
 	LPEventHandler.RegisterForEvent(EVENT_SKILL_POINTS_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED)
-	LPEventHandler.RegisterForEvent(EVENT_RETICLE_TARGET_CHANGED, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED)
+	--LPEventHandler.RegisterForEvent(EVENT_RETICLE_TARGET_CHANGED, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED)
 	LPEventHandler.RegisterForEvent(EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
 	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	LPEventHandler.RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
@@ -1141,6 +1249,7 @@ end
 function SmartEmotes.InitializeEmotes()
 	SmartEmotes.CreateTTLEmoteEventTable()
 	SmartEmotes.CreateLatchedEmoteEventTable()
+	SmartEmotes.CreateReticleEmoteTable()
 	SmartEmotes.CreateDefaultEmoteTables()
 	SmartEmotes.RegisterSmartEvents()
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
