@@ -72,6 +72,12 @@ end
 ]]--
 
 
+
+local function IsEmoteLooping(index)
+
+end
+
+
 local function UpdateEmoteFromReticle()
 	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then return end
 	local unitTitle = GetUnitTitle("reticleover")
@@ -115,26 +121,6 @@ function SmartEmotes.PerformSmartEmote()
 	SmartEmotes.didSmartEmote = true
 end
 
-
---[[
-function SmartEmotes.PerformSmartEmote()
-	local randomNumber
-	local smartEmoteIndex
-	if eventLatchedEmotes["isEnabled"] then
-		randomNumber = math.random(#emoteFromLatched["Emotes"])
-		smartEmoteIndex = emoteFromLatched["Emotes"][randomNumber]
-	elseif eventTTLEmotes["isEnabled"] then
-		randomNumber = math.random(#emoteFromTTL["Emotes"])
-		smartEmoteIndex = emoteFromTTL["Emotes"][randomNumber]
-	else
-		SmartEmotes.UpdateDefaultEmotesTable()
-		randomNumber = math.random(#defaultEmotes["Emotes"])
-		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
-	end
-	PlayEmoteByIndex(smartEmoteIndex)
-	SmartEmotes.didSmartEmote = true
-end
-]]--
 
 
 function SmartEmotes.DisableTTLEmotes()
@@ -437,7 +423,7 @@ function SmartEmotes.CreateEmotesByCityTable()
 
 
 	defaultEmotesByCity = {
-		["Elden Root"] = { 
+		["Elden Root"] = {
 			["Emotes"] = {
 				[1] = 203,
 				[2] = 203,
@@ -804,59 +790,7 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 					return true
 				end
 			end
-		}--[[,
-		[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND] = {
-			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND,
-			["Emotes"] = {
-				[1] = 70,
-				[2] = 72,
-				[3] = 8,
-				[4] = 137
-			}
-		},
-		[EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE] = {
-			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE,
-			["Emotes"] = {
-				[1] = 70,
-				[2] = 72,
-				[3] = 8,
-				[4] = 137,
-				[5] = 21,
-				[6] = 147,
-				[7] = 39,
-				[8] = 214,
-				[9] = 166,
-				[10] = 21
-			}
-		},
-		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC] = {
-			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
-			["Emotes"] = {
-				[1] = 142,
-				[2] = 67,
-				[3] = 214,
-				[4] = 24,
-				[5] = 175,
-				[6] = 142
-			}
-		},
-		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME] = {
-			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME,
-			["Emotes"] = {
-				[2] = 56,
-				[3] = 57,
-				[4] = 58
-			}
-		},
-		[EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL] = {
-			["EventName"] = EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL,
-			["Emotes"] = {
-				[1] = 56,
-				[2] = 136,
-				[3] = 137
-			}
 		}
-		]]--
 	}
 end
 

@@ -8,6 +8,7 @@ LorePlay.player = "player"
 
 function LorePlay.OnAddOnLoaded(event, addonName)
 	if addonName ~= LorePlay.name then return end
+	LPEmotesTable.CreateAllEmotesTable()
 	LorePlay.InitializeSettings()
     LorePlay.InitializeEmotes()
     LorePlay.InitializeIdle()
