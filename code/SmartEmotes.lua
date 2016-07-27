@@ -36,7 +36,7 @@ local playerTitles = {
 	["The Flawless Conqueror"] = "The Flawless Conqueror"
 }
 
-SmartEmotes.didSmartEmote = false
+SmartEmotes.isSmartEmoting = false
 
 
 --[[ USE TO ACHIEVE MASTER LIST IN SAVED VARS
@@ -72,9 +72,16 @@ end
 ]]--
 
 
-
 local function IsEmoteLooping(index)
 
+end
+
+
+local function UpdateIsSmartEmoting(index)
+	local slashName = GetEmoteSlashNameByIndex(index)
+	if LPEmotesTable.allEmotesTable[slashName]["doesLoop"] then
+	else
+	end
 end
 
 
@@ -118,7 +125,12 @@ function SmartEmotes.PerformSmartEmote()
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
 	PlayEmoteByIndex(smartEmoteIndex)
-	SmartEmotes.didSmartEmote = true
+	SmartEmotes.isSmartEmoting = true
+	
+
+
+
+	UpdateIsSmartEmoting(smartEmoteIndex)
 end
 
 
