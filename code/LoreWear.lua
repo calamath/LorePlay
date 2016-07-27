@@ -89,6 +89,10 @@ end
 
 function LoreWear.KeypressToggleLoreWearClothes()
 	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
+	if not CheckToToggleLoreWearClothes() then
+		CHAT_SYSTEM:AddMessage("Your current settings indicate you cannot equip/unequip clothing while mounted. Check your LorePlay settings to more information.")
+		return 
+	end
 	if not IsCooldownOver() then return end
 	LoreWear.ToggleLoreWearClothes()
 end

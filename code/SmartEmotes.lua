@@ -1,5 +1,6 @@
 local SmartEmotes = LorePlay
 
+
 local EVENT_STARTUP = "EVENT_STARTUP"
 local EVENT_POWER_UPDATE_STAMINA = "EVENT_POWER_UPDATE_STAMINA"
 local EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND = "EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND"
@@ -9,6 +10,7 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_
 local EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE = "EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE"
 local EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT"
 local EVENT_PLAYER_COMBAT_STATE_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_INCOMBAT"
+local isMounted
 local defaultEmotes
 local defaultEmotesByRegion
 local zoneToRegionEmotes
@@ -35,8 +37,6 @@ local playerTitles = {
 	["Maelstrom Arena Champion"] = "Maelstrom Arena Champion",
 	["The Flawless Conqueror"] = "The Flawless Conqueror"
 }
-
-SmartEmotes.isSmartEmoting = false
 
 
 --[[ USE TO ACHIEVE MASTER LIST IN SAVED VARS
@@ -72,15 +72,66 @@ end
 ]]--
 
 
-local function IsEmoteLooping(index)
 
+local function CheckPlayerMovementWhileEmoting(x, y)
+	local _, _, didMove = LPUtilities.DidPlayerMove(x, y)
+	if didMove then
+		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
+		LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false)
+	end
+	return didMove
 end
+
+
+local function ResolveLoopingEmote()
+	local x, y = GetMapPlayerPosition(LorePlay.player)
+	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 2000, function() 
+		CheckPlayerMovementWhileEmoting(x, y)
+		end)
+end
+
+
+local function ResolveEmote()
+	local x, y = GetMapPlayerPosition(LorePlay.player)
+	EVENT_MANAGER:RegisterForUpdate("EmoteTimeReached", 5000, function()
+		LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false) 
+		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
+		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
+		end)
+	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 1050, function() 
+			if CheckPlayerMovementWhileEmoting(x, y) then
+				EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
+			end
+		end)
+end
+
+
+--[[
+local function ResolveEmote()
+	local x, y = GetMapPlayerPosition(LorePlay.player)
+	EVENT_MANAGER:RegisterForUpdate("EmoteTimeReached", 5000, function() 
+		LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false) 
+		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
+		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
+		end)
+	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 1050, function() 
+		local _, _, didMove = LPUtilities.DidPlayerMove(x, y)
+			if didMove then
+				LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false)
+				EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
+				EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")	
+			end
+		end)
+end
+]]--
 
 
 local function UpdateIsSmartEmoting(index)
 	local slashName = GetEmoteSlashNameByIndex(index)
 	if LPEmotesTable.allEmotesTable[slashName]["doesLoop"] then
+		ResolveLoopingEmote()
 	else
+		ResolveEmote()
 	end
 end
 
@@ -107,6 +158,7 @@ end
 
 
 function SmartEmotes.PerformSmartEmote()
+	if IsPlayerMoving() or isMounted then return end
 	local randomNumber
 	local smartEmoteIndex
 	if IsUnitPlayer("reticleover") then
@@ -125,11 +177,7 @@ function SmartEmotes.PerformSmartEmote()
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
 	PlayEmoteByIndex(smartEmoteIndex)
-	SmartEmotes.isSmartEmoting = true
-	
-
-
-
+	LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, true)
 	UpdateIsSmartEmoting(smartEmoteIndex)
 end
 
@@ -1063,7 +1111,10 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED(eventCode, mounted)
 	if not mounted then
+		isMounted = false
 		SmartEmotes.UpdateTTLEmoteTable(eventCode)
+	else
+		isMounted = true
 	end
 end
 
@@ -1122,44 +1173,6 @@ function SmartEmotes.IsTargetSpouse()
 end
 
 
---[[
-function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED(eventCode)
-	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then return end
-	if IsUnitPlayer("reticleover") then
-		if SmartEmotes.DoesPreviousLatchedEventExist(EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL,
-		EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND, EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
-		EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME, EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE) then
-			lastLatchedEvent = emoteFromLatched["EventName"]
-		end
-		local unitTitle = GetUnitTitle("reticleover")
-		if IsUnitFriend("reticleover") then
-			if SmartEmotes.IsTargetSpouse() then
-				SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE)
-			else
-				SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND)
-			end
-		elseif playerTitles[unitTitle] ~= nil then
-			if GetUnitTitle("player") == playerTitles[unitTitle] then
-				SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME)
-			else SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_EPIC)
-			end
-		else SmartEmotes.UpdateLatchedEmoteTable(EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL)
-		end
-	elseif not IsUnitPlayer("reticleover") and 
-		SmartEmotes.DoesEmoteFromLatchedEqualEvent(EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL,
-		EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND, EVENT_RETICLE_TARGET_CHANGED_TO_EPIC,
-		EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME, EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE) then
-			if existsPreviousEvent and eventLatchedEmotes[lastLatchedEvent].Switch() then
-				SmartEmotes.UpdateLatchedEmoteTable(lastLatchedEvent)
-			else
-				eventLatchedEmotes["isEnabled"] = false
-			end
-			existsPreviousEvent = false
-	end
-end
-]]--
-
-
 -- Stamina bar
 function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE(eventCode, unitTag, powerIndex, powerType, powerValue, powerMax, powerEffectiveMax)
 	if unitTag ~= LorePlay.player then return end
@@ -1185,7 +1198,6 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler.RegisterForEvent(EVENT_HIGH_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
 	LPEventHandler.RegisterForEvent(EVENT_LOW_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
 	LPEventHandler.RegisterForEvent(EVENT_SKILL_POINTS_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED)
-	--LPEventHandler.RegisterForEvent(EVENT_RETICLE_TARGET_CHANGED, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_RETICLE_TARGET_CHANGED)
 	LPEventHandler.RegisterForEvent(EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
 	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	LPEventHandler.RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
@@ -1199,6 +1211,7 @@ function SmartEmotes.InitializeEmotes()
 	SmartEmotes.CreateDefaultEmoteTables()
 	SmartEmotes.RegisterSmartEvents()
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
+	isMounted = IsMounted()
 end
 
 LorePlay = SmartEmotes

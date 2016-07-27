@@ -7,6 +7,7 @@ local emoteFromEvent
 local defaultIdleTable
 local eventIdleTable
 local didIdleEmote = false
+local isSmartEmoting = false
 
 
 function IdleEmotes.CreateEventIdleEmotesTable()
@@ -242,7 +243,7 @@ function IdleEmotes.UpdateEmoteFromEvent(eventCode)
 	end
 end
 
-
+--[[
 function IdleEmotes.DidPlayerMove()
 	local newX, newY = GetMapPlayerPosition(LorePlay.player)
 	if newX ~= currentPlayerX or newY ~= currentPlayerY then
@@ -252,6 +253,7 @@ function IdleEmotes.DidPlayerMove()
 	end
 	return false
 end
+]]--
 
 
 function IdleEmotes.UpdateStealthState(eventCode, unitTag, stealthState)
@@ -265,7 +267,34 @@ end
 
 
 function IdleEmotes.IsCharacterIdle()
-	if not LorePlay.didSmartEmote then
+	if not isSmartEmoting then
+		local x, y, didMove = LPUtilities.DidPlayerMove(currentPlayerX, currentPlayerY) 
+		if not didMove then
+			if isPlayerStealthed == nil then
+				IdleEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, LorePlay.player, GetUnitStealthState(LorePlay.player))
+			end
+			if not isPlayerStealthed then
+				local interactionType = GetInteractionType()
+  				if interactionType == INTERACTION_NONE then
+					return true
+				end
+			end
+		else
+			currentPlayerX = x
+			currentPlayerY = y
+			if didIdleEmote then
+				didIdleEmote = false
+			end
+		end
+	end
+	return false
+end
+
+
+
+--[[
+function IdleEmotes.IsCharacterIdle()
+	if not isSmartEmoting then 
 		if not IdleEmotes.DidPlayerMove() then
 			if isPlayerStealthed == nil then
 				IdleEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, LorePlay.player, GetUnitStealthState(LorePlay.player))
@@ -283,6 +312,7 @@ function IdleEmotes.IsCharacterIdle()
 	end
 	return false
 end
+]]--
 
 
 function IdleEmotes.CheckToPerformIdleEmote()
@@ -340,6 +370,20 @@ function IdleEmotes.OnChatterEvent(eventCode)
 end
 
 
+local function OnSmartEmote(eventCode, isSmartEmotingNow)
+	if eventCode ~= EVENT_ON_SMART_EMOTE then return end
+	if isSmartEmotingNow then
+		isSmartEmoting = true
+		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+	else
+		isSmartEmoting = false
+		if not IsMounted() then
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+		end
+	end
+end
+
+
 function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
 	LPEventHandler.UnregisterForEvent(EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
@@ -362,6 +406,7 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler.RegisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
 	LPEventHandler.RegisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	LPEventHandler.RegisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler.RegisterForLocalEvent(EVENT_ON_SMART_EMOTE, OnSmartEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 end
 
