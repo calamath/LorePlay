@@ -104,7 +104,8 @@ function Settings.LoadMenuSettings()
 					return false
 				end
 			end,
-			setFunc = function(setting) 
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
 				Settings.savedSettingsTable.canPlayInstrumentsInCities = setting
 				Settings.savedVariables.canPlayInstrumentsInCities = Settings.savedSettingsTable.canPlayInstrumentsInCities
 				LorePlay.CreateDefaultIdleEmotesTable()
@@ -122,7 +123,8 @@ function Settings.LoadMenuSettings()
 					return false
 				end
 			end,
-			setFunc = function(setting) 
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
 				Settings.savedSettingsTable.canDanceInCities = setting
 				Settings.savedVariables.canDanceInCities = Settings.savedSettingsTable.canDanceInCities
 				LorePlay.CreateDefaultIdleEmotesTable()
@@ -140,7 +142,8 @@ function Settings.LoadMenuSettings()
 					return false
 				end
 			end,
-			setFunc = function(setting) 
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
 				Settings.savedSettingsTable.canBeDrunkInCities = setting
 				Settings.savedVariables.canBeDrunkInCities = Settings.savedSettingsTable.canBeDrunkInCities
 				LorePlay.CreateDefaultIdleEmotesTable()
@@ -158,7 +161,8 @@ function Settings.LoadMenuSettings()
 					return false
 				end
 			end,
-			setFunc = function(setting) 
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
 				Settings.savedSettingsTable.canExerciseInZone = setting
 				Settings.savedVariables.canExerciseInZone = Settings.savedSettingsTable.canExerciseInZone
 				LorePlay.CreateDefaultIdleEmotesTable()
@@ -176,7 +180,8 @@ function Settings.LoadMenuSettings()
 					return false
 				end
 			end,
-			setFunc = function(setting) 
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
 				Settings.savedSettingsTable.canWorship = setting
 				Settings.savedVariables.canWorship = Settings.savedSettingsTable.canWorship
 				LorePlay.CreateDefaultIdleEmotesTable()
@@ -222,6 +227,7 @@ function Settings.LoadMenuSettings()
 				end
 			end,
 			setFunc = function(setting) 
+				if not Settings.savedSettingsTable.isLoreWearOn then return end
 				Settings.savedSettingsTable.canActivateLWClothesWhileMounted = setting
 				Settings.savedVariables.canActivateLWClothesWhileMounted = Settings.savedSettingsTable.canActivateLWClothesWhileMounted 
 			end,
@@ -238,7 +244,8 @@ function Settings.LoadMenuSettings()
 					return false
 				end
 			end,
-			setFunc = function(setting) 
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isLoreWearOn then return end
 				Settings.savedSettingsTable.isUsingFavoriteCostume = setting
 				Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume 
 			end,
