@@ -243,18 +243,6 @@ function IdleEmotes.UpdateEmoteFromEvent(eventCode)
 	end
 end
 
---[[
-function IdleEmotes.DidPlayerMove()
-	local newX, newY = GetMapPlayerPosition(LorePlay.player)
-	if newX ~= currentPlayerX or newY ~= currentPlayerY then
-		currentPlayerX = newX
-		currentPlayerY = newY
-		return true
-	end
-	return false
-end
-]]--
-
 
 function IdleEmotes.UpdateStealthState(eventCode, unitTag, stealthState)
 	if unitTag ~= LorePlay.player then return end
@@ -289,30 +277,6 @@ function IdleEmotes.IsCharacterIdle()
 	end
 	return false
 end
-
-
-
---[[
-function IdleEmotes.IsCharacterIdle()
-	if not isSmartEmoting then 
-		if not IdleEmotes.DidPlayerMove() then
-			if isPlayerStealthed == nil then
-				IdleEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, LorePlay.player, GetUnitStealthState(LorePlay.player))
-			end
-			if not isPlayerStealthed then
-				local interactionType = GetInteractionType()
-				--d(interactionType)
-  				if interactionType == INTERACTION_NONE then
-					return true
-				end
-			end
-		end
-	else
-		LorePlay.didSmartEmote = false
-	end
-	return false
-end
-]]--
 
 
 function IdleEmotes.CheckToPerformIdleEmote()
