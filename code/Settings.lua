@@ -53,7 +53,6 @@ local function GetBlacklistedCostumeStrings()
 	if not blacklist then return end
 	local string = ""
 	if blacklist["count"] ~= 0 then
-		d("Not equal to zero")
 		for i,v in pairs(blacklist) do
 			if i ~= "count" then
 				string = string.."'"..GetCollectibleName(v).."'".." "
@@ -75,9 +74,6 @@ local function CheckBlacklistForCostumeId(collectibleId)
 		return false
 	end
 	local idString = tostring(collectibleId)
-	--d("ID STIRNG: "..idString)
-	--local lastElementString = tostring(#blacklist)
-	--d("LAST ELEMENT: "..lastElementString)
 	if blacklist[idString] then
 		return idString
 	end
@@ -86,7 +82,6 @@ end
 
 
 local function RemoveBlacklistedCostumeId(costumeId)
-	--local idString, lastElementString = CheckBlacklistForCostumeId(costumeId)
 	local idString = CheckBlacklistForCostumeId(costumeId)
 	if idString then
 		Settings.savedSettingsTable.blacklistedCostumes[idString] = nil
@@ -96,7 +91,7 @@ local function RemoveBlacklistedCostumeId(costumeId)
 end
 
 
-local function UnblacklistCostume()
+local function UnblacklistCurrentCostume()
 	if not Settings.savedSettingsTable.blacklistedCostumes then return end 
 	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	if not RemoveBlacklistedCostumeId(collectibleId) then
@@ -143,6 +138,15 @@ local function BlacklistCostume()
 	CHAT_SYSTEM:AddMessage("Blacklisted costume added as '"..GetCollectibleName(collectibleId).."'")
 end
 
+
+local function UnblacklistCostume()
+	local nameOfRemoved = UnblacklistCurrentCostume()
+	if not nameOfRemoved then
+		CHAT_SYSTEM:AddMessage("Current costume not found in blacklist.")
+	else
+		CHAT_SYSTEM:AddMessage("Blacklist no longer contains '"..nameOfRemoved.."'")
+	end
+end
 
 
 	local optionsTable = {
@@ -360,7 +364,7 @@ end
 			func = function()
 				local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 				if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
-				if UnblacklistCostume() then
+				if UnblacklistCurrentCostume() then
 					CHAT_SYSTEM:AddMessage("Current costume was on your blacklist, but setting it as your favorite removed it from the blacklist.")
 				end
 				Settings.savedSettingsTable.favoriteCostumeId = collectibleId
@@ -397,14 +401,7 @@ end
 			type = "button",
 			name = "Unblacklist Costume",
 			tooltip = "Removes the current costume your character is wearing from the blacklist, allowing him/her to now automatically put it on/off from the random costumes when entering/exiting cities.",
-			func = function()
-				local nameOfRemoved = UnblacklistCostume()
-				if not nameOfRemoved then
-					CHAT_SYSTEM:AddMessage("Current costume not found in blacklist.")
-				else
-					CHAT_SYSTEM:AddMessage("Blacklist no longer contains '"..nameOfRemoved.."'")
-				end
-			end,
+			func = function() UnblacklistCostume() end,
 			width = "half",
 		},
 		[21] = {
