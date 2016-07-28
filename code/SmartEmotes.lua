@@ -711,6 +711,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 		["Silvenar"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["AD"]
 		},
+		["Silvenar's Audience Hall"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
 		["Stormhold"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["EP"]
 		},
