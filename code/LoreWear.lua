@@ -67,11 +67,6 @@ local function CheckToToggleLoreWearClothes()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
 		if isMounted then return false end
 	end
-	--[[
-	if inCombat and not LoreWear.loreWearClothesActive then
-		return false
-	end
-	]]--
 	return true
 end
 
@@ -128,12 +123,6 @@ local function BuildCollectiblesMenuTable()
 	}
 	LoreWear.UpdateUnlockedCostumes()
 end
-
-
---[[
-local function OnCombatStateChanged()
-end
-]]--
 
 
 local function ShouldUpdateLocation(isInCity)

@@ -106,26 +106,6 @@ local function ResolveEmote()
 end
 
 
---[[
-local function ResolveEmote()
-	local x, y = GetMapPlayerPosition(LorePlay.player)
-	EVENT_MANAGER:RegisterForUpdate("EmoteTimeReached", 5000, function() 
-		LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false) 
-		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
-		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
-		end)
-	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 1050, function() 
-		local _, _, didMove = LPUtilities.DidPlayerMove(x, y)
-			if didMove then
-				LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false)
-				EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
-				EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")	
-			end
-		end)
-end
-]]--
-
-
 local function UpdateIsSmartEmoting(index)
 	local slashName = GetEmoteSlashNameByIndex(index)
 	if LPEmotesTable.allEmotesTable[slashName]["doesLoop"] then

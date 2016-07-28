@@ -57,7 +57,6 @@ function LPEventHandler.UnregisterForEvent(eventCode, functionName)
 end
 
 
-
 function LPEventHandler.RegisterForLocalEvent(eventCode, functionName)
 	if eventCode == nil or functionName == nil then return end
 	if not eventToFunctionTable[eventCode] then
