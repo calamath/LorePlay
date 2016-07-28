@@ -98,19 +98,21 @@ function LoreWear.KeypressToggleLoreWearClothes()
 end
 
 
-local function UpdateUnlockedCostumes()
+function LoreWear.UpdateUnlockedCostumes()
 	local id
 	for i = 1, collectiblesMenu[Appearance][Costumes]["Total"], 1 do
 		id = GetCollectibleId(Appearance,Costumes,i)
 		if IsCollectibleUnlocked(id) then
-			collectiblesMenu[Appearance][Costumes][(#collectiblesMenu[Appearance][Costumes] + 1)] = id
+			if not LorePlay.savedSettingsTable.blacklistedCostumes[tostring(id)] then
+				collectiblesMenu[Appearance][Costumes][(#collectiblesMenu[Appearance][Costumes] + 1)] = id
+			end
 		end
 	end
 end
 
 
 local function UpdateUnlockedCostumesOnCollectibleUpdate(eventCode)
-	UpdateUnlockedCostumes()
+	LoreWear.UpdateUnlockedCostumes()
 	--UpdateUnlockedHats()
 	--UpdateUnlockedPolymorphs()
 	--UpdateUnlockedSkins()
@@ -126,7 +128,7 @@ local function BuildCollectiblesMenuTable()
 			[Skins] = {["Total"] = GetTotalCollectiblesByCategoryType(COLLECTIBLE_CATEGORY_TYPE_SKIN)}
 		}
 	}
-	UpdateUnlockedCostumes()
+	LoreWear.UpdateUnlockedCostumes()
 end
 
 

@@ -11,6 +11,9 @@ local defaultSettingsTable = {
 	canWorship = true,
 	isUsingFavoriteCostume = false,
 	favoriteCostumeId = nil,
+	blacklistedCostumes = {
+		["count"] = 0
+	},
 	canActivateLWClothesWhileMounted = false,
 	maraSpouseName = ""
 }
@@ -27,6 +30,7 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
 	Settings.savedSettingsTable.isUsingFavoriteCostume = Settings.savedVariables.isUsingFavoriteCostume
 	Settings.savedSettingsTable.favoriteCostumeId = Settings.savedVariables.favoriteCostumeId
+	Settings.savedSettingsTable.blacklistedCostumes = Settings.savedVariables.blacklistedCostumes
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
 	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
 end
@@ -42,6 +46,103 @@ function Settings.LoadMenuSettings()
 		registerForRefresh = true,
 		registerForDefaults = true,
 	}
+
+
+local function GetBlacklistedCostumeStrings()
+	local blacklist = Settings.savedSettingsTable.blacklistedCostumes
+	if not blacklist then return end
+	local string = ""
+	if blacklist["count"] ~= 0 then
+		d("Not equal to zero")
+		for i,v in pairs(blacklist) do
+			if i ~= "count" then
+				string = string.."'"..GetCollectibleName(v).."'".." "
+				return string
+			end
+		end
+	else
+		return string.."None"
+	end
+end
+
+
+local function CheckBlacklistForCostumeId(collectibleId)
+	if collectibleId == 0 then return false end
+	local blacklist = Settings.savedSettingsTable.blacklistedCostumes
+	if not blacklist then
+		blacklist = {}
+		Settings.savedSettingsTable.blacklistedCostumes = blacklist
+		return false
+	end
+	local idString = tostring(collectibleId)
+	--d("ID STIRNG: "..idString)
+	--local lastElementString = tostring(#blacklist)
+	--d("LAST ELEMENT: "..lastElementString)
+	if blacklist[idString] then
+		return idString
+	end
+	return false
+end
+
+
+local function RemoveBlacklistedCostumeId(costumeId)
+	--local idString, lastElementString = CheckBlacklistForCostumeId(costumeId)
+	local idString = CheckBlacklistForCostumeId(costumeId)
+	if idString then
+		Settings.savedSettingsTable.blacklistedCostumes[idString] = nil
+		Settings.savedVariables.blacklistedCostumes = Settings.savedSettingsTable.blacklistedCostumes
+		return true
+	end
+end
+
+
+local function UnblacklistCostume()
+	if not Settings.savedSettingsTable.blacklistedCostumes then return end 
+	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+	if not RemoveBlacklistedCostumeId(collectibleId) then
+		return false
+	end
+	local count = Settings.savedSettingsTable.blacklistedCostumes["count"]
+	Settings.savedSettingsTable.blacklistedCostumes["count"] = count - 1
+	LorePlay.UpdateUnlockedCostumes()
+	return GetCollectibleName(collectibleId)
+end
+
+
+local function ClearBlacklist()
+	if Settings.savedSettingsTable.blacklistedCostumes["count"] == 0 then
+		CHAT_SYSTEM:AddMessage("Nothing is on your blacklist.")
+		return
+	end
+	local blacklisted = GetBlacklistedCostumeStrings()
+	Settings.savedSettingsTable.blacklistedCostumes = {
+		["count"] = 0
+	}
+	Settings.savedVariables.blacklistedCostumes = Settings.savedSettingsTable.blacklistedCostumes
+	LorePlay.UpdateUnlockedCostumes()
+	CHAT_SYSTEM:AddMessage("Blacklist cleared. The following items were removed: "..blacklisted)
+end
+
+
+local function BlacklistCostume()
+	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
+	if collectibleId == Settings.savedSettingsTable.favoriteCostumeId then 
+		CHAT_SYSTEM:AddMessage("Current costume is your favorite! Clear it from your favorites first, just to be sure you meant to do this.")
+		return 
+	end
+	if CheckBlacklistForCostumeId(collectibleId) then
+		CHAT_SYSTEM:AddMessage("Current costume already blacklisted.")
+		return
+	end
+	Settings.savedSettingsTable.blacklistedCostumes[tostring(collectibleId)] = collectibleId
+	local count = Settings.savedSettingsTable.blacklistedCostumes["count"]
+	Settings.savedSettingsTable.blacklistedCostumes["count"] = count + 1 
+	Settings.savedVariables.blacklistedCostumes = Settings.savedSettingsTable.blacklistedCostumes
+	LorePlay.UpdateUnlockedCostumes()
+	CHAT_SYSTEM:AddMessage("Blacklisted costume added as '"..GetCollectibleName(collectibleId).."'")
+end
+
 
 
 	local optionsTable = {
@@ -253,34 +354,78 @@ function Settings.LoadMenuSettings()
 			default = false,
 		},
 		[17] = {
-		type = "button",
-		name = "Set Favorite Costume",
-		tooltip = "Sets the current costume your character is wearing as his/her favorite costume, allowing him/her to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
-		func = function()
-			local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
-			if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
-			Settings.savedSettingsTable.favoriteCostumeId = collectibleId
-			Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
-			Settings.savedSettingsTable.isUsingFavoriteCostume = true
-			Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
-			CHAT_SYSTEM:AddMessage("Favorite costume set as '"..GetCollectibleName(collectibleId).."'")
+			type = "button",
+			name = "Set Favorite Costume",
+			tooltip = "Sets the current costume your character is wearing as his/her favorite costume, allowing him/her to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
+			func = function()
+				local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+				if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
+				if UnblacklistCostume() then
+					CHAT_SYSTEM:AddMessage("Current costume was on your blacklist, but setting it as your favorite removed it from the blacklist.")
+				end
+				Settings.savedSettingsTable.favoriteCostumeId = collectibleId
+				Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
+				Settings.savedSettingsTable.isUsingFavoriteCostume = true
+				Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
+				CHAT_SYSTEM:AddMessage("Favorite costume set as '"..GetCollectibleName(collectibleId).."'")
 			end,
-		width = "half",
+			width = "half",
 		},
 		[18] = {
-		type = "button",
-		name = "Clear Favorite Costume",
-		tooltip = "Clears the current costume your character has selected as his/her favorite, allowing him/her to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
-		func = function()
-			if not Settings.savedSettingsTable.favoriteCostumeId then return end 
-			local collectibleName = GetCollectibleName(Settings.savedSettingsTable.favoriteCostumeId)
-			Settings.savedSettingsTable.favoriteCostumeId = nil
-			Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
-			Settings.savedSettingsTable.isUsingFavoriteCostume = false
-			Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
-			CHAT_SYSTEM:AddMessage("Favorite costume is no longer '"..collectibleName.."'")
+			type = "button",
+			name = "Clear Favorite Costume",
+			tooltip = "Clears the current costume your character has selected as his/her favorite, allowing him/her to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
+			func = function()
+				if not Settings.savedSettingsTable.favoriteCostumeId then return end 
+				local collectibleName = GetCollectibleName(Settings.savedSettingsTable.favoriteCostumeId)
+				Settings.savedSettingsTable.favoriteCostumeId = nil
+				Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
+				Settings.savedSettingsTable.isUsingFavoriteCostume = false
+				Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
+				CHAT_SYSTEM:AddMessage("Favorite costume is no longer '"..collectibleName.."'")
 			end,
-		width = "half",
+			width = "half",
+		},
+		[19] = {
+			type = "button",
+			name = "Blacklist Costume",
+			tooltip = "Sets the current costume your character is wearing as a blacklisted costume, no longer allowing him/her to automatically put it on/off when entering/exiting cities.",
+			func = function() BlacklistCostume() end,
+			width = "half",
+		},
+		[20] = {
+			type = "button",
+			name = "Unblacklist Costume",
+			tooltip = "Removes the current costume your character is wearing from the blacklist, allowing him/her to now automatically put it on/off from the random costumes when entering/exiting cities.",
+			func = function()
+				local nameOfRemoved = UnblacklistCostume()
+				if not nameOfRemoved then
+					CHAT_SYSTEM:AddMessage("Current costume not found in blacklist.")
+				else
+					CHAT_SYSTEM:AddMessage("Blacklist no longer contains '"..nameOfRemoved.."'")
+				end
+			end,
+			width = "half",
+		},
+		[21] = {
+			type = "button",
+			name = "Show Blacklist",
+			tooltip = "Prints the names of all the costumes currently blacklisted to the chat box.",
+			func = function()
+				if Settings.savedSettingsTable.blacklistedCostumes["count"] == 0 then
+					CHAT_SYSTEM:AddMessage("Nothing is on your blacklist.")
+					return
+				end
+				CHAT_SYSTEM:AddMessage("Number of blacklisted costumes: "..tostring(Settings.savedSettingsTable.blacklistedCostumes["count"]).."\nCurrent blacklisted costumes: "..GetBlacklistedCostumeStrings())
+			end,
+			width = "half",
+		},
+		[22] = {
+			type = "button",
+			name = "Clear Blacklist",
+			tooltip = "Wipes your blacklist clean, allowing your character to now automatically equip/unequip anything that was once on the list.",
+			func = function() ClearBlacklist() end,
+			width = "half",
 		},
 	}
 
