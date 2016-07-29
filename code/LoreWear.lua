@@ -156,6 +156,10 @@ local function UpdateLocation(eventCode)
 	local isInCity = LorePlay.IsPlayerInCity(location)
 	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	-- If not wearing clothing and in city, then definitely toggle clothes
+	if not IsCooldownOver() then
+		zo_callLater(function() UpdateLocation(eventCode) end, 3000)
+		return
+	end
 	if not ShouldUpdateLocation(isInCity) then return end
 	if isInCity then
 		if currentCostumeID == 0 then
