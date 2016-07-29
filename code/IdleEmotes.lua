@@ -231,6 +231,7 @@ function IdleEmotes.PerformIdleEmote()
 		randomEmote = math.random(#defaultIdleTable[location])
 		currIdleEmote = defaultIdleTable[location][randomEmote]
 	end
+	LPEventHandler.FireEvent(EVENT_ON_IDLE_EMOTE, false, true, currIdleEmote)
 	PlayEmoteByIndex(currIdleEmote)
 	didIdleEmote = true
 end
@@ -341,6 +342,7 @@ local function OnSmartEmote(eventCode, isSmartEmotingNow)
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	else
 		isSmartEmoting = false
+		d(isSmartEmoting)
 		if not IsMounted() then
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end

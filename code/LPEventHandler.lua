@@ -13,13 +13,18 @@ local function CallEventFunctions(eventCode, ...)
 end 
 
 
-function LPEventHandler.FireEvent(eventCode, ...)
+function LPEventHandler.FireEvent(eventCode, async, ...)
+	if not eventCode then return end
 	if not eventToFunctionTable[eventCode] or #eventToFunctionTable[eventCode] == 0 then
 		d("Event "..eventCode.." trying to be fired is not yet registered with any functions.")
 		return
 	end
 	local arg = {...}
-	zo_callLater(function() CallEventFunctions(eventCode, unpack(arg)) end, 500)
+	if not async then
+		CallEventFunctions(eventCode, unpack(arg))
+	else
+		zo_callLater(function() CallEventFunctions(eventCode, unpack(arg)) end, 500)
+	end
 end
 
 

@@ -23,6 +23,7 @@ libs\LibAddonMenu-2.0\controls\iconpicker.lua
 code\LPEventHandler.lua
 code\Utilities.lua
 code\LPEmotesTable.lua
+code\LPEmoteHandler.lua
 LorePlay.lua
 code\SmartEmotes.lua
 code\IdleEmotes.lua

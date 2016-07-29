@@ -71,8 +71,7 @@ local function StoreMyEmotesIntoSavedVars()
 end
 ]]--
 
-
-
+--[[
 local function CheckPlayerMovementWhileEmoting(x, y)
 	local _, _, didMove = LPUtilities.DidPlayerMove(x, y)
 	if didMove then
@@ -114,6 +113,8 @@ local function UpdateIsSmartEmoting(index)
 		ResolveEmote()
 	end
 end
+]]--
+
 
 
 local function UpdateEmoteFromReticle()
@@ -156,11 +157,11 @@ function SmartEmotes.PerformSmartEmote()
 		randomNumber = math.random(#defaultEmotes["Emotes"])
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
+	LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false, true, smartEmoteIndex)
 	PlayEmoteByIndex(smartEmoteIndex)
-	LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, true)
-	UpdateIsSmartEmoting(smartEmoteIndex)
+	--LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, true)
+	--UpdateIsSmartEmoting(smartEmoteIndex)
 end
-
 
 
 function SmartEmotes.DisableTTLEmotes()
