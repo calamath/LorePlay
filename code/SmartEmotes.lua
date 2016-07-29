@@ -71,51 +71,6 @@ local function StoreMyEmotesIntoSavedVars()
 end
 ]]--
 
---[[
-local function CheckPlayerMovementWhileEmoting(x, y)
-	local _, _, didMove = LPUtilities.DidPlayerMove(x, y)
-	if didMove then
-		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
-		LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false)
-	end
-	return didMove
-end
-
-
-local function ResolveLoopingEmote()
-	local x, y = GetMapPlayerPosition(LorePlay.player)
-	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 2000, function() 
-		CheckPlayerMovementWhileEmoting(x, y)
-		end)
-end
-
-
-local function ResolveEmote()
-	local x, y = GetMapPlayerPosition(LorePlay.player)
-	EVENT_MANAGER:RegisterForUpdate("EmoteTimeReached", 5000, function()
-		LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false) 
-		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
-		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
-		end)
-	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 1050, function() 
-			if CheckPlayerMovementWhileEmoting(x, y) then
-				EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
-			end
-		end)
-end
-
-
-local function UpdateIsSmartEmoting(index)
-	local slashName = GetEmoteSlashNameByIndex(index)
-	if LPEmotesTable.allEmotesTable[slashName]["doesLoop"] then
-		ResolveLoopingEmote()
-	else
-		ResolveEmote()
-	end
-end
-]]--
-
-
 
 local function UpdateEmoteFromReticle()
 	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then return end
@@ -159,8 +114,6 @@ function SmartEmotes.PerformSmartEmote()
 	end
 	LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false, smartEmoteIndex)
 	PlayEmoteByIndex(smartEmoteIndex)
-	--LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, true)
-	--UpdateIsSmartEmoting(smartEmoteIndex)
 end
 
 

@@ -74,6 +74,7 @@ local function OnPlayEmoteByIndex(index)
 	return false
 end
 
+
 ZO_PreHook("PlayEmoteByIndex", OnPlayEmoteByIndex)
 LPEventHandler.RegisterForLocalEvent(EVENT_ON_SMART_EMOTE, OnSmartEmote)
 LPEventHandler.RegisterForLocalEvent(EVENT_ON_IDLE_EMOTE, OnIdleEmote)
