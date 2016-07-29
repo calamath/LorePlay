@@ -38,6 +38,7 @@ local function EquipLoreWearClothes()
 	end
 	UseCollectible(currentCollectible)
 	lastUsedCollectible = currentCollectible
+	--LoreWear.loreWearClothesActive = true
 end
 
 
@@ -50,6 +51,7 @@ local function UnequipLoreWearClothes()
 		end
 	end
 	UseCollectible(lastUsedCollectible)
+	--LoreWear.loreWearClothesActive = false
 end
 
 
@@ -73,9 +75,11 @@ end
 
 function LoreWear.ToggleLoreWearClothes()
 	if LoreWear.loreWearClothesActive then
-		UnequipLoreWearClothes() 
+		UnequipLoreWearClothes()
+		LoreWear.loreWearClothesActive = false
 	else
 		EquipLoreWearClothes()
+		LoreWear.loreWearClothesActive = true
 	end
 end
 
