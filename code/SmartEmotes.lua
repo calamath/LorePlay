@@ -157,7 +157,7 @@ function SmartEmotes.PerformSmartEmote()
 		randomNumber = math.random(#defaultEmotes["Emotes"])
 		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 	end
-	LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false, true, smartEmoteIndex)
+	LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, false, smartEmoteIndex)
 	PlayEmoteByIndex(smartEmoteIndex)
 	--LPEventHandler.FireEvent(EVENT_ON_SMART_EMOTE, true)
 	--UpdateIsSmartEmoting(smartEmoteIndex)

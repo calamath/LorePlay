@@ -7,7 +7,7 @@ local emoteFromEvent
 local defaultIdleTable
 local eventIdleTable
 local didIdleEmote = false
-local isSmartEmoting = false
+local isActiveEmoting = false
 
 
 function IdleEmotes.CreateEventIdleEmotesTable()
@@ -256,7 +256,7 @@ end
 
 
 function IdleEmotes.IsCharacterIdle()
-	if not isSmartEmoting then
+	if not isActiveEmoting then
 		local x, y, didMove = LPUtilities.DidPlayerMove(currentPlayerX, currentPlayerY) 
 		if not didMove then
 			if isPlayerStealthed == nil then
@@ -335,14 +335,14 @@ function IdleEmotes.OnChatterEvent(eventCode)
 end
 
 
-local function OnSmartEmote(eventCode, isSmartEmotingNow)
-	if eventCode ~= EVENT_ON_SMART_EMOTE then return end
-	if isSmartEmotingNow then
-		isSmartEmoting = true
+local function OnActiveEmote(eventCode, isEmotingNow)
+	if eventCode ~= EVENT_ACTIVE_EMOTE then return end
+	if isEmotingNow then
+		isActiveEmoting = true
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	else
-		isSmartEmoting = false
-		d(isSmartEmoting)
+		isActiveEmoting = false
+		--d(isActiveEmoting)
 		if not IsMounted() then
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
@@ -372,7 +372,7 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler.RegisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
 	LPEventHandler.RegisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	LPEventHandler.RegisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
-	LPEventHandler.RegisterForLocalEvent(EVENT_ON_SMART_EMOTE, OnSmartEmote)
+	LPEventHandler.RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 end
 
