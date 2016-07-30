@@ -567,6 +567,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 		["Baandari Trading Post"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["AD"]
 		},
+		["Baandari Post Wayshrine"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["AD"]
+		},
 		["Belkarth"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["DC"]
 		},
