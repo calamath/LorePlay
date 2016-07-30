@@ -198,19 +198,19 @@ end
 
 function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
-		LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
+		LPEventHandler:UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	end
-	LPEventHandler.UnregisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
-	LPEventHandler.UnregisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
-	LPEventHandler.UnregisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
+	LPEventHandler:UnregisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
+	LPEventHandler:UnregisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
+	LPEventHandler:UnregisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 end
 
 
 function LoreWear.RegisterLoreWearEvents()
-	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
-	LPEventHandler.RegisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
-	LPEventHandler.RegisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
-	LPEventHandler.RegisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
+	LPEventHandler:RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
+	LPEventHandler:RegisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
+	LPEventHandler:RegisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
+	LPEventHandler:RegisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 end
 
 

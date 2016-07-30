@@ -19,8 +19,8 @@ libs\LibAddonMenu-2.0\controls\header.lua
 libs\LibAddonMenu-2.0\controls\slider.lua
 libs\LibAddonMenu-2.0\controls\texture.lua
 libs\LibAddonMenu-2.0\controls\iconpicker.lua
+libs\LibEventHandler\LibEventHandler.lua
 
-code\LPEventHandler.lua
 code\Utilities.lua
 code\LPEmotesTable.lua
 code\LPEmoteHandler.lua

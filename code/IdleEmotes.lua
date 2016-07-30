@@ -231,7 +231,7 @@ function IdleEmotes.PerformIdleEmote()
 		randomEmote = math.random(#defaultIdleTable[location])
 		currIdleEmote = defaultIdleTable[location][randomEmote]
 	end
-	LPEventHandler.FireEvent(EVENT_ON_IDLE_EMOTE, false, true, currIdleEmote)
+	LPEventHandler:FireEvent(EVENT_ON_IDLE_EMOTE, false, true, currIdleEmote)
 	PlayEmoteByIndex(currIdleEmote)
 	didIdleEmote = true
 end
@@ -342,7 +342,6 @@ local function OnActiveEmote(eventCode, isEmotingNow)
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	else
 		isActiveEmoting = false
-		--d(isActiveEmoting)
 		if not IsMounted() then
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
@@ -351,28 +350,28 @@ end
 
 
 function IdleEmotes.UnregisterIdleEvents()
-	LPEventHandler.UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
-	LPEventHandler.UnregisterForEvent(EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
-	LPEventHandler.UnregisterForEvent(EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
-	LPEventHandler.UnregisterForEvent(EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
-	LPEventHandler.UnregisterForEvent(EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
-	LPEventHandler.UnregisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
-	LPEventHandler.UnregisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
-	LPEventHandler.UnregisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler:UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
+	LPEventHandler:UnregisterForEvent(EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
+	LPEventHandler:UnregisterForEvent(EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
+	LPEventHandler:UnregisterForEvent(EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
+	LPEventHandler:UnregisterForEvent(EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
+	LPEventHandler:UnregisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
+	LPEventHandler:UnregisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler:UnregisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 end
 
 
 function IdleEmotes.RegisterIdleEvents()
-	LPEventHandler.RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
-	LPEventHandler.RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
-	LPEventHandler.RegisterForEvent(EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
-	LPEventHandler.RegisterForEvent(EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
-	LPEventHandler.RegisterForEvent(EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
-	LPEventHandler.RegisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
-	LPEventHandler.RegisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
-	LPEventHandler.RegisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
-	LPEventHandler.RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
+	LPEventHandler:RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
+	LPEventHandler:RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
+	LPEventHandler:RegisterForEvent(EVENT_STEALTH_STATE_CHANGED, IdleEmotes.UpdateStealthState)
+	LPEventHandler:RegisterForEvent(EVENT_CHATTER_BEGIN, IdleEmotes.OnChatterEvent)
+	LPEventHandler:RegisterForEvent(EVENT_CHATTER_END, IdleEmotes.OnChatterEvent)
+	LPEventHandler:RegisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
+	LPEventHandler:RegisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler:RegisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler:RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 end
 

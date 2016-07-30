@@ -1,3 +1,5 @@
+LPEmoteHandler = {}
+
 EVENT_ACTIVE_EMOTE = "EVENT_ACTIVE_EMOTE"
 EVENT_ON_SMART_EMOTE = "EVENT_ON_SMART_EMOTE"
 EVENT_ON_IDLE_EMOTE = "EVENT_ON_IDLE_EMOTE"
@@ -10,7 +12,7 @@ local function CheckPlayerMovementWhileEmoting(x, y)
 	local _, _, didMove = LPUtilities.DidPlayerMove(x, y)
 	if didMove then
 		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
-		LPEventHandler.FireEvent(EVENT_ACTIVE_EMOTE, false, false)
+		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, false, false)
 	end
 	return didMove
 end
@@ -27,7 +29,7 @@ end
 local function ResolveEmote()
 	local x, y = GetMapPlayerPosition(LorePlay.player)
 	EVENT_MANAGER:RegisterForUpdate("EmoteTimeReached", 5000, function()
-		LPEventHandler.FireEvent(EVENT_ACTIVE_EMOTE, true, false)
+		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, true, false)
 		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
 		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
 		end)
@@ -63,18 +65,21 @@ local function OnSmartEmote(eventCode, index)
 end
 
 
---returns false to confirm this didn't handle the original ESO action
+--returns false to confirm this didn't handle the original ESO action,
+--thus firing ESO's PlayEmoteByIndex
 local function OnPlayEmoteByIndex(index)
 	if performedSmartEmote or not performedIdleEmote then
 		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
 		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
 		UpdateIsEmoting(index)
-		LPEventHandler.FireEvent(EVENT_ACTIVE_EMOTE, true, true)
+		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, true, true)
 	end
 	return false
 end
 
 
-ZO_PreHook("PlayEmoteByIndex", OnPlayEmoteByIndex)
-LPEventHandler.RegisterForLocalEvent(EVENT_ON_SMART_EMOTE, OnSmartEmote)
-LPEventHandler.RegisterForLocalEvent(EVENT_ON_IDLE_EMOTE, OnIdleEmote)
+function LPEmoteHandler.InitializeEmoteHandler()
+	ZO_PreHook("PlayEmoteByIndex", OnPlayEmoteByIndex)
+	LPEventHandler:RegisterForLocalEvent(EVENT_ON_SMART_EMOTE, OnSmartEmote)
+	LPEventHandler:RegisterForLocalEvent(EVENT_ON_IDLE_EMOTE, OnIdleEmote)
+end
