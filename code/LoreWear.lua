@@ -1,6 +1,7 @@
 local LoreWear = LorePlay
 
 local isMounted
+local isFastTraveling
 local lastUsedCollectible
 local collectiblesMenu
 local lastTimeStamp
@@ -135,16 +136,20 @@ local function ShouldUpdateLocation(isInCity)
 	end
 	if isInCity then
 		if wasLastLocationCity then 
+			--d("is in city, was in city")
 			return false
 		else 
 			wasLastLocationCity = true
+			--d("is in city, was NOT in city")
 			return true
 		end
 	else
 		if not wasLastLocationCity then
+			--d("is NOT in city, was NOT in city")
 			return false
 		else 
 			wasLastLocationCity = false
+			--d("is NOT in city, was in city")
 			return true
 		end
 	end
@@ -155,6 +160,7 @@ local function UpdateLocation(eventCode)
 	local location = GetPlayerLocationName()
 	local isInCity = LorePlay.IsPlayerInCity(location)
 	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+	if isFastTraveling then return end
 	if not IsCooldownOver() then
 		zo_callLater(function() UpdateLocation(eventCode) end, 3000)
 		return
@@ -196,6 +202,16 @@ local function OnMountedStateChanged(eventCode, mounted)
 end
 
 
+local function OnFastTravelInteraction(eventCode)
+	if eventCode == EVENT_START_FAST_TRAVEL_INTERACTION then
+		isFastTraveling = true
+	else
+		isFastTraveling = false
+		UpdateLocation(EVENT_ZONE_CHANGED)
+	end
+end
+
+
 function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
 		LPEventHandler:UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
@@ -211,6 +227,8 @@ function LoreWear.RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
 	LPEventHandler:RegisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
+	LPEventHandler:RegisterForEvent(EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
+	LPEventHandler:RegisterForEvent(EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 end
 
 
