@@ -35,12 +35,12 @@ local playerTitles = {
 	["Daedric Lord Slayer"] = "Daedric Lord Slayer",
 	["Tamriel Hero"] = "Tamriel Hero",
 	["Maelstrom Arena Champion"] = "Maelstrom Arena Champion",
+	["Dragonstar Arena Champion"] = "Dragonstar Arena Champion",
 	["The Flawless Conqueror"] = "The Flawless Conqueror"
 }
 
 
 local function UpdateEmoteFromReticle()
-	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then return end
 	local unitTitle = GetUnitTitle("reticleover")
 	if IsUnitFriend("reticleover") then
 		if SmartEmotes.IsTargetSpouse() then
@@ -64,7 +64,8 @@ function SmartEmotes.PerformSmartEmote()
 	if IsPlayerMoving() or isMounted then return end
 	local randomNumber
 	local smartEmoteIndex
-	if IsUnitPlayer("reticleover") then
+	if IsUnitPlayer("reticleover") and 
+	not SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then
 		UpdateEmoteFromReticle()
 		randomNumber = math.random(#emoteFromReticle["Emotes"])
 		smartEmoteIndex = emoteFromReticle["Emotes"][randomNumber]
