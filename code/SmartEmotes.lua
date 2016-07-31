@@ -39,39 +39,6 @@ local playerTitles = {
 }
 
 
---[[ USE TO ACHIEVE MASTER LIST IN SAVED VARS
---local myStrings = {}
-local function StoreMyEmotesIntoSavedVars()
-	local emoteString = ""
-	local emoteString2 = ""
-	local emoteSlashName
-	local emoteIndex
-	local emoteCategory
-	local emoteID
-	local emoteDisplayName
-	local emoteShowInGamepad
-	local HalfOfEmotes = (GetNumEmotes()/2)
-	
-	for i = 1, HalfOfEmotes, 1 do
-		emoteSlashName, emoteCategory, emoteID, 
-		emoteDisplayName, emoteShowInGamepad = GetEmoteInfo(i)
-		emoteString = emoteString..emoteSlashName..","..emoteCategory..","..i.."\n"
-	end
-
-	for i = HalfOfEmotes+1, GetNumEmotes(), 1 do
-		emoteSlashName, emoteCategory, emoteID, 
-		emoteDisplayName, emoteShowInGamepad = GetEmoteInfo(i)
-		emoteString2 = emoteString2..emoteSlashName..","..emoteCategory..","..i.."\n"
-	end
-
-	myStrings[1] = emoteString
-	myStrings[2] = emoteString2
-	-- Update the saved vars before using this
-	LorePlay.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", LorePlay.savedVarsVersion, nil, myStrings)
-end
-]]--
-
-
 local function UpdateEmoteFromReticle()
 	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then return end
 	local unitTitle = GetUnitTitle("reticleover")
