@@ -1,5 +1,5 @@
 ## Title: LorePlay
-## APIVersion: 100015
+## APIVersion: 100016
 ## Author: Justinon
 ## SavedVariables: LorePlaySavedVars
 ## OptionalDependsOn: LibAddonMenu-2.0
