@@ -184,6 +184,11 @@ local function UpdateLocation(eventCode)
 end
 
 
+local function UpdateLocationDelayed(eventCode)
+	zo_callLater(function() UpdateLocation(eventCode) end, 5000)
+end
+
+
 local function OnPlayerIsActivated(eventCode)
 	isMounted = IsMounted()
 	UpdateLocation(EVENT_ZONE_CHANGED)
@@ -207,7 +212,6 @@ local function OnFastTravelInteraction(eventCode)
 		isFastTraveling = true
 	else
 		isFastTraveling = false
-		UpdateLocation(EVENT_ZONE_CHANGED)
 	end
 end
 
@@ -216,7 +220,7 @@ function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
 		LPEventHandler:UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	end
-	LPEventHandler:UnregisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
+	LPEventHandler:UnregisterForEvent(EVENT_ZONE_CHANGED, UpdateLocationDelayed)
 	LPEventHandler:UnregisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
 	LPEventHandler:UnregisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 end
@@ -224,7 +228,7 @@ end
 
 function LoreWear.RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
-	LPEventHandler:RegisterForEvent(EVENT_ZONE_CHANGED, UpdateLocation)
+	LPEventHandler:RegisterForEvent(EVENT_ZONE_CHANGED, UpdateLocationDelayed)
 	LPEventHandler:RegisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 	LPEventHandler:RegisterForEvent(EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
