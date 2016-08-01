@@ -6,7 +6,7 @@ local lastUsedCollectible
 local collectiblesMenu
 local lastTimeStamp
 local wasLastLocationCity
-local Appearance, Costumes, Hats, Polymorphs, Skins = 3, 1, 2, 3, 4 -- DLC = 1, Upgrade = 2, Appearance = 3, Assistants = 4, etc. Subcategories are also sequential
+local Appearance, Hats, Costumes, Skins, Polymorphs = 3, 1, 2, 3, 4 -- DLC = 1, Upgrade = 2, Appearance = 3, Assistants = 4, etc. Subcategories are also sequential
 LoreWear.loreWearClothesActive = false
 
 
@@ -37,7 +37,6 @@ local function EquipLoreWearClothes()
 	end
 	UseCollectible(currentCollectible)
 	lastUsedCollectible = currentCollectible
-	--LoreWear.loreWearClothesActive = true
 end
 
 
@@ -50,7 +49,6 @@ local function UnequipLoreWearClothes()
 		end
 	end
 	UseCollectible(lastUsedCollectible)
-	--LoreWear.loreWearClothesActive = false
 end
 
 
@@ -61,6 +59,19 @@ local function IsCooldownOver()
 	end
 	lastTimeStamp = now
 	return true
+end
+
+
+local function SetLoreWearClothesActive()
+	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+	if currentCostumeID == 0 then
+		LoreWear.loreWearClothesActive = false
+		return false
+	else
+		LoreWear.loreWearClothesActive = true
+		lastUsedCollectible = currentCostumeID
+		return true
+	end
 end
 
 
@@ -90,6 +101,7 @@ function LoreWear.KeypressToggleLoreWearClothes()
 		return 
 	end
 	if not IsCooldownOver() then return end
+	SetLoreWearClothesActive()
 	LoreWear.ToggleLoreWearClothes()
 end
 
@@ -134,23 +146,24 @@ local function ShouldUpdateLocation(isInCity)
 		wasLastLocationCity = isInCity
 		return true
 	end
+	local wasInCity
 	if isInCity then
 		if wasLastLocationCity then 
 			--d("is in city, was in city")
 			return false
 		else 
-			wasLastLocationCity = true
+			wasInCity = true
 			--d("is in city, was NOT in city")
-			return true
+			return true, wasInCity
 		end
 	else
 		if not wasLastLocationCity then
 			--d("is NOT in city, was NOT in city")
 			return false
 		else 
-			wasLastLocationCity = false
+			wasInCity = false
 			--d("is NOT in city, was in city")
-			return true
+			return true, wasInCity
 		end
 	end
 end
@@ -159,28 +172,24 @@ end
 local function UpdateLocation(eventCode)
 	local location = GetPlayerLocationName()
 	local isInCity = LorePlay.IsPlayerInCity(location)
-	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	if isFastTraveling then return end
+	local shouldUpdate, wasInCity = ShouldUpdateLocation(isInCity)
+	if not shouldUpdate then return end
 	if not IsCooldownOver() then
 		zo_callLater(function() UpdateLocation(eventCode) end, 3000)
 		return
 	end
-	if not ShouldUpdateLocation(isInCity) then return end
+	local areClothesActive = SetLoreWearClothesActive()
 	if isInCity then
-		if currentCostumeID == 0 then
-			LoreWear.loreWearClothesActive = false
+		if not areClothesActive then
 			LoreWear.ToggleLoreWearClothes()
-		elseif not LoreWear.loreWearClothesActive then	--This is to check for whether the player was wearing clothes but not activated from my addon
-			lastUsedCollectible = currentCostumeID
-			LoreWear.loreWearClothesActive = true
 		end
 	else
-		if currentCostumeID ~= 0 then
-			LoreWear.loreWearClothesActive = true
-			lastUsedCollectible = currentCostumeID
+		if areClothesActive then
 			LoreWear.ToggleLoreWearClothes()
 		end
 	end
+	wasLastLocationCity = wasInCity
 end
 
 
