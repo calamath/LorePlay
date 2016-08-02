@@ -2,6 +2,7 @@ local LoreWear = LorePlay
 
 local isMounted
 local isFastTraveling
+local isInCombat
 local lastUsedCollectible
 local collectiblesMenu
 local lastTimeStamp
@@ -172,7 +173,7 @@ end
 local function UpdateLocation(eventCode)
 	local location = GetPlayerLocationName()
 	local isInCity = LorePlay.IsPlayerInCity(location)
-	if isFastTraveling then return end
+	if isFastTraveling or isInCombat then return end
 	local shouldUpdate, wasInCity = ShouldUpdateLocation(isInCity)
 	if not shouldUpdate then return end
 	if not IsCooldownOver() then
@@ -189,7 +190,7 @@ local function UpdateLocation(eventCode)
 			LoreWear.ToggleLoreWearClothes()
 		end
 	end
-	wasLastLocationCity = wasInCity
+	wasLastLocationCity = isInCity
 end
 
 
@@ -225,6 +226,16 @@ local function OnFastTravelInteraction(eventCode)
 end
 
 
+local function OnPlayerCombatState(eventCode, inCombat)
+	if inCombat then
+		isInCombat = true
+	else
+		isInCombat = false
+		zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1000)
+	end
+end
+
+
 function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
 		LPEventHandler:UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
@@ -232,6 +243,9 @@ function LoreWear.UnregisterLoreWearEvents()
 	LPEventHandler:UnregisterForEvent(EVENT_ZONE_CHANGED, UpdateLocationDelayed)
 	LPEventHandler:UnregisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
 	LPEventHandler:UnregisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
+	LPEventHandler:UnregisterForEvent(EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
+	LPEventHandler:UnregisterForEvent(EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
+	LPEventHandler:UnregisterForEvent(EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
 end
 
 
@@ -242,6 +256,8 @@ function LoreWear.RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 	LPEventHandler:RegisterForEvent(EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
+	LPEventHandler:RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
+
 end
 
 

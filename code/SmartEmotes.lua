@@ -10,6 +10,7 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_
 local EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE = "EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE"
 local EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT"
 local EVENT_PLAYER_COMBAT_STATE_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_INCOMBAT"
+local EVENT_KILLED_BOSS = "EVENT_KILLED_BOSS"
 local isMounted
 local defaultEmotes
 local defaultEmotesByRegion
@@ -843,12 +844,11 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Emotes"] = {
 				[1] = 78,
 				[2] = 162,
-				[3] = 81,
+				[3] = 39,
 				[4] = 179,
 				[5] = 52,
 				[6] = 119,
-				[7] = 200,
-				[8] = 39
+				[7] = 200
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -861,6 +861,24 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[4] = 106
 			},
 			["Duration"] = defaultDuration*(2/3)
+		},
+		[EVENT_KILLED_BOSS] = {
+			["EventName"] = EVENT_KILLED_BOSS,
+			["Emotes"] = {
+				[1] = 200,
+				[2] = 162,
+				[3] = 119,
+				[4] = 179,
+				[5] = 25,
+				[6] = 152,
+				[7] = 145,
+				[8] = 62,
+				[9] = 13,
+				[10] = 22,
+				[11] = 97,
+				[12] = 8
+			},
+			["Duration"] = defaultDuration
 		},
 		[EVENT_TRADE_SUCCEEDED] = {
 			["EventName"] = EVENT_TRADE_SUCCEEDED,
@@ -1008,7 +1026,8 @@ end
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
-	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
+	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] or
+	emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_KILLED_BOSS]["EventName"] then return end
 	if not inCombat then
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT)
 	else
@@ -1097,6 +1116,14 @@ function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE(eventCode, u
 end
 
 
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE(eventCode, unitTag, currentExp, maxExp, reason)
+	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
+	if reason == PROGRESS_REASON_OVERLAND_BOSS_KILL then
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_KILLED_BOSS)
+	end
+end
+
+
 function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_LEVEL_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_NOT_SWIMMING, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
@@ -1109,6 +1136,7 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LORE_BOOK_LEARNED_SKILL_EXPERIENCE)
 	LPEventHandler:RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
+	LPEventHandler:RegisterForEvent(EVENT_EXPERIENCE_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE)
 end
 
 
