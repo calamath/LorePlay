@@ -778,15 +778,16 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[4] = 165,
 				[5] = 25,
 				[6] = 129,
-				[7] = 97
+				[7] = 97,
+				[8] = 97,
+				[9] = 97
 			},
 			["Duration"] = defaultDuration*4
 		},
 		[EVENT_PLAYER_NOT_SWIMMING] = {
 			["EventName"] = EVENT_PLAYER_NOT_SWIMMING,
 			["Emotes"] = {
-				[1] = 64,
-				--[2] = 215
+				[1] = 64
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1057,23 +1058,37 @@ end
 
 
 --[[ TODO
-function ImmersiveEmotes.UpdateSmartEmoteTable_For_EVENT_LOOT_RECEIVED(eventCode, receivedBy, itemName, quantity, itemSound, lootType, self, isPickpocketLoot, questItemIcon, itemId)
-	--if itemName == "Rough Beech" or itemName == "Ta" then d("You found an item!") end
-	--local name,col,typID,id,qual,levelreq,enchant,ench1,ench2,un1,un2,un3,un4,un5,un6,un7,un8,un9,style,un10,bound,charge,un11=ZO_LinkHandler_ParseLink(itemName)
-	local un,un8,col,itemID,subtype,reqLevel,enchID,enchst,enchlvl,enchID2,enchst2,enchlvl2,un1,un2,un3,un4,un5,un6,style,crafted,bound,stolen,charge,potEff=ZO_LinkHandler_ParseLink(itemName)
-	--id = tonumber(id)
-	--name = zo_strformat(SI_TOOLTIP_ITEM_NAME, name)
-	d("itemId: "..itemId)
-	d("ID: "..itemID)
-	d("Col: "..col)
-	d("ReqLevel: "..reqLevel)
-	d("subtype: "..subtype)
-	d("Style: "..style)
-	--d("The item ID is: "..itemId)
-	--d(receivedBy.." "..itemName.." "..quantity.." "..lootType.." "..questItemIcon.." "..itemId)
-	--ImmersiveEmotes.UpdateSmartEmoteTable(eventCode)
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(eventCode, itemName, quantity)
+	if GetItemLinkQuality(itemName) == ITEM_QUALITY_LEGENDARY then
+		if quantity < 5 then
+			SmartEmotes.UpdateTTLEmoteTable()
+		else
+			SmartEmotes.UpdateTTLEmoteTable()
+		end
+	end
 end
 ]]--
+
+
+--[[
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_UNIQUE(eventCode, itemName)
+	
+end
+]]--
+
+
+--[[
+function SmartEmotes.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, self, isPickpocketLoot, questItemIcon, itemId)
+	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] or
+	emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_KILLED_BOSS]["EventName"] then return end
+	
+	if IsItemLinkEnchantingRune(itemName) then
+		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(EVENT_LOOT_RECEIVED_RUNE, itemName, quantity)
+	elseif IsItemLinkUnique(itemName) then
+		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_UNIQUE(EVENT_LOOT_RECEIVED_UNIQUE, itemName)
+	end
+end
+]]
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED(eventCode)
@@ -1138,6 +1153,7 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
 	LPEventHandler:RegisterForEvent(EVENT_EXPERIENCE_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE)
+	--LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, SmartEmotes.OnLootReceived)
 end
 
 
