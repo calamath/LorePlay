@@ -6,7 +6,7 @@ local lastUsedCollectible
 local collectiblesMenu
 local lastTimeStamp
 local wasLastLocationCity
-local Appearance, Hats, Costumes, Skins, Polymorphs = 3, 1, 2, 3, 4 -- DLC = 1, Upgrade = 2, Appearance = 3, Assistants = 4, etc. Subcategories are also sequential
+local Appearance, Hats, Costumes, Skins, Polymorphs = "Appearance", "Hats", "Costumes", "Skins", "Polymorphs"
 LoreWear.loreWearClothesActive = false
 
 
@@ -109,7 +109,7 @@ end
 function LoreWear.UpdateUnlockedCostumes()
 	local id
 	for i = 1, collectiblesMenu[Appearance][Costumes]["Total"], 1 do
-		id = GetCollectibleId(Appearance,Costumes,i)
+		id = GetCollectibleIdFromType(COLLECTIBLE_CATEGORY_TYPE_COSTUME, i)
 		if IsCollectibleUnlocked(id) then
 			if not LorePlay.savedSettingsTable.blacklistedCostumes[tostring(id)] then
 				collectiblesMenu[Appearance][Costumes][(#collectiblesMenu[Appearance][Costumes] + 1)] = id
