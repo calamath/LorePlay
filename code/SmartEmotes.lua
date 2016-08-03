@@ -1,6 +1,12 @@
 local SmartEmotes = LorePlay
 
 
+
+local fadeOutAnimation
+local fadeInAnimation
+
+
+
 local EVENT_STARTUP = "EVENT_STARTUP"
 local EVENT_POWER_UPDATE_STAMINA = "EVENT_POWER_UPDATE_STAMINA"
 local EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND = "EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND"
@@ -98,6 +104,7 @@ function SmartEmotes.CheckToDisableTTLEmotes()
 	local resetDurInSecs = emoteFromTTL["Duration"]/1000
 	if GetDiffBetweenTimeStamps(now, lastEventTimeStamp) >= resetDurInSecs then
 		SmartEmotes.DisableTTLEmotes()
+		SmartEmotesIndicator:SetHidden(true)
 	end
 end
 
@@ -120,6 +127,7 @@ function SmartEmotes.UpdateTTLEmoteTable(eventCode)
 		eventTTLEmotes["isEnabled"] = true
 	end
 	emoteFromTTL = eventTTLEmotes[eventCode]
+	SmartEmotesIndicator:SetHidden(false)
 	zo_callLater(SmartEmotes.CheckToDisableTTLEmotes, eventTTLEmotes[eventCode]["Duration"])
 end
 
@@ -1157,12 +1165,19 @@ function SmartEmotes.RegisterSmartEvents()
 end
 
 
+function SmartEmotes.InitializeIndicator()
+	fadeOutAnimation = ZO_AlphaAnimation:New(SmartEmotesIndicator)
+
+end
+
+
 function SmartEmotes.InitializeEmotes()
 	SmartEmotes.CreateTTLEmoteEventTable()
 	SmartEmotes.CreateLatchedEmoteEventTable()
 	SmartEmotes.CreateReticleEmoteTable()
 	SmartEmotes.CreateDefaultEmoteTables()
 	SmartEmotes.RegisterSmartEvents()
+	SmartEmotes.InitializeIndicator()
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
 	isMounted = IsMounted()
 end

@@ -26,6 +26,7 @@ code\Utilities.lua
 code\LPEmotesTable.lua
 code\LPEmoteHandler.lua
 LorePlay.lua
+code\SmartEmotesIndicator.xml
 code\SmartEmotes.lua
 code\IdleEmotes.lua
 code\LoreWear.lua
