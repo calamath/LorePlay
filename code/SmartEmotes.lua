@@ -99,23 +99,15 @@ function SmartEmotes.PerformSmartEmote()
 	if IsUnitPlayer("reticleover") and 
 	not SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then
 		UpdateEmoteFromReticle()
-		--randomNumber = math.random(#emoteFromReticle["Emotes"])
-		--smartEmoteIndex = emoteFromReticle["Emotes"][randomNumber]
 		smartEmoteIndex = GetSmartEmoteIndex(emoteFromReticle)
 		wasReticle = true
 	elseif eventLatchedEmotes["isEnabled"] then
-		--randomNumber = math.random(#emoteFromLatched["Emotes"])
-		--smartEmoteIndex = emoteFromLatched["Emotes"][randomNumber]
 		smartEmoteIndex = GetSmartEmoteIndex(emoteFromLatched)
 	elseif eventTTLEmotes["isEnabled"] then
-		--randomNumber = math.random(#emoteFromTTL["Emotes"])
-		--smartEmoteIndex = emoteFromTTL["Emotes"][randomNumber]
 		smartEmoteIndex = GetSmartEmoteIndex(emoteFromTTL)
 		wasTTL = true
 	else
 		SmartEmotes.UpdateDefaultEmotesTable()
-		--randomNumber = math.random(#defaultEmotes["Emotes"])
-		--smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
 		smartEmoteIndex = GetSmartEmoteIndex(defaultEmotes)
 	end
 	LPEventHandler:FireEvent(EVENT_ON_SMART_EMOTE, false, smartEmoteIndex)
@@ -131,9 +123,7 @@ end
 
 
 function SmartEmotes.DisableTTLEmotes()
-	--if eventTTLEmotes["isEnabled"] then
-		eventTTLEmotes["isEnabled"] = false
-	--end
+	eventTTLEmotes["isEnabled"] = false
 	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
 	if indicator and not eventLatchedEmotes["isEnabled"] then
 		TurnIndicatorOff()
@@ -164,9 +154,7 @@ function SmartEmotes.UpdateLatchedEmoteTable(eventCode)
 	if not eventLatchedEmotes[eventCode] then return end
 	if emoteFromLatched == eventLatchedEmotes[eventCode] and eventLatchedEmotes["isEnabled"] then return end
 	emoteFromLatched = eventLatchedEmotes[eventCode]
-	--if not eventLatchedEmotes["isEnabled"] then
-		eventLatchedEmotes["isEnabled"] = true
-	--end
+	eventLatchedEmotes["isEnabled"] = true
 	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
 	if not indicator then
 		TurnIndicatorOn()
@@ -1225,7 +1213,6 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
 	LPEventHandler:RegisterForEvent(EVENT_EXPERIENCE_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE)
 	--LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, SmartEmotes.OnLootReceived)
-	--LPEventHandler:RegisterForLocalEvent(EVENT_INDICATOR_ON, OnTurnIndicatorOn)
 end
 
 
