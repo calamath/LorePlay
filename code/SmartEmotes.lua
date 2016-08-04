@@ -1193,9 +1193,11 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE(eventCode, unitTag, currentExp, maxExp, reason)
 	if unitTag ~= LorePlay.player then return end
-	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
+	--if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
+	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE) then return end
 	if reason == PROGRESS_REASON_OVERLAND_BOSS_KILL then
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_KILLED_BOSS)
+		return
 	end
 end
 
