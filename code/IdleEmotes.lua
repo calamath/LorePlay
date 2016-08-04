@@ -358,6 +358,7 @@ function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
 	LPEventHandler:UnregisterForEvent(EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	LPEventHandler:UnregisterForEvent(EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler:UnregisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 end
 

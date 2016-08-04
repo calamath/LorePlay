@@ -12,6 +12,7 @@ local defaultSettingsTable = {
 	canExerciseInZone = true,
 	canWorship = true,
 	isUsingFavoriteCostume = false,
+	shouldFavoriteOverride = true,
 	favoriteCostumeId = nil,
 	blacklistedCostumes = {
 		["count"] = 0
@@ -35,6 +36,7 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.canExerciseInZone = Settings.savedVariables.canExerciseInZone
 	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
 	Settings.savedSettingsTable.isUsingFavoriteCostume = Settings.savedVariables.isUsingFavoriteCostume
+	Settings.savedSettingsTable.shouldFavoriteOverride = Settings.savedVariables.shouldFavoriteOverride
 	Settings.savedSettingsTable.favoriteCostumeId = Settings.savedVariables.favoriteCostumeId
 	Settings.savedSettingsTable.blacklistedCostumes = Settings.savedVariables.blacklistedCostumes
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
@@ -403,6 +405,25 @@ function Settings.LoadMenuSettings()
 			default = false,
 		},
 		[19] = {
+			type = "checkbox",
+			name = "Should Favorite Override Others",
+			tooltip = "If enabled, uses your favorite costume when entering cities, even if you enter the city wearing a different costume.\nIf disabled, if you enter a city with a different costume, your favorite will NOT be put on over it.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn and Settings.savedSettingsTable.isUsingFavoriteCostume then
+					return Settings.savedSettingsTable.shouldFavoriteOverride
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isLoreWearOn or not Settings.savedSettingsTable.isUsingFavoriteCostume then return end
+				Settings.savedSettingsTable.shouldFavoriteOverride = setting
+				Settings.savedVariables.shouldFavoriteOverride = Settings.savedSettingsTable.shouldFavoriteOverride 
+			end,
+			width = "full",
+			default = true,
+		},
+		[20] = {
 			type = "button",
 			name = "Set Favorite Costume",
 			tooltip = "Sets the current costume your character is wearing as your favorite costume, allowing your character to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
@@ -420,7 +441,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[20] = {
+		[21] = {
 			type = "button",
 			name = "Clear Favorite Costume",
 			tooltip = "Clears the costume you have previously selected as your favorite, re-allowing your character to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
@@ -435,21 +456,21 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[21] = {
+		[22] = {
 			type = "button",
 			name = "Blacklist Costume",
 			tooltip = "Sets the current costume your character is wearing as a blacklisted costume, no longer allowing it to be automatically put on/off when entering/exiting cities.",
 			func = function() BlacklistCostume() end,
 			width = "half",
 		},
-		[22] = {
+		[23] = {
 			type = "button",
 			name = "Unblacklist Costume",
 			tooltip = "Removes the current costume your character is wearing from the blacklist, re-allowing it to be automatically put on/off from the random costumes when entering/exiting cities.",
 			func = function() UnblacklistCostume() end,
 			width = "half",
 		},
-		[23] = {
+		[24] = {
 			type = "button",
 			name = "Show Blacklist",
 			tooltip = "Prints the names of all the costumes currently blacklisted to the chat box.",
@@ -462,7 +483,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[24] = {
+		[25] = {
 			type = "button",
 			name = "Clear Blacklist",
 			tooltip = "Wipes your blacklist clean, allowing your character to now automatically equip/unequip anything that was once on the list.",
