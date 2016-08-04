@@ -120,7 +120,7 @@ function LoreWear.UpdateUnlockedCostumes()
 end
 
 
-local function UpdateUnlockedCostumesOnCollectibleUpdate(eventCode)
+local function UpdateUnlockedCollectiblesOnCollectibleUpdate(eventCode)
 	LoreWear.UpdateUnlockedCostumes()
 	--UpdateUnlockedHats()
 	--UpdateUnlockedPolymorphs()
@@ -237,7 +237,7 @@ function LoreWear.UnregisterLoreWearEvents()
 		LPEventHandler:UnregisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	end
 	LPEventHandler:UnregisterForEvent(EVENT_ZONE_CHANGED, UpdateLocationDelayed)
-	LPEventHandler:UnregisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
+	LPEventHandler:UnregisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCollectiblesOnCollectibleUpdate)
 	LPEventHandler:UnregisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 	LPEventHandler:UnregisterForEvent(EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForEvent(EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
@@ -248,7 +248,7 @@ end
 function LoreWear.RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	LPEventHandler:RegisterForEvent(EVENT_ZONE_CHANGED, UpdateLocationDelayed)
-	LPEventHandler:RegisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCostumesOnCollectibleUpdate)
+	LPEventHandler:RegisterForEvent(EVENT_COLLECTIBLE_NOTIFICATION_NEW, UpdateUnlockedCollectiblesOnCollectibleUpdate)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 	LPEventHandler:RegisterForEvent(EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)

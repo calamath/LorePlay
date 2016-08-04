@@ -152,7 +152,7 @@ end
 function SmartEmotes.UpdateLatchedEmoteTable(eventCode)
 	if not eventCode then return end
 	if not eventLatchedEmotes[eventCode] then return end
-	if emoteFromLatched == eventLatchedEmotes[eventCode] and eventLatchedEmotes["isEnabled"] then return end
+	--if emoteFromLatched == eventLatchedEmotes[eventCode] and eventLatchedEmotes["isEnabled"] then return end
 	emoteFromLatched = eventLatchedEmotes[eventCode]
 	eventLatchedEmotes["isEnabled"] = true
 	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
@@ -174,8 +174,9 @@ function SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
 	if not indicator then
 		TurnIndicatorOn()
-		wasIndicatorTurnedOffForTTL = false
+		--wasIndicatorTurnedOffForTTL = false
 	end
+	wasIndicatorTurnedOffForTTL = false
 end
 
 
@@ -1147,7 +1148,7 @@ function SmartEmotes.OnLootReceived(eventCode, receivedBy, itemName, quantity, i
 		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_UNIQUE(EVENT_LOOT_RECEIVED_UNIQUE, itemName)
 	end
 end
-]]
+]]--
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED(eventCode)
@@ -1157,7 +1158,7 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED(eventCode, pointsBefore, pointsNow, partialPointsBefore, partialPointsNow)
 	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
-	--[[ MAKE NEW TABLE FOR DIFFERENCE BETWEEN SKYSHARD AND SKILL POINT GAIN ]] --
+	--[[ MAKE NEW TABLE FOR DIFFERENCE BETWEEN SKYSHARD AND SKILL POINT GAIN ]]--
 	if partialPointsNow > partialPointsBefore then
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_SKILL_POINTS_CHANGED)
 	elseif pointsNow > pointsBefore then
