@@ -69,7 +69,7 @@ local function GetBlacklistedCostumeStrings()
 	if blacklist["count"] ~= 0 then
 		for i,v in pairs(blacklist) do
 			if i ~= "count" then
-				string = string.."'"..GetCollectibleName(v).."'"..", "
+				string = string.."'"..GetCollectibleName(v).."'".." "
 			end
 		end
 		return string
