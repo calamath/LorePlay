@@ -6,10 +6,11 @@ EVENT_ON_IDLE_EMOTE = "EVENT_ON_IDLE_EMOTE"
 
 local performedSmartEmote
 local performedIdleEmote
+local didMove
 
 
 local function CheckPlayerMovementWhileEmoting(x, y)
-	local _, _, didMove = LPUtilities.DidPlayerMove(x, y)
+	_, _, didMove = LPUtilities.DidPlayerMove(x, y)
 	if didMove then
 		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
 		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, false, false)

@@ -1,9 +1,11 @@
-local Settings = LorePlay
+local Settings = {}
 local LAM2
+EVENT_INDICATOR_MOVED = "EVENT_INDICATOR_MOVED"
 
 local defaultSettingsTable = {
 	isIdleEmotesOn = true,
 	isLoreWearOn = true,
+	isSmartEmotesIndicatorOn = true,
 	canPlayInstrumentsInCities = true,
 	canDanceInCities = true,
 	canBeDrunkInCities = true,
@@ -15,14 +17,18 @@ local defaultSettingsTable = {
 		["count"] = 0
 	},
 	canActivateLWClothesWhileMounted = false,
-	maraSpouseName = ""
+	maraSpouseName = "",
+	indicatorLeft = nil,
+	indicatorTop = nil
 }
 
 
 function Settings.LoadSavedSettings()
-	Settings.savedSettingsTable = defaultSettingsTable
+	--Settings.savedSettingsTable = defaultSettingsTable
+	Settings.savedSettingsTable = {}
 	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
 	Settings.savedSettingsTable.isLoreWearOn = Settings.savedVariables.isLoreWearOn
+	Settings.savedSettingsTable.isSmartEmotesIndicatorOn = Settings.savedVariables.isSmartEmotesIndicatorOn
 	Settings.savedSettingsTable.canPlayInstrumentsInCities = Settings.savedVariables.canPlayInstrumentsInCities
 	Settings.savedSettingsTable.canDanceInCities = Settings.savedVariables.canDanceInCities
 	Settings.savedSettingsTable.canBeDrunkInCities = Settings.savedVariables.canBeDrunkInCities
@@ -33,19 +39,27 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.blacklistedCostumes = Settings.savedVariables.blacklistedCostumes
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
 	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
+	Settings.savedSettingsTable.indicatorLeft = Settings.savedVariables.indicatorLeft
+	Settings.savedSettingsTable.indicatorTop = Settings.savedVariables.indicatorTop
 end
 
 
-function Settings.LoadMenuSettings()
-	local panelData = {
-		type = "panel",
-		name = LorePlay.name,
-		displayName = "|c8c7037LorePlay",
-		author = "Justinon",
-		version = LorePlay.version,
-		registerForRefresh = true,
-		registerForDefaults = true,
-	}
+local function ResetIndicator()
+	SmartEmotesIndicator:ClearAnchors()
+	SmartEmotesIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, 0, 0)
+	Settings.savedSettingsTable.indicatorLeft = nil
+	Settings.savedSettingsTable.indicatorTop = nil
+	Settings.savedVariables.indicatorLeft = Settings.savedSettingsTable.indicatorLeft
+	Settings.savedVariables.indicatorTop = Settings.savedSettingsTable.indicatorTop
+end
+
+
+local function OnIndicatorMoved(eventCode, top, left)
+	Settings.savedSettingsTable.indicatorTop = top
+	Settings.savedSettingsTable.indicatorLeft = left
+	Settings.savedVariables.indicatorTop = Settings.savedSettingsTable.indicatorTop
+	Settings.savedVariables.indicatorLeft = Settings.savedSettingsTable.indicatorLeft
+end
 
 
 local function GetBlacklistedCostumeStrings()
@@ -149,6 +163,16 @@ local function UnblacklistCostume()
 end
 
 
+function Settings.LoadMenuSettings()
+	local panelData = {
+		type = "panel",
+		name = LorePlay.name,
+		displayName = "|c8c7037LorePlay",
+		author = "Justinon",
+		version = LorePlay.version,
+		registerForRefresh = true,
+	}
+
 	local optionsTable = {
 		[1] = {
 			type = "header",
@@ -158,7 +182,7 @@ end
 		[2] = {
 			type = "description",
 			title = nil,
-			text = "|cFF0000Don't forget to bind your SmartEmotes button!|r\nContextual, appropriate emotes to perform at the touch of a button.\n",
+			text = "|cFF0000Don't forget to bind your SmartEmotes button!|r\nContextual, appropriate emotes to perform at the touch of a button.\nBy default, pressing performs an emote based on location. However, it adapts and conforms to many different special environmental situations along your travels as well.",
 			width = "full",
 		},
 		[3] = {
@@ -175,17 +199,38 @@ end
 			default = "",
 		},
 		[4] = {
+			type = "checkbox",
+			name = "Toggle Indicator On/Off",
+			tooltip = "Turns on/off the small, moveable indicator (drama masks) that appears on your screen whenever new special adaptive SmartEmotes are available to be performed.",
+			getFunc = function() return Settings.savedSettingsTable.isSmartEmotesIndicatorOn end,
+			setFunc = function(setting) 
+				Settings.savedSettingsTable.isSmartEmotesIndicatorOn = setting
+				Settings.savedVariables.isSmartEmotesIndicatorOn = Settings.savedSettingsTable.isSmartEmotesIndicatorOn
+				if not Settings.savedSettingsTable.isSmartEmotesIndicatorOn then
+					SmartEmotesIndicator:SetHidden(true)
+				end
+			end,
+			width = "full",
+		},
+		[5] = {
+			type = "button",
+			name = "Reset Indicator Position",
+			tooltip = "Resets the indicator to be positioned in the top left of the screen.",
+			func = function() ResetIndicator() end,
+			width = "full",
+		},
+		[6] = {
 			type = "header",
 			name = "Idle Emotes",
 			width = "full",
 		},
-		[5] = {
+		[7] = {
 			type = "description",
 			title = nil,
 			text = "Contextual, automatic emotes that occur when you go idle or AFK (Not moving, not fighting, not stealthing).\n",
 			width = "full",
 		},
-		[6] = {
+		[8] = {
 			type = "checkbox",
 			name = "Toggle IdleEmotes On/Off",
 			tooltip = "Turns on/off the automatic, contextual emotes that occur when you go idle or AFK.",
@@ -198,7 +243,7 @@ end
 			end,
 			width = "full",
 		},
-		[7] = {
+		[9] = {
 			type = "checkbox",
 			name = "Can Play Instruments In Cities",
 			tooltip = "Determines whether or not your character can perform instrument emotes when idle in cities.",
@@ -217,7 +262,7 @@ end
 			end,
 			width = "full",
 		},
-		[8] = {
+		[10] = {
 			type = "checkbox",
 			name = "Can Dance In Cities",
 			tooltip = "Determines whether or not your character can perform dance emotes when idle in cities.",
@@ -236,7 +281,7 @@ end
 			end,
 			width = "full",
 		},
-		[9] = {
+		[11] = {
 			type = "checkbox",
 			name = "Can Be Drunk In Cities",
 			tooltip = "Determines whether or not your character can perform drunken emotes when idle in cities.",
@@ -255,7 +300,7 @@ end
 			end,
 			width = "full",
 		},
-		[10] = {
+		[12] = {
 			type = "checkbox",
 			name = "Can Exercise Outside Cities",
 			tooltip = "Determines whether or not your character can perform exercise emotes when idle outside of cities.",
@@ -274,7 +319,7 @@ end
 			end,
 			width = "full",
 		},
-		[11] = {
+		[13] = {
 			type = "checkbox",
 			name = "Can Worship/Pray",
 			tooltip = "Determines whether or not your character can perform prayer and worship emotes when idle in general.",
@@ -293,18 +338,18 @@ end
 			end,
 			width = "full",
 		},
-		[12] = {
+		[14] = {
 			type = "header",
 			name = "Lore Wear",
 			width = "full",
 		},
-		[13] = {
+		[15] = {
 			type = "description",
 			title = nil,
 			text = "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically equip his/her favorite (or a random) costume anytime he/she enters a city, and unequip upon exiting.\n",
 			width = "full",
 		},
-		[14] = {
+		[16] = {
 			type = "checkbox",
 			name = "Toggle LoreWear On/Off",
 			tooltip = "Turns on/off the automatic, contextual clothing that will be put on when entering cities.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)",
@@ -320,7 +365,7 @@ end
 			end,
 			width = "full",
 		},
-		[15] = {
+		[17] = {
 			type = "checkbox",
 			name = "Allow Equip While Mounted",
 			tooltip = "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.",
@@ -338,7 +383,7 @@ end
 			end,
 			width = "full",
 		},
-		[16] = {
+		[18] = {
 			type = "checkbox",
 			name = "Use Favorite Costume",
 			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to picking from the defaults randomly.",
@@ -357,10 +402,10 @@ end
 			width = "full",
 			default = false,
 		},
-		[17] = {
+		[19] = {
 			type = "button",
 			name = "Set Favorite Costume",
-			tooltip = "Sets the current costume your character is wearing as his/her favorite costume, allowing him/her to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
+			tooltip = "Sets the current costume your character is wearing as your favorite costume, allowing your character to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
 			func = function()
 				local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 				if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
@@ -375,10 +420,10 @@ end
 			end,
 			width = "half",
 		},
-		[18] = {
+		[20] = {
 			type = "button",
 			name = "Clear Favorite Costume",
-			tooltip = "Clears the current costume your character has selected as his/her favorite, allowing him/her to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
+			tooltip = "Clears the costume you have previously selected as your favorite, re-allowing your character to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
 			func = function()
 				if not Settings.savedSettingsTable.favoriteCostumeId then return end 
 				local collectibleName = GetCollectibleName(Settings.savedSettingsTable.favoriteCostumeId)
@@ -390,21 +435,21 @@ end
 			end,
 			width = "half",
 		},
-		[19] = {
+		[21] = {
 			type = "button",
 			name = "Blacklist Costume",
-			tooltip = "Sets the current costume your character is wearing as a blacklisted costume, no longer allowing him/her to automatically put it on/off when entering/exiting cities.",
+			tooltip = "Sets the current costume your character is wearing as a blacklisted costume, no longer allowing it to be automatically put on/off when entering/exiting cities.",
 			func = function() BlacklistCostume() end,
 			width = "half",
 		},
-		[20] = {
+		[22] = {
 			type = "button",
 			name = "Unblacklist Costume",
-			tooltip = "Removes the current costume your character is wearing from the blacklist, allowing him/her to now automatically put it on/off from the random costumes when entering/exiting cities.",
+			tooltip = "Removes the current costume your character is wearing from the blacklist, re-allowing it to be automatically put on/off from the random costumes when entering/exiting cities.",
 			func = function() UnblacklistCostume() end,
 			width = "half",
 		},
-		[21] = {
+		[23] = {
 			type = "button",
 			name = "Show Blacklist",
 			tooltip = "Prints the names of all the costumes currently blacklisted to the chat box.",
@@ -413,11 +458,11 @@ end
 					CHAT_SYSTEM:AddMessage("Nothing is on your blacklist.")
 					return
 				end
-				CHAT_SYSTEM:AddMessage("Number of blacklisted costumes: "..tostring(Settings.savedSettingsTable.blacklistedCostumes["count"]).."\nCurrent blacklisted costumes: "..GetBlacklistedCostumeStrings())
+				CHAT_SYSTEM:AddMessage("Number of blacklisted costumes: "..tostring(Settings.savedSettingsTable.blacklistedCostumes["count"]).."\nCurrent blacklisted costume(s): "..GetBlacklistedCostumeStrings())
 			end,
 			width = "half",
 		},
-		[22] = {
+		[24] = {
 			type = "button",
 			name = "Clear Blacklist",
 			tooltip = "Wipes your blacklist clean, allowing your character to now automatically equip/unequip anything that was once on the list.",
@@ -431,11 +476,18 @@ end
 end
 
 
+local function RegisterSettingsEvents()
+	LPEventHandler:RegisterForLocalEvent(EVENT_INDICATOR_MOVED, OnIndicatorMoved)
+end
+
+
 function Settings.InitializeSettings()
 	Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", LorePlay.majorVersion, nil, defaultSettingsTable)
 	Settings.LoadSavedSettings()
 	LAM2 = LibStub("LibAddonMenu-2.0")
 	Settings.LoadMenuSettings()
+	RegisterSettingsEvents()
 end
+
 
 LorePlay = Settings

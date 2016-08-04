@@ -25,6 +25,7 @@ libs\LibEventHandler\LibEventHandler.lua
 code\Utilities.lua
 code\LPEmotesTable.lua
 code\LPEmoteHandler.lua
+code\Settings.lua
 LorePlay.lua
 code\SmartEmotesIndicator.xml
 code\SmartEmotes.lua
@@ -32,7 +33,7 @@ code\IdleEmotes.lua
 code\LoreWear.lua
 bindings\bindings.xml
 bindings\bindings.lua
-code\Settings.lua
+
 
 
 ; DISCLOSURE:

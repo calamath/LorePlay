@@ -147,24 +147,21 @@ local function ShouldUpdateLocation(isInCity)
 		wasLastLocationCity = isInCity
 		return true
 	end
-	local wasInCity
 	if isInCity then
 		if wasLastLocationCity then 
 			--d("is in city, was in city")
 			return false
 		else 
-			wasInCity = true
 			--d("is in city, was NOT in city")
-			return true, wasInCity
+			return true
 		end
 	else
 		if not wasLastLocationCity then
 			--d("is NOT in city, was NOT in city")
 			return false
 		else 
-			wasInCity = false
 			--d("is NOT in city, was in city")
-			return true, wasInCity
+			return true
 		end
 	end
 end
@@ -174,8 +171,7 @@ local function UpdateLocation(eventCode)
 	local location = GetPlayerLocationName()
 	local isInCity = LorePlay.IsPlayerInCity(location)
 	if isFastTraveling or isInCombat then return end
-	local shouldUpdate, wasInCity = ShouldUpdateLocation(isInCity)
-	if not shouldUpdate then return end
+	if not ShouldUpdateLocation(isInCity) then return end
 	if not IsCooldownOver() then
 		zo_callLater(function() UpdateLocation(eventCode) end, 3000)
 		return
@@ -257,7 +253,6 @@ function LoreWear.RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
-
 end
 
 

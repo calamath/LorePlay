@@ -1,10 +1,12 @@
 local SmartEmotes = LorePlay
 
 
-
-local fadeOutAnimation
-local fadeInAnimation
-
+local indicator
+local wasIndicatorTurnedOffForTTL
+local indicatorFadeIn
+local indicatorFadeOut
+local timelineFadeIn
+local timelineFadeOut
 
 
 local EVENT_STARTUP = "EVENT_STARTUP"
@@ -17,6 +19,9 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE = "EVENT_RETICLE_TARGET_CHANGED_TO_
 local EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT"
 local EVENT_PLAYER_COMBAT_STATE_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_INCOMBAT"
 local EVENT_KILLED_BOSS = "EVENT_KILLED_BOSS"
+local EVENT_INDICATOR_ON = "EVENT_INDICATOR_ON"
+
+
 local isMounted
 local defaultEmotes
 local defaultEmotesByRegion
@@ -47,6 +52,19 @@ local playerTitles = {
 }
 
 
+local function TurnIndicatorOff()
+	timelineFadeOut:PlayFromStart()
+	indicator = false
+end
+
+
+local function TurnIndicatorOn()
+	SmartEmotesIndicator:SetHidden(false)
+	timelineFadeIn:PlayFromStart()
+	indicator = true
+end
+
+
 local function UpdateEmoteFromReticle()
 	local unitTitle = GetUnitTitle("reticleover")
 	if IsUnitFriend("reticleover") then
@@ -67,34 +85,67 @@ local function UpdateEmoteFromReticle()
 end
 
 
+local function GetSmartEmoteIndex(emoteTable)
+	local randomNumber, smartEmoteIndex
+	randomNumber = math.random(#emoteTable["Emotes"])
+	smartEmoteIndex = emoteTable["Emotes"][randomNumber]
+	return smartEmoteIndex
+end
+
+
 function SmartEmotes.PerformSmartEmote()
 	if IsPlayerMoving() or isMounted then return end
-	local randomNumber
-	local smartEmoteIndex
+	local smartEmoteIndex, wasReticle, wasTTL
 	if IsUnitPlayer("reticleover") and 
 	not SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then
 		UpdateEmoteFromReticle()
-		randomNumber = math.random(#emoteFromReticle["Emotes"])
-		smartEmoteIndex = emoteFromReticle["Emotes"][randomNumber]
+		--randomNumber = math.random(#emoteFromReticle["Emotes"])
+		--smartEmoteIndex = emoteFromReticle["Emotes"][randomNumber]
+		smartEmoteIndex = GetSmartEmoteIndex(emoteFromReticle)
+		wasReticle = true
 	elseif eventLatchedEmotes["isEnabled"] then
-		randomNumber = math.random(#emoteFromLatched["Emotes"])
-		smartEmoteIndex = emoteFromLatched["Emotes"][randomNumber]
+		--randomNumber = math.random(#emoteFromLatched["Emotes"])
+		--smartEmoteIndex = emoteFromLatched["Emotes"][randomNumber]
+		smartEmoteIndex = GetSmartEmoteIndex(emoteFromLatched)
 	elseif eventTTLEmotes["isEnabled"] then
-		randomNumber = math.random(#emoteFromTTL["Emotes"])
-		smartEmoteIndex = emoteFromTTL["Emotes"][randomNumber]
+		--randomNumber = math.random(#emoteFromTTL["Emotes"])
+		--smartEmoteIndex = emoteFromTTL["Emotes"][randomNumber]
+		smartEmoteIndex = GetSmartEmoteIndex(emoteFromTTL)
+		wasTTL = true
 	else
 		SmartEmotes.UpdateDefaultEmotesTable()
-		randomNumber = math.random(#defaultEmotes["Emotes"])
-		smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
+		--randomNumber = math.random(#defaultEmotes["Emotes"])
+		--smartEmoteIndex = defaultEmotes["Emotes"][randomNumber]
+		smartEmoteIndex = GetSmartEmoteIndex(defaultEmotes)
 	end
 	LPEventHandler:FireEvent(EVENT_ON_SMART_EMOTE, false, smartEmoteIndex)
 	PlayEmoteByIndex(smartEmoteIndex)
+	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if indicator and not wasReticle then
+		TurnIndicatorOff()
+		if wasTTL then
+			wasIndicatorTurnedOffForTTL = true
+		end
+	end
 end
 
 
 function SmartEmotes.DisableTTLEmotes()
-	if eventTTLEmotes["isEnabled"] then
+	--if eventTTLEmotes["isEnabled"] then
 		eventTTLEmotes["isEnabled"] = false
+	--end
+	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if indicator and not eventLatchedEmotes["isEnabled"] then
+		TurnIndicatorOff()
+	end
+end
+
+
+function SmartEmotes.DisableLatchedEmotes()
+	eventLatchedEmotes["isEnabled"] = false
+	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if indicator and not eventTTLEmotes["isEnabled"] or wasIndicatorTurnedOffForTTL then
+		TurnIndicatorOff()
 	end
 end
 
@@ -104,17 +155,21 @@ function SmartEmotes.CheckToDisableTTLEmotes()
 	local resetDurInSecs = emoteFromTTL["Duration"]/1000
 	if GetDiffBetweenTimeStamps(now, lastEventTimeStamp) >= resetDurInSecs then
 		SmartEmotes.DisableTTLEmotes()
-		SmartEmotesIndicator:SetHidden(true)
 	end
 end
 
 
 function SmartEmotes.UpdateLatchedEmoteTable(eventCode)
-	if eventCode == nil then return end
-	if eventLatchedEmotes[eventCode] == nil then return end
+	if not eventCode then return end
+	if not eventLatchedEmotes[eventCode] then return end
+	if emoteFromLatched == eventLatchedEmotes[eventCode] and eventLatchedEmotes["isEnabled"] then return end
 	emoteFromLatched = eventLatchedEmotes[eventCode]
-	if not eventLatchedEmotes["isEnabled"] then
+	--if not eventLatchedEmotes["isEnabled"] then
 		eventLatchedEmotes["isEnabled"] = true
+	--end
+	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if not indicator then
+		TurnIndicatorOn()
 	end
 end
 
@@ -127,8 +182,12 @@ function SmartEmotes.UpdateTTLEmoteTable(eventCode)
 		eventTTLEmotes["isEnabled"] = true
 	end
 	emoteFromTTL = eventTTLEmotes[eventCode]
-	SmartEmotesIndicator:SetHidden(false)
 	zo_callLater(SmartEmotes.CheckToDisableTTLEmotes, eventTTLEmotes[eventCode]["Duration"])
+	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if not indicator then
+		TurnIndicatorOn()
+		wasIndicatorTurnedOffForTTL = false
+	end
 end
 
 
@@ -763,7 +822,7 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 			},
 			["Switch"] = function() 
 				local currentStam, _, effectiveMaxStam = GetUnitPower(LorePlay.player, POWERTYPE_STAMINA)
-				if currentStam < effectiveMaxStam*(.55) then
+				if currentStam < effectiveMaxStam*(.60) then
 					return true
 				end
 			end
@@ -1009,12 +1068,16 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 	-- Must remain in this order for proper detection
 	if SmartEmotes.IsPlayerInCity(location) then
 		defaultEmotes = defaultEmotesByCity[location]
+		return
 	elseif SmartEmotes.IsPlayerInDolmen(location) then
 		defaultEmotes = defaultEmotesForDolmens
+		return
 	elseif SmartEmotes.IsPlayerInZone(zoneName) then
 		defaultEmotes = zoneToRegionEmotes[zoneName]
+		return
 	elseif SmartEmotes.IsPlayerInDungeon(location, zoneName) then
 		defaultEmotes = defaultEmotesForDungeons
+		return
 	end
 end
 
@@ -1127,13 +1190,13 @@ end
 function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE(eventCode, unitTag, powerIndex, powerType, powerValue, powerMax, powerEffectiveMax)
 	if unitTag ~= LorePlay.player then return end
 	if powerType == POWERTYPE_STAMINA then
-		local lowerThreshold = powerEffectiveMax*(.2)
-		local upperThreshold = powerEffectiveMax*(.55)
+		local lowerThreshold = powerEffectiveMax*(.20)
+		local upperThreshold = powerEffectiveMax*(.60)
 		if powerValue <= lowerThreshold then 
 			SmartEmotes.UpdateLatchedEmoteTable(EVENT_POWER_UPDATE_STAMINA)
 		elseif powerValue >= upperThreshold 
 		and SmartEmotes.DoesEmoteFromLatchedEqualEvent(EVENT_POWER_UPDATE_STAMINA) then
-			eventLatchedEmotes["isEnabled"] = false
+			SmartEmotes.DisableLatchedEmotes()
 		end
 	end
 end
@@ -1162,12 +1225,28 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
 	LPEventHandler:RegisterForEvent(EVENT_EXPERIENCE_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE)
 	--LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, SmartEmotes.OnLootReceived)
+	--LPEventHandler:RegisterForLocalEvent(EVENT_INDICATOR_ON, OnTurnIndicatorOn)
 end
 
 
 function SmartEmotes.InitializeIndicator()
-	fadeOutAnimation = ZO_AlphaAnimation:New(SmartEmotesIndicator)
-
+	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then 
+		SmartEmotesIndicator:SetHidden(true)
+	end
+	if LorePlay.savedSettingsTable.indicatorTop then
+		SmartEmotesIndicator:ClearAnchors()
+		SmartEmotesIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, LorePlay.savedSettingsTable.indicatorLeft, LorePlay.savedSettingsTable.indicatorTop)
+	end
+	local fadeTime = 1500
+	indicatorFadeIn, timelineFadeIn = CreateSimpleAnimation(ANIMATION_ALPHA, SmartEmotesIndicator)
+	indicatorFadeOut, timelineFadeOut = CreateSimpleAnimation(ANIMATION_ALPHA, SmartEmotesIndicator) --SmartEmotesIndicator defined in xml file of same name
+	indicatorFadeIn:SetAlphaValues(0, EmoteImage:GetAlpha())
+	indicatorFadeIn:SetDuration(fadeTime)
+	indicatorFadeOut:SetAlphaValues(EmoteImage:GetAlpha(), 0)
+	indicatorFadeOut:SetDuration(fadeTime)
+	timelineFadeIn:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
+	timelineFadeOut:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
+	indicator = false
 end
 
 
