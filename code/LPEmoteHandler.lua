@@ -21,7 +21,7 @@ end
 
 local function ResolveLoopingEmote()
 	local x, y = GetMapPlayerPosition(LorePlay.player)
-	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 1000, function() 
+	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 1500, function() 
 		CheckPlayerMovementWhileEmoting(x, y)
 		end)
 end
@@ -34,7 +34,7 @@ local function ResolveEmote()
 		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
 		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
 		end)
-	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 1050, function() 
+	EVENT_MANAGER:RegisterForUpdate("PlayerMovement", 1500, function() 
 			if CheckPlayerMovementWhileEmoting(x, y) then
 				EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
 			end

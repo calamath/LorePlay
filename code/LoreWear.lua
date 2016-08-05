@@ -65,6 +65,7 @@ end
 
 
 -- NEW EXPERIMENTAL
+-- Return: didLoreWearChooseClothes, didPlayerChooseClothes
 local function GetPlayerCostumeState()
 	currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	if currentCostumeID == 0 then

@@ -17,6 +17,7 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME = "EVENT_RETICLE_TARGET_CHANGED_
 local EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL = "EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL"
 local EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE = "EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE"
 local EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT"
+local EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED = "EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED"
 local EVENT_PLAYER_COMBAT_STATE_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_INCOMBAT"
 local EVENT_KILLED_BOSS = "EVENT_KILLED_BOSS"
 local EVENT_INDICATOR_ON = "EVENT_INDICATOR_ON"
@@ -751,7 +752,8 @@ function SmartEmotes.CreateReticleEmoteTable()
 				[1] = 70,
 				[2] = 72,
 				[3] = 8,
-				[4] = 137
+				[4] = 137,
+				[5] = 94
 			}
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE] = {
@@ -793,7 +795,8 @@ function SmartEmotes.CreateReticleEmoteTable()
 			["Emotes"] = {
 				[1] = 56,
 				[2] = 136,
-				[3] = 137
+				[3] = 137,
+				[4] = 17
 			}
 		}
 	}
@@ -909,13 +912,28 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
+		[EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED] = {
+			["EventName"] = EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED,
+			["Emotes"] = {
+				[1] = 95,
+				[2] = 95,
+				[3] = 74,
+				[4] = 73,
+				[5] = 93,
+				[6] = 109,
+				[7] = 78
+			},
+			["Duration"] = defaultDuration*(2/3)
+		},
 		[EVENT_PLAYER_COMBAT_STATE_INCOMBAT] = {
 			["EventName"] = EVENT_PLAYER_COMBAT_STATE_INCOMBAT,
 			["Emotes"] = {
 				[1] = 27,
 				[2] = 160,
 				[3] = 164,
-				[4] = 106
+				[4] = 106,
+				[5] = 159,
+				[6] = 159
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -1090,8 +1108,10 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode
 	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] or
 	emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_KILLED_BOSS]["EventName"] then return end
 	if not inCombat then
-		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT)
+		isInCombat = false
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED)
 	else
+		isInCombat = true
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_INCOMBAT)
 	end
 end
@@ -1202,10 +1222,20 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE(eventCode, 
 end
 
 
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+	if isInCombat then return end
+	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE, EVENT_KILLED_BOSS) then return end
+	if result == ACTION_RESULT_DIED or result == ACTION_RESULT_KILLING_BLOW or result == ACTION_RESULT_TARGET_DEAD then
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT)
+	end
+end
+
+
 function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_LEVEL_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_NOT_SWIMMING, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
 	LPEventHandler:RegisterForEvent(EVENT_POWER_UPDATE, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE)
+	EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_POWER_UPDATE, REGISTER_FILTER_POWER_TYPE, POWERTYPE_STAMINA)
 	LPEventHandler:RegisterForEvent(EVENT_TRADE_CANCELED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED)
 	LPEventHandler:RegisterForEvent(EVENT_TRADE_SUCCEEDED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED)
 	LPEventHandler:RegisterForEvent(EVENT_HIGH_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)
@@ -1215,6 +1245,8 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_MOUNTED_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_MOUNTED_STATE_CHANGED)
 	LPEventHandler:RegisterForEvent(EVENT_PLAYER_COMBAT_STATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE)
 	LPEventHandler:RegisterForEvent(EVENT_EXPERIENCE_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE)
+	LPEventHandler:RegisterForEvent(EVENT_COMBAT_EVENT, OnCombatEvent)
+	EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_TARGET_DEAD, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_KILLING_BLOW, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_DIED)
 	--LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, SmartEmotes.OnLootReceived)
 end
 
