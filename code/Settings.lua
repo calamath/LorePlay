@@ -13,6 +13,7 @@ local defaultSettingsTable = {
 	canWorship = true,
 	isUsingFavoriteCostume = false,
 	shouldFavoriteOverride = true,
+	equipPreviousCostumeWhenAdventuring = true,
 	favoriteCostumeId = nil,
 	blacklistedCostumes = {
 		["count"] = 0
@@ -37,6 +38,7 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
 	Settings.savedSettingsTable.isUsingFavoriteCostume = Settings.savedVariables.isUsingFavoriteCostume
 	Settings.savedSettingsTable.shouldFavoriteOverride = Settings.savedVariables.shouldFavoriteOverride
+	Settings.savedSettingsTable.equipPreviousCostumeWhenAdventuring = Settings.savedVariables.equipPreviousCostumeWhenAdventuring
 	Settings.savedSettingsTable.favoriteCostumeId = Settings.savedVariables.favoriteCostumeId
 	Settings.savedSettingsTable.blacklistedCostumes = Settings.savedVariables.blacklistedCostumes
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
@@ -184,7 +186,7 @@ function Settings.LoadMenuSettings()
 		[2] = {
 			type = "description",
 			title = nil,
-			text = "|cFF0000Don't forget to bind your SmartEmotes button!|r\nContextual, appropriate emotes to perform at the touch of a button.\nBy default, pressing performs an emote based on location. However, it adapts and conforms to many different special environmental situations along your travels as well.",
+			text = "Contextual, appropriate emotes to perform at the touch of a button.\nBy default, pressing performs an emote based on location. However, it adapts and conforms to many different special environmental situations along your travels as well.\n|cFF0000Don't forget to bind your SmartEmotes button!|r",
 			width = "full",
 		},
 		[3] = {
@@ -235,7 +237,7 @@ function Settings.LoadMenuSettings()
 		[8] = {
 			type = "checkbox",
 			name = "Toggle IdleEmotes On/Off",
-			tooltip = "Turns on/off the automatic, contextual emotes that occur when you go idle or AFK.",
+			tooltip = "Turns on/off the automatic, contextual emotes that occur when you go idle or AFK.\n(Note: Disabling IdleEmotes displays all its settings as off, but will persist after re-enabling.)",
 			getFunc = function() return Settings.savedSettingsTable.isIdleEmotesOn end,
 			setFunc = function(setting) 
 				Settings.savedSettingsTable.isIdleEmotesOn = setting
@@ -348,7 +350,7 @@ function Settings.LoadMenuSettings()
 		[15] = {
 			type = "description",
 			title = nil,
-			text = "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically equip his/her favorite (or a random) costume anytime he/she enters a city, and unequip upon exiting.\n",
+			text = "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically equip his/her favorite (or a random) costume anytime he/she enters a city, and unequip upon exiting.\n|cFF0000Don't forget to bind your LoreWear show/hide clothes button!|r",
 			width = "full",
 		},
 		[16] = {
@@ -387,6 +389,24 @@ function Settings.LoadMenuSettings()
 		},
 		[18] = {
 			type = "checkbox",
+			name = "Equip Last Worn Costume When Adventuring",
+			tooltip = "If enabled, when exiting a city your character will equip the last worn costume from before entering the city.\nIf disabled, your character will show armor when exiting a city regardless of what was previously worn.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn then
+					return Settings.savedSettingsTable.equipPreviousCostumeWhenAdventuring
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting) 
+				if not Settings.savedSettingsTable.isLoreWearOn then return end
+				Settings.savedSettingsTable.equipPreviousCostumeWhenAdventuring = setting
+				Settings.savedVariables.equipPreviousCostumeWhenAdventuring = Settings.savedSettingsTable.equipPreviousCostumeWhenAdventuring 
+			end,
+			width = "full",
+		},
+		[19] = {
+			type = "checkbox",
 			name = "Use Favorite Costume",
 			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to picking from the defaults randomly.",
 			getFunc = function() 
@@ -404,10 +424,10 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[19] = {
+		[20] = {
 			type = "checkbox",
 			name = "Should Favorite Override Others",
-			tooltip = "If enabled, uses your favorite costume when entering cities, even if you enter the city wearing a different costume.\nIf disabled, if you enter a city with a different costume, your favorite will NOT be put on over it.",
+			tooltip = "If enabled, uses your favorite costume when entering cities, even if you enter the city wearing a different costume.\nIf disabled, if you enter a city with a different costume, your favorite will NOT be put on over it.\nThis is to allow for easy, individual costume selection without changing your favorite.",
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn and Settings.savedSettingsTable.isUsingFavoriteCostume then
 					return Settings.savedSettingsTable.shouldFavoriteOverride
@@ -423,7 +443,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = true,
 		},
-		[20] = {
+		[21] = {
 			type = "button",
 			name = "Set Favorite Costume",
 			tooltip = "Sets the current costume your character is wearing as your favorite costume, allowing your character to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
@@ -441,7 +461,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[21] = {
+		[22] = {
 			type = "button",
 			name = "Clear Favorite Costume",
 			tooltip = "Clears the costume you have previously selected as your favorite, re-allowing your character to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
@@ -456,21 +476,21 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[22] = {
+		[23] = {
 			type = "button",
 			name = "Blacklist Costume",
 			tooltip = "Sets the current costume your character is wearing as a blacklisted costume, no longer allowing it to be automatically put on/off when entering/exiting cities.",
 			func = function() BlacklistCostume() end,
 			width = "half",
 		},
-		[23] = {
+		[24] = {
 			type = "button",
 			name = "Unblacklist Costume",
 			tooltip = "Removes the current costume your character is wearing from the blacklist, re-allowing it to be automatically put on/off from the random costumes when entering/exiting cities.",
 			func = function() UnblacklistCostume() end,
 			width = "half",
 		},
-		[24] = {
+		[25] = {
 			type = "button",
 			name = "Show Blacklist",
 			tooltip = "Prints the names of all the costumes currently blacklisted to the chat box.",
@@ -483,7 +503,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[25] = {
+		[26] = {
 			type = "button",
 			name = "Clear Blacklist",
 			tooltip = "Wipes your blacklist clean, allowing your character to now automatically equip/unequip anything that was once on the list.",

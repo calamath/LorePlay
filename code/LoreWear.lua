@@ -3,16 +3,13 @@ local LoreWear = LorePlay
 local isMounted
 local isFastTraveling
 local isInCombat
+local currentCostumeID
 local lastUsedCollectible
+local costumeBeforeCity
 local collectiblesMenu
 local lastTimeStamp
 local wasLastLocationCity
 local Appearance, Hats, Costumes, Skins, Polymorphs = "Appearance", "Hats", "Costumes", "Skins", "Polymorphs"
-LoreWear.loreWearClothesActive = false
-
-
-
-LoreWear.activeForDifferentCostume = false
 
 
 local function GetRandomLoreWearCostumeID()
@@ -68,8 +65,8 @@ end
 
 
 -- NEW EXPERIMENTAL
-local function SetLoreWearClothesActive()
-	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+local function GetPlayerCostumeState()
+	currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	if currentCostumeID == 0 then
 		return false, false
 	else
@@ -85,56 +82,6 @@ local function SetLoreWearClothesActive()
 end
 
 
--- EXPERIMENTAL
---[[
-local function SetLoreWearClothesActive()
-	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
-	if currentCostumeID == 0 then
-		LoreWear.activeForDifferentCostume = false
-		LoreWear.loreWearClothesActive = false
-		return false, false
-	else
-		if LorePlay.savedSettingsTable.isUsingFavoriteCostume then
-			--d("Is using favorite")
-			if currentCostumeID == LorePlay.savedSettingsTable.favoriteCostumeId then
-				LoreWear.activeForDifferentCostume = false
-				LoreWear.loreWearClothesActive = true
-				lastUsedCollectible = currentCostumeID
-				--d("LoreWear clothes active now")
-				return true, false
-			else
-				--d("LoreWear NOT active")
-				LoreWear.activeForDifferentCostume = true
-				LoreWear.loreWearClothesActive = false
-				lastUsedCollectible = currentCostumeID
-				return false, true
-			end
-		else
-			LoreWear.activeForDifferentCostume = false
-			LoreWear.loreWearClothesActive = true
-			lastUsedCollectible = currentCostumeID
-			return true, false
-		end
-	end
-end
-]]--
-
-
---[[ ORIGINAL
-local function SetLoreWearClothesActive()
-	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
-	if currentCostumeID == 0 then
-		LoreWear.loreWearClothesActive = false
-		return false
-	else
-		LoreWear.loreWearClothesActive = true
-		lastUsedCollectible = currentCostumeID
-		return true
-	end
-end
-]]--
-
-
 local function CheckToToggleLoreWearClothes()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
 		if isMounted then return false end
@@ -143,21 +90,8 @@ local function CheckToToggleLoreWearClothes()
 end
 
 
---[[
-function LoreWear.ToggleLoreWearClothes()
-	if LoreWear.loreWearClothesActive then
-		UnequipLoreWearClothes()
-		LoreWear.loreWearClothesActive = false
-	else
-		EquipLoreWearClothes()
-		LoreWear.loreWearClothesActive = true
-	end
-end
-]]--
-
-
 local function ShowOrHideClothes()
-	local currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+	currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	if currentCostumeID == 0 then
 		UseCollectible(lastUsedCollectible)
 	else
@@ -175,8 +109,6 @@ function LoreWear.KeypressToggleLoreWearClothes()
 	end
 	if not IsCooldownOver() then return end
 	ShowOrHideClothes()
-	--SetLoreWearClothesActive()
-	--LoreWear.ToggleLoreWearClothes()
 end
 
 
@@ -250,8 +182,9 @@ local function UpdateLocation(eventCode)
 		zo_callLater(function() UpdateLocation(eventCode) end, 3000)
 		return
 	end
-	local areLoreWearChosenClothesActive, arePlayerChosenClothesActive = SetLoreWearClothesActive()
+	local areLoreWearChosenClothesActive, arePlayerChosenClothesActive = GetPlayerCostumeState()
 	if isInCity then
+		costumeBeforeCity = currentCostumeID
 		if arePlayerChosenClothesActive then
 			if LorePlay.savedSettingsTable.shouldFavoriteOverride then
 				EquipLoreWearClothes()
@@ -261,36 +194,17 @@ local function UpdateLocation(eventCode)
 		end
 	else
 		if areLoreWearChosenClothesActive or arePlayerChosenClothesActive then
-			UnequipLoreWearClothes()
+			if LorePlay.savedSettingsTable.equipPreviousCostumeWhenAdventuring and costumeBeforeCity ~= 0 then
+				if costumeBeforeCity ~= currentCostumeID then
+					UseCollectible(costumeBeforeCity)
+				end
+			else
+				UnequipLoreWearClothes()
+			end
 		end
 	end
 	wasLastLocationCity = isInCity
 end
-
-
---[[ ORIGINAL
-local function UpdateLocation(eventCode)
-	local location = GetPlayerLocationName()
-	local isInCity = LorePlay.IsPlayerInCity(location)
-	if isFastTraveling or isInCombat then return end
-	if not ShouldUpdateLocation(isInCity) then return end
-	if not IsCooldownOver() then
-		zo_callLater(function() UpdateLocation(eventCode) end, 3000)
-		return
-	end
-	local areClothesActive = SetLoreWearClothesActive()
-	if isInCity then
-		if not areClothesActive then
-			LoreWear.ToggleLoreWearClothes()
-		end
-	else
-		if areClothesActive then
-			LoreWear.ToggleLoreWearClothes()
-		end
-	end
-	wasLastLocationCity = isInCity
-end
-]]--
 
 
 local function UpdateLocationDelayed(eventCode)
@@ -310,7 +224,7 @@ local function OnMountedStateChanged(eventCode, mounted)
 	else 
 		isMounted = false
 		if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
-			zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1350)
+			zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1400)
 		end	
 	end
 end
