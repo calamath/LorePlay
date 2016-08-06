@@ -1295,7 +1295,6 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED(eventCode)
 end
 
 
---[[
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_GENERAL(eventCode, itemName)
 	if eventCode ~= EVENT_LOOT_RECEIVED_GENERAL then return end
 	--local equipType = GetItemLinkEquipType(itemName)
@@ -1314,7 +1313,7 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_GENERAL(eventCo
 		wornQuality2 = GetItemLinkQuality(wornItem2)
 	end
 	if qualityReceived > wornQuality1 or wornQuality2 and qualityReceived > wornQuality2 then
-		--SmartEmotes.UpdateTTLEmoteTable(EVENT_LOOT_RECEIVED_BETTER)
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_LOOT_RECEIVED_BETTER)
 	end
 end
 
@@ -1326,17 +1325,8 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(eventCode,
 		SmartEmotes.UpdateTTLEmoteTable(runeQualityToEvents[quality])
 	end
 end
-]]--
 
 
---[[
-function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_UNIQUE(eventCode, itemName)
-	
-end
-]]--
-
-
---[[
 local function OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, self, isPickpocketLoot, questItemIcon, itemId)
 	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] or
 	emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_KILLED_BOSS]["EventName"] then return end
@@ -1344,12 +1334,11 @@ local function OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSou
 	if IsItemLinkEnchantingRune(itemName) then
 		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(EVENT_LOOT_RECEIVED_RUNE, itemName)
 	elseif IsItemLinkUnique(itemName) then
-		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_UNIQUE(EVENT_LOOT_RECEIVED_UNIQUE, itemName)
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_LOOT_RECEIVED_BETTER)
 	else
 		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_GENERAL(EVENT_LOOT_RECEIVED_GENERAL, itemName)
 	end
 end
-]]--
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED(eventCode)
@@ -1448,7 +1437,7 @@ function SmartEmotes.RegisterSmartEvents()
 	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_DIED)
 	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, , ACTION_RESULT_DIED_XP)
 	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_KILLING_BLOW)
-	--LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, OnLootReceived)
+	LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, OnLootReceived)
 end
 
 
