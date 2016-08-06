@@ -1335,7 +1335,14 @@ local function OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSou
 		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(EVENT_LOOT_RECEIVED_RUNE, itemName)
 	elseif IsItemLinkUnique(itemName) then
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_LOOT_RECEIVED_BETTER)
+	--else 
+		--local itemType = GetItemLinkItemType()
+		-- if itemType == ITEMTYPE_RAW_MATERIAL then
+		
+		-- end
+	--end
 	else
+	--if
 		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_GENERAL(EVENT_LOOT_RECEIVED_GENERAL, itemName)
 	end
 end
