@@ -10,6 +10,7 @@ local timelineFadeOut
 
 
 local EVENT_STARTUP = "EVENT_STARTUP"
+local EVENT_KILLED_CREATURE = "EVENT_KILLED_CREATURE"
 local EVENT_POWER_UPDATE_STAMINA = "EVENT_POWER_UPDATE_STAMINA"
 local EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND = "EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND"
 local EVENT_RETICLE_TARGET_CHANGED_TO_EPIC = "EVENT_RETICLE_TARGET_CHANGED_TO_EPIC"
@@ -19,11 +20,21 @@ local EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE = "EVENT_RETICLE_TARGET_CHANGED_TO_
 local EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT"
 local EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED = "EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED"
 local EVENT_PLAYER_COMBAT_STATE_INCOMBAT = "EVENT_PLAYER_COMBAT_STATE_INCOMBAT"
+local EVENT_LOCKPICK_SUCCESS_EASY = "EVENT_LOCKPICK_SUCCESS_EASY"
+local EVENT_LOCKPICK_SUCCESS_MEDIUM = "EVENT_LOCKPICK_SUCCESS_MEDIUM"
+local EVENT_LOCKPICK_SUCCESS_HARD = "EVENT_LOCKPICK_SUCCESS_HARD"
+local EVENT_LOOT_RECEIVED_RUNE_TA = "EVENT_LOOT_RECEIVED_RUNE_TA"
+local EVENT_LOOT_RECEIVED_RUNE_REKUTA = "EVENT_LOOT_RECEIVED_RUNE_REKUTA"
+local EVENT_LOOT_RECEIVED_RUNE_KUTA = "EVENT_LOOT_RECEIVED_RUNE_KUTA"
+local EVENT_LOOT_RECEIVED_UNIQUE = "EVENT_LOOT_RECEIVED_UNIQUE"
+local EVENT_LOOT_RECEIVED_GENERAL = "EVENT_LOOT_RECEIVED_GENERAL"
+local EVENT_LOOT_RECEIVED_BETTER = "EVENT_LOOT_RECEIVED_BETTER"
 local EVENT_KILLED_BOSS = "EVENT_KILLED_BOSS"
 local EVENT_INDICATOR_ON = "EVENT_INDICATOR_ON"
 
 
 local isMounted
+local isInCombat
 local lockpickQuality
 local defaultEmotes
 local defaultEmotesByRegion
@@ -50,6 +61,11 @@ local lockpickValues = {
 	[LOCK_QUALITY_MASTER] = 6,
 	[LOCK_QUALITY_IMPOSSIBLE] = 7
 }
+local runeQualityToEvents = {
+	[ITEM_QUALITY_NORMAL] = EVENT_LOOT_RECEIVED_RUNE_TA,
+	[ITEM_QUALITY_ARTIFACT] = EVENT_LOOT_RECEIVED_RUNE_REKUTA,
+	[ITEM_QUALITY_LEGENDARY] = EVENT_LOOT_RECEIVED_RUNE_KUTA
+}
 local playerTitles = {
 	["Emperor"] = "Emperor",
 	["Empress"] = "Empress",
@@ -75,6 +91,14 @@ local function TurnIndicatorOn()
 	SmartEmotesIndicator:SetHidden(false)
 	timelineFadeIn:PlayFromStart()
 	indicator = true
+end
+
+
+function SmartEmotes.IsTargetSpouse()
+	if GetUnitNameHighlightedByReticle() == LorePlay.savedSettingsTable.maraSpouseName then
+		return true
+	end
+	return false
 end
 
 
@@ -888,7 +912,9 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[3] = 12,
 				[4] = 168,
 				[5] = 133,
-				[6] = 80
+				[6] = 80,
+				[7] = 173,
+				[8] = 71
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -899,9 +925,100 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[2] = 32,
 				[3] = 155,
 				[4] = 12,
-				[5] = 167
+				[5] = 167,
+				[6] = 109,
+				[7] = 109
+		[EVENT_LOCKPICK_SUCCESS_EASY] = {
+			["EventName"] = EVENT_LOCKPICK_SUCCESS_EASY,
+			["Emotes"] = {
+				[1] = 129,
+				[2] = 42,
+				[3] = 36,
+				[4] = 78,
+				[5] = 41
+			},
+			["Duration"] = defaultDuration
+		},
+		[EVENT_LOCKPICK_SUCCESS_MEDIUM] = {
+			["EventName"] = EVENT_LOCKPICK_SUCCESS_MEDIUM,
+			["Emotes"] = {
+				[1] = 129,
+				[2] = 36,
+				[3] = 36,
+				[4] = 91,
+				[5] = 95,
+				[6] = 95
+			},
+			["Duration"] = defaultDuration
+		},
+		[EVENT_LOCKPICK_SUCCESS_HARD] = {
+			["EventName"] = EVENT_LOCKPICK_SUCCESS_HARD,
+			["Emotes"] = {
+				[1] = 95,
+				[2] = 25,
+				[3] = 25,
+				[4] = 25,
+				[5] = 82,
+				[6] = 150,
+				[7] = 36,
+				[8] = 26,
+				[9] = 66
+			},
+			["Duration"] = defaultDuration
+		},
+		[EVENT_LOOT_RECEIVED_RUNE_TA] = {
+			["EventName"] = EVENT_LOOT_RECEIVED_RUNE_TA,
+			["Emotes"] = {
+				[1] = 29,
+				[2] = 69,
+				[3] = 73,
+				[4] = 33,
+				[5] = 134,
+				[6] = 40,
+				[7] = 133,
+				[8] = 23
 			},
 			["Duration"] = defaultDuration*(2/3)
+		},
+		[EVENT_LOOT_RECEIVED_RUNE_REKUTA] = {
+			["EventName"] = EVENT_LOOT_RECEIVED_RUNE_REKUTA,
+			["Emotes"] = {
+				[1] = 36,
+				[2] = 54,
+				[3] = 42,
+				[4] = 81,
+				[5] = 129,
+				[6] = 26
+			},
+			["Duration"] = defaultDuration*(2/3)
+		},
+		[EVENT_LOOT_RECEIVED_RUNE_KUTA] = {
+			["EventName"] = EVENT_LOOT_RECEIVED_RUNE_KUTA,
+			["Emotes"] = {
+				[1] = 67,
+				[2] = 13,
+				[3] = 66,
+				[4] = 25,
+				[5] = 163,
+				[6] = 72,
+				[7] = 150,
+				[8] = 26
+			},
+			["Duration"] = defaultDuration
+		},
+		[EVENT_LOOT_RECEIVED_BETTER] = {
+			["EventName"] = EVENT_LOOT_RECEIVED_BETTER,
+			["Emotes"] = {
+				[1] = 25,
+				[2] = 25,
+				[3] = 39,
+				[4] = 14,
+				[5] = 151,
+				[6] = 54,
+				[7] = 164,
+				[8] = 130
+			},
+			["Duration"] = defaultDuration
 		},
 		[EVENT_LOW_FALL_DAMAGE] = {
 			["EventName"] = EVENT_LOW_FALL_DAMAGE,
@@ -1127,12 +1244,26 @@ function SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE(eventCode)
 end
 
 
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result)
+	if isInCombat then return end
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT)
+	end
+end
+
+
+local function OnCombatEvent(eventCode, result)
+	zo_callLater(function() SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result) end, 0500)
+end
+
+
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_COMBAT_STATE(eventCode, inCombat)
 	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE, EVENT_KILLED_BOSS, 
 		EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT) then return end
 	if not inCombat then
+		isInCombat = false
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED)
 	else
+		isInCombat = true
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_INCOMBAT)
 	end
 end
@@ -1158,14 +1289,35 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED(eventCode)
 end
 
 
---[[ TODO
-function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(eventCode, itemName, quantity)
-	if GetItemLinkQuality(itemName) == ITEM_QUALITY_LEGENDARY then
-		if quantity < 5 then
-			SmartEmotes.UpdateTTLEmoteTable()
-		else
-			SmartEmotes.UpdateTTLEmoteTable()
-		end
+--[[
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_GENERAL(eventCode, itemName)
+	if eventCode ~= EVENT_LOOT_RECEIVED_GENERAL then return end
+	--local equipType = GetItemLinkEquipType(itemName)
+	--if equipType == EQUIP_TYPE_INVALID then return end
+	local equipSlot1, equipSlot2 = GetComparisonEquipSlotsFromItemLink(itemName)
+	if not equipSlot1 or equipSlot1 == EQUIP_SLOT_NONE or equipSlot1 == EQUIP_SLOT_COSTUME then return end
+	local qualityReceived = GetItemLinkQuality(itemName)
+	local wornItem1 = GetSlotItemLink(equipSlot1)
+	local wornItem2
+	if equipSlot2 and equipSlot2 ~= EQUIP_SLOT_NONE then
+		wornItem2 = GetSlotItemLink(equipSlot2)
+	end
+	local wornQuality1 = GetItemLinkQuality(wornItem1)
+	local wornQuality2
+	if wornItem2 then
+		wornQuality2 = GetItemLinkQuality(wornItem2)
+	end
+	if qualityReceived > wornQuality1 or wornQuality2 and qualityReceived > wornQuality2 then
+		--SmartEmotes.UpdateTTLEmoteTable(EVENT_LOOT_RECEIVED_BETTER)
+	end
+end
+
+
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(eventCode, itemName)
+	local quality = GetItemLinkQuality(itemName)
+	if quality == ITEM_QUALITY_NORMAL or quality == ITEM_QUALITY_ARTIFACT or 
+	quality == ITEM_QUALITY_LEGENDARY then
+		SmartEmotes.UpdateTTLEmoteTable(runeQualityToEvents[quality])
 	end
 end
 ]]--
@@ -1179,14 +1331,16 @@ end
 
 
 --[[
-function SmartEmotes.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, self, isPickpocketLoot, questItemIcon, itemId)
+local function OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, self, isPickpocketLoot, questItemIcon, itemId)
 	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] or
 	emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_KILLED_BOSS]["EventName"] then return end
 	
 	if IsItemLinkEnchantingRune(itemName) then
-		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(EVENT_LOOT_RECEIVED_RUNE, itemName, quantity)
+		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(EVENT_LOOT_RECEIVED_RUNE, itemName)
 	elseif IsItemLinkUnique(itemName) then
 		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_UNIQUE(EVENT_LOOT_RECEIVED_UNIQUE, itemName)
+	else
+		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_GENERAL(EVENT_LOOT_RECEIVED_GENERAL, itemName)
 	end
 end
 ]]--
@@ -1205,14 +1359,6 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_SKILL_POINTS_CHANGED(eventCod
 	elseif pointsNow > pointsBefore then
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_SKILL_POINTS_CHANGED)
 	end
-end
-
-
-function SmartEmotes.IsTargetSpouse()
-	if GetUnitNameHighlightedByReticle() == LorePlay.savedSettingsTable.maraSpouseName then
-		return true
-	end
-	return false
 end
 
 
@@ -1242,21 +1388,6 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE(eventCode, 
 	end
 end
 
---[[ THIS SHIT WONT WORK
-
-|
-|
-|
-V
-
-]]
-function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result) --, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
-	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE, EVENT_KILLED_BOSS) then return end
-	if result == ACTION_RESULT_DIED or result == ACTION_RESULT_KILLING_BLOW or result == ACTION_RESULT_TARGET_DEAD then
-		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT)
-	end
-end
-
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOCKPICK_FAILED(eventCode)
 	if eventCode ~= EVENT_LOCKPICK_FAILED then return end
@@ -1270,14 +1401,14 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOCKPICK_SUCCESS(eventCode)
 	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE) then return end
 	if not lockpickQuality then return end
 	if lockpickQuality <= lockpickValues[LOCK_QUALITY_SIMPLE] then
-		--SmartEmotes.UpdateTTLEmoteTable(EVENT_LOCKPICK_SUCCESS_EASY)
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_LOCKPICK_SUCCESS_EASY)
 		return
 	elseif lockpickQuality > lockpickValues[LOCK_QUALITY_SIMPLE] 
 	and lockpickQuality <= lockpickValues[LOCK_QUALITY_ADVANCED] then
-		--SmartEmotes.UpdateTTLEmoteTable(EVENT_LOCKPICK_SUCCESS_MEDIUM)
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_LOCKPICK_SUCCESS_MEDIUM)
 		return
 	elseif lockpickQuality > lockpickValues[LOCK_QUALITY_ADVANCED] then
-		--SmartEmotes.UpdateTTLEmoteTable(EVENT_LOCKPICK_SUCCESS_HARD)
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_LOCKPICK_SUCCESS_HARD)
 		return
 	end
 end
@@ -1307,10 +1438,11 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_LOCKPICK_SUCCESS, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOCKPICK_SUCCESS)
 	LPEventHandler:RegisterForEvent(EVENT_BEGIN_LOCKPICK, OnBeginLockpick)
 	LPEventHandler:RegisterForEvent(EVENT_COMBAT_EVENT, OnCombatEvent)
-	EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_TARGET_DEAD)
-	EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_DIED)
-	EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_KILLING_BLOW)
-	--LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, SmartEmotes.OnLootReceived)
+	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_TARGET_DEAD, ACTION_RESULT_DIED, ACTION_RESULT_DIED_XP, ACTION_RESULT_KILLING_BLOW)
+	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_DIED)
+	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, , ACTION_RESULT_DIED_XP)
+	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_KILLING_BLOW)
+	--LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, OnLootReceived)
 end
 
 
