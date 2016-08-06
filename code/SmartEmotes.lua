@@ -928,6 +928,9 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[5] = 167,
 				[6] = 109,
 				[7] = 109
+			},
+			["Duration"] = defaultDuration*(2/3)
+		},
 		[EVENT_LOCKPICK_SUCCESS_EASY] = {
 			["EventName"] = EVENT_LOCKPICK_SUCCESS_EASY,
 			["Emotes"] = {
@@ -1246,6 +1249,9 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result)
 	if isInCombat then return end
+	if result == ACTION_RESULT_DIED_XP or result == ACTION_RESULT_DIED or 
+	result == ACTION_RESULT_KILLING_BLOW or result == ACTION_RESULT_TARGET_DEAD then
+		if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE, EVENT_KILLED_BOSS) then return end
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT)
 	end
 end
