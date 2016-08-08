@@ -1247,8 +1247,8 @@ function SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE(eventCode)
 end
 
 
-function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result)
-	if isInCombat then return end
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+	if not sourceName == GetUnitName(LorePlay.player) or isInCombat then return end
 	if result == ACTION_RESULT_DIED_XP or result == ACTION_RESULT_DIED or 
 	result == ACTION_RESULT_KILLING_BLOW or result == ACTION_RESULT_TARGET_DEAD then
 		if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE, EVENT_KILLED_BOSS) then return end

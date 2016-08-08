@@ -94,7 +94,11 @@ end
 local function ShowOrHideClothes()
 	currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	if currentCostumeID == 0 then
-		UseCollectible(lastUsedCollectible)
+		if not lastUsedCollectible then
+			EquipLoreWearClothes()
+		else
+			UseCollectible(lastUsedCollectible)
+		end
 	else
 		lastUsedCollectible = currentCostumeID
 		UnequipLoreWearClothes()
@@ -150,7 +154,7 @@ end
 local function ShouldUpdateLocation(isInCity)
 	if not CheckToToggleLoreWearClothes() then return false end
 	if wasLastLocationCity == nil then
-		wasLastLocationCity = isInCity
+		--wasLastLocationCity = isInCity
 		return true
 	end
 	if isInCity then
@@ -185,26 +189,33 @@ local function UpdateLocation(eventCode)
 	end
 	local areLoreWearChosenClothesActive, arePlayerChosenClothesActive = GetPlayerCostumeState()
 	if isInCity then
-		costumeBeforeCity = currentCostumeID
-		if arePlayerChosenClothesActive then
-			if LorePlay.savedSettingsTable.shouldFavoriteOverride then
-				EquipLoreWearClothes()
-			end
+		if not areLoreWearChosenClothesActive or 
+		arePlayerChosenClothesActive and LorePlay.savedSettingsTable.shouldFavoriteOverride then
+			EquipLoreWearClothes()
+			if wasLastLocationCity == nil then return end
+			wasLastLocationCity = isInCity
+			costumeBeforeCity = currentCostumeID
+			return
+		--[[
 		elseif not areLoreWearChosenClothesActive then
 			EquipLoreWearClothes()
+			if wasLastLocationCity == nil then return end
+			wasLastLocationCity = isInCity
+			return
+		--]]
 		end
 	else
 		if areLoreWearChosenClothesActive or arePlayerChosenClothesActive then
-			if LorePlay.savedSettingsTable.equipPreviousCostumeWhenAdventuring and costumeBeforeCity ~= 0 then
-				if costumeBeforeCity ~= currentCostumeID then
+			if LorePlay.savedSettingsTable.equipPreviousCostumeWhenAdventuring and costumeBeforeCity and costumeBeforeCity ~= 0 then
+				if costumeBeforeCity ~= currentCostumeID or wasLastLocationCity == nil then
 					UseCollectible(costumeBeforeCity)
 				end
 			else
 				UnequipLoreWearClothes()
 			end
+			wasLastLocationCity = isInCity
 		end
 	end
-	wasLastLocationCity = isInCity
 end
 
 
