@@ -213,7 +213,6 @@ function SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
 	if not indicator then
 		TurnIndicatorOn()
-		--wasIndicatorTurnedOffForTTL = false
 	end
 	wasIndicatorTurnedOffForTTL = false
 end
@@ -1402,7 +1401,6 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE(eventCode, unitTag, currentExp, maxExp, reason)
 	if unitTag ~= LorePlay.player then return end
-	--if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] then return end
 	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE) then return end
 	if reason == PROGRESS_REASON_OVERLAND_BOSS_KILL then
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_KILLED_BOSS)
@@ -1460,10 +1458,6 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(EVENT_LOCKPICK_SUCCESS, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOCKPICK_SUCCESS)
 	LPEventHandler:RegisterForEvent(EVENT_BEGIN_LOCKPICK, OnBeginLockpick)
 	LPEventHandler:RegisterForEvent(EVENT_COMBAT_EVENT, OnCombatEvent)
-	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_TARGET_DEAD, ACTION_RESULT_DIED, ACTION_RESULT_DIED_XP, ACTION_RESULT_KILLING_BLOW)
-	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_DIED)
-	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, , ACTION_RESULT_DIED_XP)
-	--EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_KILLING_BLOW)
 	LPEventHandler:RegisterForEvent(EVENT_LOOT_RECEIVED, OnLootReceived)
 end
 

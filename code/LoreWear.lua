@@ -64,7 +64,6 @@ local function IsCooldownOver()
 end
 
 
--- NEW EXPERIMENTAL
 -- Return: didLoreWearChooseClothes, didPlayerChooseClothes
 local function GetPlayerCostumeState()
 	currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
@@ -158,25 +157,20 @@ local function ShouldUpdateLocation(isInCity)
 	end
 	if isInCity then
 		if wasLastLocationCity then 
-			--d("is in city, was in city")
 			return false
 		else 
-			--d("is in city, was NOT in city")
 			return true
 		end
 	else
 		if not wasLastLocationCity then
-			--d("is NOT in city, was NOT in city")
 			return false
 		else 
-			--d("is NOT in city, was in city")
 			return true
 		end
 	end
 end
 
 
--- EXPERIMENTAL
 local function UpdateLocation(eventCode)
 	local location = GetPlayerLocationName()
 	local isInCity = LorePlay.IsPlayerInCity(location)
