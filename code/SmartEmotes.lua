@@ -29,6 +29,8 @@ local EVENT_LOOT_RECEIVED_RUNE_KUTA = "EVENT_LOOT_RECEIVED_RUNE_KUTA"
 local EVENT_LOOT_RECEIVED_UNIQUE = "EVENT_LOOT_RECEIVED_UNIQUE"
 local EVENT_LOOT_RECEIVED_GENERAL = "EVENT_LOOT_RECEIVED_GENERAL"
 local EVENT_LOOT_RECEIVED_BETTER = "EVENT_LOOT_RECEIVED_BETTER"
+local EVENT_LOOT_RECEIVED_RECIPE_OR_MATERIAL = "EVENT_LOOT_RECEIVED_RECIPE_OR_MATERIAL"
+local EVENT_LOOT_RECEIVED_RARE_RECIPE_OR_MATERIAL = "EVENT_LOOT_RECEIVED_RARE_RECIPE_OR_MATERIAL"
 local EVENT_KILLED_BOSS = "EVENT_KILLED_BOSS"
 local EVENT_INDICATOR_ON = "EVENT_INDICATOR_ON"
 
@@ -1009,6 +1011,20 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			},
 			["Duration"] = defaultDuration
 		},
+		[EVENT_LOOT_RECEIVED_RARE_RECIPE_OR_MATERIAL] = {
+			["EventName"] = EVENT_LOOT_RECEIVED_RARE_RECIPE_OR_MATERIAL,
+			["Emotes"] = {
+				[1] = 67,
+				[2] = 13,
+				[3] = 66,
+				[4] = 25,
+				[5] = 163,
+				[6] = 72,
+				[7] = 150,
+				[8] = 26
+			},
+			["Duration"] = defaultDuration
+		},
 		[EVENT_LOOT_RECEIVED_BETTER] = {
 			["EventName"] = EVENT_LOOT_RECEIVED_BETTER,
 			["Emotes"] = {
@@ -1053,7 +1069,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[6] = 119,
 				[7] = 200
 			},
-			["Duration"] = defaultDuration*(2/3)
+			["Duration"] = defaultDuration*(1/3)
 		},
 		[EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED] = {
 			["EventName"] = EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED,
@@ -1066,7 +1082,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[6] = 109,
 				[7] = 78
 			},
-			["Duration"] = defaultDuration*(2/3)
+			["Duration"] = defaultDuration*(1/2)
 		},
 		[EVENT_PLAYER_COMBAT_STATE_INCOMBAT] = {
 			["EventName"] = EVENT_PLAYER_COMBAT_STATE_INCOMBAT,
@@ -1327,22 +1343,26 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(eventCode,
 end
 
 
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RECIPE_OR_MATERIAL(eventCode, itemName)
+	local quality = GetItemLinkQuality(itemName)
+	if quality == ITEM_QUALITY_ARTIFACT or quality == ITEM_QUALITY_LEGENDARY then
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_LOOT_RECEIVED_RARE_RECIPE_OR_MATERIAL)
+	end
+end
+
+
 local function OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, self, isPickpocketLoot, questItemIcon, itemId)
 	if emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_LEVEL_UPDATE]["EventName"] or
 	emoteFromTTL["EventName"] == eventTTLEmotes[EVENT_KILLED_BOSS]["EventName"] then return end
 	
+	local itemType = GetItemLinkItemType(itemName)
 	if IsItemLinkEnchantingRune(itemName) then
 		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RUNE(EVENT_LOOT_RECEIVED_RUNE, itemName)
+	elseif itemType == ITEMTYPE_RAW_MATERIAL or ITEMTYPE_RECIPE then
+		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_RECIPE_OR_MATERIAL(EVENT_LOOT_RECEIVED_RECIPE_OR_MATERIAL, itemName)
 	elseif IsItemLinkUnique(itemName) then
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_LOOT_RECEIVED_BETTER)
-	--else 
-		--local itemType = GetItemLinkItemType()
-		-- if itemType == ITEMTYPE_RAW_MATERIAL then
-		
-		-- end
-	--end
 	else
-	--if
 		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_GENERAL(EVENT_LOOT_RECEIVED_GENERAL, itemName)
 	end
 end

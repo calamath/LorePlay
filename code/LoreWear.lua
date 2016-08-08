@@ -154,7 +154,6 @@ end
 local function ShouldUpdateLocation(isInCity)
 	if not CheckToToggleLoreWearClothes() then return false end
 	if wasLastLocationCity == nil then
-		--wasLastLocationCity = isInCity
 		return true
 	end
 	if isInCity then
@@ -196,13 +195,6 @@ local function UpdateLocation(eventCode)
 			wasLastLocationCity = isInCity
 			costumeBeforeCity = currentCostumeID
 			return
-		--[[
-		elseif not areLoreWearChosenClothesActive then
-			EquipLoreWearClothes()
-			if wasLastLocationCity == nil then return end
-			wasLastLocationCity = isInCity
-			return
-		--]]
 		end
 	else
 		if areLoreWearChosenClothesActive or arePlayerChosenClothesActive then
