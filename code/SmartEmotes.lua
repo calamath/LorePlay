@@ -1068,7 +1068,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[6] = 119,
 				[7] = 200
 			},
-			["Duration"] = defaultDuration*(1/3)
+			["Duration"] = defaultDuration*(1/2)
 		},
 		[EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED] = {
 			["EventName"] = EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT_FLED,
@@ -1262,8 +1262,8 @@ function SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE(eventCode)
 end
 
 
-function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
-	if not sourceName == GetUnitName(LorePlay.player) or isInCombat then return end
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result, sourceName)
+	if sourceName ~= GetUnitName(LorePlay.player).."^Fx" or isInCombat then return end
 	if result == ACTION_RESULT_DIED_XP or result == ACTION_RESULT_DIED or 
 	result == ACTION_RESULT_KILLING_BLOW or result == ACTION_RESULT_TARGET_DEAD then
 		if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE, EVENT_KILLED_BOSS) then return end
@@ -1272,8 +1272,10 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, resul
 end
 
 
-local function OnCombatEvent(eventCode, result)
-	zo_callLater(function() SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result) end, 0500)
+local function OnCombatEvent(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+	zo_callLater(function() 
+		SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result, sourceName) 
+	end, 0250)
 end
 
 
