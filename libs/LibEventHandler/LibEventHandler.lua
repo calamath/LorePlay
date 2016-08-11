@@ -13,7 +13,7 @@ local function CallEventFunctions(eventCode, ...)
 	for i = 1, numOfFuncs, 1 do
 		eventToFunctionTable[eventCode][i](eventCode, ...)
 	end
-end 
+end
 
 
 function LEH:FireEvent(eventCode, async, ...)
@@ -57,10 +57,10 @@ function LEH:UnregisterForLocalEvent(eventCode, functionName)
 end
 
 
-function LEH:UnregisterForEvent(eventCode, functionName)
+function LEH:UnregisterForEvent(namespace, eventCode, functionName)
 	local needsUnregistration = LEH:UnregisterForLocalEvent(eventCode, functionName)
 	if needsUnregistration then
-		EVENT_MANAGER:UnregisterForEvent(LorePlay.name, eventCode)
+		EVENT_MANAGER:UnregisterForEvent(namespace, eventCode)
 	end
 end
 
@@ -87,9 +87,9 @@ function LEH:RegisterForLocalEvent(eventCode, functionName)
 end
 
 
-function LEH:RegisterForEvent(eventCode, functionName)
+function LEH:RegisterForEvent(namespace, eventCode, functionName)
 	local needsRegistration = LEH:RegisterForLocalEvent(eventCode, functionName)
 	if needsRegistration then
-		EVENT_MANAGER:RegisterForEvent(LorePlay.name, eventCode, CallEventFunctions)
+		EVENT_MANAGER:RegisterForEvent(namespace, eventCode, CallEventFunctions)
 	end
 end
