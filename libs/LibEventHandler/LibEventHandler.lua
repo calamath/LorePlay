@@ -16,17 +16,17 @@ local function CallEventFunctions(eventCode, ...)
 end
 
 
-function LEH:FireEvent(eventCode, async, ...)
+function LEH:FireEvent(eventCode, asyncDelayInMS, ...)
 	if not eventCode then return end
 	if not eventToFunctionTable[eventCode] or #eventToFunctionTable[eventCode] == 0 then
 		d("Event "..eventCode.." trying to be fired is not yet registered with any functions.")
 		return
 	end
 	local arg = {...}
-	if not async then
+	if not asyncDelayInMS or asyncDelayInMS == 0 then
 		CallEventFunctions(eventCode, unpack(arg))
 	else
-		zo_callLater(function() CallEventFunctions(eventCode, unpack(arg)) end, 500)
+		zo_callLater(function() CallEventFunctions(eventCode, unpack(arg)) end, asyncDelayInMS)
 	end
 end
 

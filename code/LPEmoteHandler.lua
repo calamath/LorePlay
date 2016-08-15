@@ -30,7 +30,7 @@ end
 local function ResolveEmote()
 	local x, y = GetMapPlayerPosition(LorePlay.player)
 	EVENT_MANAGER:RegisterForUpdate("EmoteTimeReached", 5000, function()
-		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, true, false)
+		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, 250, false)
 		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
 		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
 		end)
@@ -73,7 +73,7 @@ local function OnPlayEmoteByIndex(index)
 		EVENT_MANAGER:UnregisterForUpdate("PlayerMovement")
 		EVENT_MANAGER:UnregisterForUpdate("EmoteTimeReached")
 		UpdateIsEmoting(index)
-		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, true, true)
+		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, 10, true)
 	end
 	return false
 end
