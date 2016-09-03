@@ -672,6 +672,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 		["Hollow City"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["Other"]
 		},
+		["The Hollow City"] = { 
+			["Emotes"] = defaultCityToRegionEmotes["Other"]
+		},
 		["Imperial City"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["Other"]
 		},
