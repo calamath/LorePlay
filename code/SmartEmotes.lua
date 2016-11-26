@@ -259,12 +259,12 @@ function SmartEmotes.CreateEmotesByRegionTable()
 				[1] = 8,
 				[2] = 169,
 				[3] = 64,
-				[4] = 215,
+				[4] = 214,
 				[5] = 52,
 				[6] = 38,
 				[7] = 104,
 				[8] = 64,
-				[9] = 215,
+				[9] = 214,
 				[10] = 169
 			}
 		},
@@ -806,7 +806,7 @@ function SmartEmotes.CreateReticleEmoteTable()
 				[5] = 21,
 				[6] = 147,
 				[7] = 39,
-				[8] = 214,
+				[8] = 213,
 				[9] = 166,
 				[10] = 21
 			}
@@ -816,7 +816,7 @@ function SmartEmotes.CreateReticleEmoteTable()
 			["Emotes"] = {
 				[1] = 142,
 				[2] = 67,
-				[3] = 214,
+				[3] = 213,
 				[4] = 24,
 				[5] = 175,
 				[6] = 142
@@ -903,8 +903,8 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Emotes"] = {
 				[1] = 10,
 				[2] = 125,
-				[3] = 212,
-				[4] = 213
+				[3] = 212
+				--[4] = 213
 			},
 			["Duration"] = defaultDuration
 		},

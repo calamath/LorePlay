@@ -88,7 +88,6 @@ local function AddLoopingStatusToEmotes()
 	allEmotesTable["/hammerwall"]["doesLoop"] = true
 	allEmotesTable["/hammerlow"]["doesLoop"] = true
 	allEmotesTable["/letter"]["doesLoop"] = true
-	allEmotesTable["/letterlookup"]["doesLoop"] = true
 	allEmotesTable["/rake"]["doesLoop"] = true
 	allEmotesTable["/read"]["doesLoop"] = true
 	allEmotesTable["/shovel"]["doesLoop"] = true
