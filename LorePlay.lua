@@ -1,7 +1,7 @@
 LorePlay = LorePlay or {}
 LorePlay.majorVersion = 1
 LorePlay.minorVersion = 4
-LorePlay.bugVersion = 1
+LorePlay.bugVersion = 2
 LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LorePlay.bugVersion
 LorePlay.name = "LorePlay"
 LorePlay.player = "player"

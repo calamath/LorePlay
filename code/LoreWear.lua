@@ -9,7 +9,7 @@ local costumeBeforeCity
 local collectiblesMenu
 local lastTimeStamp
 local wasLastLocationCity
-local Appearance, Hats, Costumes, Skins, Polymorphs = "Appearance", "Hats", "Costumes", "Skins", "Polymorphs"
+local Appearance, Hats, Costumes, Skins, Polymorphs, Hair = "Appearance", "Hats", "Costumes", "Skins", "Polymorphs", "Hair"
 
 
 local function GetRandomLoreWearCostumeID()
@@ -90,7 +90,7 @@ local function CheckToToggleLoreWearClothes()
 end
 
 
-local function ShowOrHideClothes()
+local function ForceShowOrHideClothes()
 	currentCostumeID = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	if currentCostumeID == 0 then
 		if not lastUsedCollectible then
@@ -112,7 +112,7 @@ function LoreWear.KeypressToggleLoreWearClothes()
 		return 
 	end
 	if not IsCooldownOver() then return end
-	ShowOrHideClothes()
+	ForceShowOrHideClothes()
 end
 
 
@@ -129,9 +129,45 @@ function LoreWear.UpdateUnlockedCostumes()
 end
 
 
-local function UpdateUnlockedCollectiblesOnCollectibleUpdate(eventCode)
-	LoreWear.UpdateUnlockedCostumes()
-	--UpdateUnlockedHats()
+ --MAY NOT WORK YET
+local function UpdateUnlockedHats()
+	local id
+	for i = 1, collectiblesMenu[Appearance][Hats]["Total"], 1 do
+		id = GetCollectibleIdFromType(COLLECTIBLE_CATEGORY_TYPE_HAT, i)
+		if IsCollectibleUnlocked(id) then
+			--blacklistedHats doesn't yet exist
+			if not LorePlay.savedSettingsTable.blacklistedHats[tostring(id)] then
+				collectiblesMenu[Appearance][Hats][(#collectiblesMenu[Appearance][Hats] + 1)] = id
+			end
+		end
+	end
+end
+
+
+ --MAY NOT WORK YET
+local function UpdateUnlockedHair()
+	local id
+	for i = 1, collectiblesMenu[Appearance][Hair]["Total"], 1 do
+		id = GetCollectibleIdFromType(COLLECTIBLE_CATEGORY_TYPE_HAIR, i)
+		if IsCollectibleUnlocked(id) then
+			--blacklistedHair doesn't yet exist
+			if not LorePlay.savedSettingsTable.blacklistedHair[tostring(id)] then
+				collectiblesMenu[Appearance][Hair][(#collectiblesMenu[Appearance][Hair] + 1)] = id
+			end
+		end
+	end
+end
+
+
+local function UpdateUnlockedCollectiblesOnCollectibleUpdate(eventCode, collectibleId)
+	local _,_,_,_,_,_,_,collCategory = GetCollectibleInfo(collectibleId)
+	if collCategory == COLLECTIBLE_CATEGORY_TYPE_COSTUME then
+		LoreWear.UpdateUnlockedCostumes()
+	elseif collCategory == COLLECTIBLE_CATEGORY_TYPE_HAT then
+		--UpdateUnlockedHats()
+	elseif collCategory == COLLECTIBLE_CATEGORY_TYPE_HAIR then
+		--UpdateUnlockedHair()
+	end
 	--UpdateUnlockedPolymorphs()
 	--UpdateUnlockedSkins()
 end
@@ -143,10 +179,13 @@ local function BuildCollectiblesMenuTable()
 			[Costumes] = {["Total"] = GetTotalCollectiblesByCategoryType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)},
 			[Hats] =  {["Total"] = GetTotalCollectiblesByCategoryType(COLLECTIBLE_CATEGORY_TYPE_HAT)},
 			[Polymorphs] = {["Total"] = GetTotalCollectiblesByCategoryType(COLLECTIBLE_CATEGORY_TYPE_POLYMORPH)},
-			[Skins] = {["Total"] = GetTotalCollectiblesByCategoryType(COLLECTIBLE_CATEGORY_TYPE_SKIN)}
+			[Skins] = {["Total"] = GetTotalCollectiblesByCategoryType(COLLECTIBLE_CATEGORY_TYPE_SKIN)},
+			[Hair] = {["Total"] = GetTotalCollectiblesByCategoryType(COLLECTIBLE_CATEGORY_TYPE_HAIR)}
 		}
 	}
 	LoreWear.UpdateUnlockedCostumes()
+	--UpdateUnlockedHats()
+	--UpdateUnlockedHair()
 end
 
 

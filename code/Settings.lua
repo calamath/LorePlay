@@ -12,9 +12,13 @@ local defaultSettingsTable = {
 	canExerciseInZone = true,
 	canWorship = true,
 	isUsingFavoriteCostume = false,
+	--isUsingFavoriteHat = false,
+	--isUsingFavoriteHair = false,
 	shouldFavoriteOverride = true,
 	equipPreviousCostumeWhenAdventuring = true,
 	favoriteCostumeId = nil,
+	favoriteHatId = nil,
+	favoriteHairId = nil,
 	blacklistedCostumes = {
 		["count"] = 0
 	},
@@ -40,6 +44,8 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.shouldFavoriteOverride = Settings.savedVariables.shouldFavoriteOverride
 	Settings.savedSettingsTable.equipPreviousCostumeWhenAdventuring = Settings.savedVariables.equipPreviousCostumeWhenAdventuring
 	Settings.savedSettingsTable.favoriteCostumeId = Settings.savedVariables.favoriteCostumeId
+	Settings.savedSettingsTable.favoriteHatId = Settings.savedVariables.favoriteHatId
+	Settings.savedSettingsTable.favoriteHairId = Settings.savedVariables.favoriteHairId
 	Settings.savedSettingsTable.blacklistedCostumes = Settings.savedVariables.blacklistedCostumes
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
 	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
@@ -165,6 +171,15 @@ local function UnblacklistCostume()
 		CHAT_SYSTEM:AddMessage("Blacklist no longer contains '"..nameOfRemoved.."'")
 	end
 end
+
+
+
+--[[ MAY NOT WORK ]]--
+local function BlacklistOutfit(collectibleType)
+
+end
+
+
 
 
 function Settings.LoadMenuSettings()
