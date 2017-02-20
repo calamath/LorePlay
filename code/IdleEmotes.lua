@@ -1,6 +1,6 @@
 local IdleEmotes = LorePlay
 
-local idleTime = 15000 -- time period in miliseconds to check whether player is idle
+local idleTime = 10000 -- time period in miliseconds to check whether player is idle
 local isPlayerStealthed
 local currentPlayerX, currentPlayerY
 local emoteFromEvent
@@ -223,10 +223,14 @@ function IdleEmotes.PerformIdleEmote()
 		currIdleEmote = emoteFromEvent[randomEmote]
 	else
 		-- Doubles the time checked for Idling to allow current IdleEmote to persist longer
+		
+		--[[
 		if didIdleEmote then
 			didIdleEmote = false
 			return
 		end
+		]]--
+
 		local location = IdleEmotes.GetLocation()
 		randomEmote = math.random(#defaultIdleTable[location])
 		currIdleEmote = defaultIdleTable[location][randomEmote]
@@ -234,6 +238,10 @@ function IdleEmotes.PerformIdleEmote()
 	LPEventHandler:FireEvent(EVENT_ON_IDLE_EMOTE, false, true, currIdleEmote)
 	PlayEmoteByIndex(currIdleEmote)
 	didIdleEmote = true
+
+	-- Try to increase time for actively idle emoting
+	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.savedSettingsTable.timeBetweenIdleEmotes, IdleEmotes.CheckToPerformIdleEmote)
 end
 
 
@@ -255,6 +263,29 @@ function IdleEmotes.UpdateStealthState(eventCode, unitTag, stealthState)
 end
 
 
+
+function IdleEmotes.IsCharacterIdle()
+	if IsMounted() then return end
+	if not isActiveEmoting then
+		local didMove = IdleEmotes.UpdateIfMoved() 
+		if not didMove then
+			if isPlayerStealthed == nil then
+				IdleEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, LorePlay.player, GetUnitStealthState(LorePlay.player))
+			end
+			if not isPlayerStealthed then
+				local interactionType = GetInteractionType()
+  				if interactionType == INTERACTION_NONE then
+					return true
+				end
+			end
+		end
+	end
+	return false
+end
+
+
+
+--[[
 function IdleEmotes.IsCharacterIdle()
 	if not isActiveEmoting then
 		local x, y, didMove = LPUtilities.DidPlayerMove(currentPlayerX, currentPlayerY) 
@@ -273,17 +304,36 @@ function IdleEmotes.IsCharacterIdle()
 			currentPlayerY = y
 			if didIdleEmote then
 				didIdleEmote = false
+				-- Back to default idletime checking
+				EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+				EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 			end
 		end
 	end
 	return false
 end
+]]--
 
 
 function IdleEmotes.CheckToPerformIdleEmote()
 	if IdleEmotes.IsCharacterIdle() then
 		IdleEmotes.PerformIdleEmote()
 	end
+end
+
+
+function IdleEmotes.UpdateIfMoved()
+	local x, y, didMove = LPUtilities.DidPlayerMove(currentPlayerX, currentPlayerY)
+	if didMove then
+		currentPlayerX = x
+		currentPlayerY = y
+		if didIdleEmote then
+			didIdleEmote = false
+		end
+		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+	end
+	return didMove
 end
 
 
@@ -349,6 +399,27 @@ local function OnActiveEmote(eventCode, isEmotingNow)
 end
 
 
+function IdleEmotes.OnCraftingStationInteract(eventCode)
+	if eventCode == EVENT_CRAFTING_STATION_INTERACT then
+		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+	elseif eventCode == EVENT_END_CRAFTING_STATION_INTERACT then
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+	end
+end
+
+--[[ FIX FOR 'CANNOT PERFORM EMOTE'?
+local scenes = {}
+local function noCameraSpin()
+    for name, scene in pairs(SCENE_MANAGER.scenes) do
+      if not name:find("market") and not name:find("store") and not name:find("crownCrate") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
+        scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
+        scenes[name] = scene
+      end
+    end
+end
+]]--
+
+
 function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
@@ -358,8 +429,11 @@ function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
 	LPEventHandler:UnregisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
+	EVENT_MANAGER:UnregisterForUpdate("IdleEmotesMoveTimer")
 end
 
 
@@ -372,8 +446,11 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_TRADE_INVITE_ACCEPTED, IdleEmotes.OnTradeEvent_For_EVENT_TRADE_INVITE_ACCEPTED)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_TRADE_SUCCEEDED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
 	LPEventHandler:RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+	EVENT_MANAGER:RegisterForUpdate("IdleEmotesMoveTimer", idleTime, IdleEmotes.UpdateIfMoved)
 end
 
 
@@ -382,6 +459,7 @@ function IdleEmotes.InitializeIdle()
 	IdleEmotes.CreateDefaultIdleEmotesTable()
 	IdleEmotes.CreateEventIdleEmotesTable()
 	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
+	--noCameraSpin()
 	IdleEmotes.RegisterIdleEvents()
 end
 

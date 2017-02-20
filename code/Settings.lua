@@ -25,7 +25,8 @@ local defaultSettingsTable = {
 	canActivateLWClothesWhileMounted = false,
 	maraSpouseName = "",
 	indicatorLeft = nil,
-	indicatorTop = nil
+	indicatorTop = nil,
+	timeBetweenIdleEmotes = 30000
 }
 
 
@@ -51,6 +52,7 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
 	Settings.savedSettingsTable.indicatorLeft = Settings.savedVariables.indicatorLeft
 	Settings.savedSettingsTable.indicatorTop = Settings.savedVariables.indicatorTop
+	Settings.savedSettingsTable.timeBetweenIdleEmotes = Settings.savedVariables.timeBetweenIdleEmotes
 end
 
 
@@ -174,9 +176,24 @@ end
 
 
 
---[[ MAY NOT WORK ]]--
+--[[ MAY NOT WORK
 local function BlacklistOutfit(collectibleType)
 
+end
+]]--
+
+
+function Settings.ToggleIdleEmotes(settings)
+	if Settings.savedSettingsTable.isIdleEmotesOn == settings then return end
+	Settings.savedSettingsTable.isIdleEmotesOn = settings
+	Settings.savedVariables.isIdleEmotesOn = Settings.savedSettingsTable.isIdleEmotesOn
+	if not Settings.savedSettingsTable.isIdleEmotesOn then LorePlay.UnregisterIdleEvents() end
+	LorePlay.InitializeIdle()
+	if settings then 
+		CHAT_SYSTEM:AddMessage("Toggled IdleEmotes on")
+	else
+		CHAT_SYSTEM:AddMessage("Toggled IdleEmotes off")
+	end
 end
 
 
@@ -189,6 +206,7 @@ function Settings.LoadMenuSettings()
 		displayName = "|c8c7037LorePlay",
 		author = "Justinon",
 		version = LorePlay.version,
+		slashCommand = "/loreplay",
 		registerForRefresh = true,
 	}
 
@@ -255,14 +273,30 @@ function Settings.LoadMenuSettings()
 			tooltip = "Turns on/off the automatic, contextual emotes that occur when you go idle or AFK.\n(Note: Disabling IdleEmotes displays all its settings as off, but will persist after re-enabling.)",
 			getFunc = function() return Settings.savedSettingsTable.isIdleEmotesOn end,
 			setFunc = function(setting) 
-				Settings.savedSettingsTable.isIdleEmotesOn = setting
-				Settings.savedVariables.isIdleEmotesOn = Settings.savedSettingsTable.isIdleEmotesOn
-				if not Settings.savedSettingsTable.isIdleEmotesOn then LorePlay.UnregisterIdleEvents() end
-				LorePlay.InitializeIdle()
+				Settings.ToggleIdleEmotes(setting)
 			end,
 			width = "full",
+			reference = "IdleEmotesToggleCheckbox",
 		},
 		[9] = {
+			type = "slider",
+			name = "Emote Duration",
+			tooltip = "Determines how long in seconds a given idle emote will be performed before switching to a new one.\nDefault is 30 seconds.",
+			min = 10,
+			max = 120,
+			step = 2,
+			getFunc = function() 
+				return Settings.savedSettingsTable.timeBetweenIdleEmotes/1000 -- Converting ms to s
+			end,
+			setFunc = function(value)
+				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+				Settings.savedSettingsTable.timeBetweenIdleEmotes = (value*1000) -- Converting seconds to ms
+				Settings.savedVariables.timeBetweenIdleEmotes = Settings.savedSettingsTable.timeBetweenIdleEmotes
+			end,
+			width = "full",
+			default = 30,
+		},
+		[10] = {
 			type = "checkbox",
 			name = "Can Play Instruments In Cities",
 			tooltip = "Determines whether or not your character can perform instrument emotes when idle in cities.",
@@ -281,7 +315,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[10] = {
+		[11] = {
 			type = "checkbox",
 			name = "Can Dance In Cities",
 			tooltip = "Determines whether or not your character can perform dance emotes when idle in cities.",
@@ -300,7 +334,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[11] = {
+		[12] = {
 			type = "checkbox",
 			name = "Can Be Drunk In Cities",
 			tooltip = "Determines whether or not your character can perform drunken emotes when idle in cities.",
@@ -319,7 +353,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[12] = {
+		[13] = {
 			type = "checkbox",
 			name = "Can Exercise Outside Cities",
 			tooltip = "Determines whether or not your character can perform exercise emotes when idle outside of cities.",
@@ -338,7 +372,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[13] = {
+		[14] = {
 			type = "checkbox",
 			name = "Can Worship/Pray",
 			tooltip = "Determines whether or not your character can perform prayer and worship emotes when idle in general.",
@@ -357,18 +391,18 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[14] = {
+		[15] = {
 			type = "header",
 			name = "Lore Wear",
 			width = "full",
 		},
-		[15] = {
+		[16] = {
 			type = "description",
 			title = nil,
 			text = "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically equip his/her favorite (or a random) costume anytime he/she enters a city, and unequip upon exiting.\n|cFF0000Don't forget to bind your LoreWear show/hide clothes button!|r",
 			width = "full",
 		},
-		[16] = {
+		[17] = {
 			type = "checkbox",
 			name = "Toggle LoreWear On/Off",
 			tooltip = "Turns on/off the automatic, contextual clothing that will be put on when entering cities.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)",
@@ -384,7 +418,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[17] = {
+		[18] = {
 			type = "checkbox",
 			name = "Allow Equip While Mounted",
 			tooltip = "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.",
@@ -402,7 +436,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[18] = {
+		[19] = {
 			type = "checkbox",
 			name = "Equip Last Worn Costume When Adventuring",
 			tooltip = "If enabled, when exiting a city your character will equip the last worn costume from before entering the city.\nIf disabled, your character will show armor when exiting a city regardless of what was previously worn.",
@@ -420,7 +454,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[19] = {
+		[20] = {
 			type = "checkbox",
 			name = "Use Favorite Costume",
 			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to picking from the defaults randomly.",
@@ -439,7 +473,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[20] = {
+		[21] = {
 			type = "checkbox",
 			name = "Should Favorite Override Others",
 			tooltip = "If enabled, uses your favorite costume when entering cities, even if you enter the city wearing a different costume.\nIf disabled, if you enter a city with a different costume, your favorite will NOT be put on over it.\nThis is to allow for easy, individual costume selection without changing your favorite.",
@@ -458,7 +492,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = true,
 		},
-		[21] = {
+		[22] = {
 			type = "button",
 			name = "Set Favorite Costume",
 			tooltip = "Sets the current costume your character is wearing as your favorite costume, allowing your character to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
@@ -476,7 +510,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[22] = {
+		[23] = {
 			type = "button",
 			name = "Clear Favorite Costume",
 			tooltip = "Clears the costume you have previously selected as your favorite, re-allowing your character to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
@@ -491,21 +525,21 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[23] = {
+		[24] = {
 			type = "button",
 			name = "Blacklist Costume",
 			tooltip = "Sets the current costume your character is wearing as a blacklisted costume, no longer allowing it to be automatically put on/off when entering/exiting cities.",
 			func = function() BlacklistCostume() end,
 			width = "half",
 		},
-		[24] = {
+		[25] = {
 			type = "button",
 			name = "Unblacklist Costume",
 			tooltip = "Removes the current costume your character is wearing from the blacklist, re-allowing it to be automatically put on/off from the random costumes when entering/exiting cities.",
 			func = function() UnblacklistCostume() end,
 			width = "half",
 		},
-		[25] = {
+		[26] = {
 			type = "button",
 			name = "Show Blacklist",
 			tooltip = "Prints the names of all the costumes currently blacklisted to the chat box.",
@@ -518,7 +552,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[26] = {
+		[27] = {
 			type = "button",
 			name = "Clear Blacklist",
 			tooltip = "Wipes your blacklist clean, allowing your character to now automatically equip/unequip anything that was once on the list.",
@@ -527,8 +561,8 @@ function Settings.LoadMenuSettings()
 		},
 	}
 
-	LAM2:RegisterAddonPanel("MyAddonOptions", panelData)
-	LAM2:RegisterOptionControls("MyAddonOptions", optionsTable)
+	LAM2:RegisterAddonPanel("LorePlayOptions", panelData)
+	LAM2:RegisterOptionControls("LorePlayOptions", optionsTable)
 end
 
 
