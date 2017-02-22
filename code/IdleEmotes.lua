@@ -10,6 +10,7 @@ local didIdleEmote = false
 local isActiveEmoting = false
 
 
+
 function IdleEmotes.CreateEventIdleEmotesTable()
 	eventIdleTable = {
 		["isEnabled"] = false,
@@ -322,6 +323,7 @@ function IdleEmotes.CheckToPerformIdleEmote()
 end
 
 
+-- Used to check if player has moved in between IdleEmotes to allow for faster detection
 function IdleEmotes.UpdateIfMoved()
 	local x, y, didMove = LPUtilities.DidPlayerMove(currentPlayerX, currentPlayerY)
 	if didMove then
