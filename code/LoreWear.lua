@@ -136,9 +136,10 @@ local function UpdateUnlockedHats()
 		id = GetCollectibleIdFromType(COLLECTIBLE_CATEGORY_TYPE_HAT, i)
 		if IsCollectibleUnlocked(id) then
 			--blacklistedHats doesn't yet exist
-			if not LorePlay.savedSettingsTable.blacklistedHats[tostring(id)] then
+			--[[ Hats don't need to be blacklisted ]]--
+			--if not LorePlay.savedSettingsTable.blacklistedHats[tostring(id)] then
 				collectiblesMenu[Appearance][Hats][(#collectiblesMenu[Appearance][Hats] + 1)] = id
-			end
+			--end
 		end
 	end
 end
@@ -151,13 +152,29 @@ local function UpdateUnlockedHair()
 		id = GetCollectibleIdFromType(COLLECTIBLE_CATEGORY_TYPE_HAIR, i)
 		if IsCollectibleUnlocked(id) then
 			--blacklistedHair doesn't yet exist
-			if not LorePlay.savedSettingsTable.blacklistedHair[tostring(id)] then
+			--[[ Hair doesn't need to be blacklisted ]]--
+			--if not LorePlay.savedSettingsTable.blacklistedHair[tostring(id)] then
 				collectiblesMenu[Appearance][Hair][(#collectiblesMenu[Appearance][Hair] + 1)] = id
-			end
+			--end
 		end
 	end
 end
 
+
+ --MAY NOT WORK YET
+local function UpdateUnlockedSkins()
+	local id
+	for i = 1, collectiblesMenu[Appearance][Skins]["Total"], 1 do
+		id = GetCollectibleIdFromType(COLLECTIBLE_CATEGORY_TYPE_SKIN, i)
+		if IsCollectibleUnlocked(id) then
+			--blacklistedSkins doesn't yet exist
+			--[[ Skins don't need to be blacklisted ]]--
+			--if not LorePlay.savedSettingsTable.blacklistedSkins[tostring(id)] then
+				collectiblesMenu[Appearance][Skins][(#collectiblesMenu[Appearance][Skins] + 1)] = id
+			--end
+		end
+	end
+end
 
 local function UpdateUnlockedCollectiblesOnCollectibleUpdate(eventCode, collectibleId)
 	local _,_,_,_,_,_,_,collCategory = GetCollectibleInfo(collectibleId)
@@ -167,9 +184,10 @@ local function UpdateUnlockedCollectiblesOnCollectibleUpdate(eventCode, collecti
 		--UpdateUnlockedHats()
 	elseif collCategory == COLLECTIBLE_CATEGORY_TYPE_HAIR then
 		--UpdateUnlockedHair()
+	elseif collCategorry == COLLECTIBLE_CATEGORY_TYPE_SKIN then
+		--UpdateUnlockedSkins()
 	end
 	--UpdateUnlockedPolymorphs()
-	--UpdateUnlockedSkins()
 end
 
 

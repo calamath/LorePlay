@@ -12,13 +12,15 @@ local defaultSettingsTable = {
 	canExerciseInZone = true,
 	canWorship = true,
 	isUsingFavoriteCostume = false,
-	--isUsingFavoriteHat = false,
-	--isUsingFavoriteHair = false,
+	isUsingFavoriteHat = false,
+	isUsingFavoriteHair = false,
+	isUsingFavoriteSkin = false,
 	shouldFavoriteOverride = true,
 	equipPreviousCostumeWhenAdventuring = true,
 	favoriteCostumeId = nil,
 	favoriteHatId = nil,
 	favoriteHairId = nil,
+	favoriteSkinId = nil,
 	blacklistedCostumes = {
 		["count"] = 0
 	},
@@ -42,11 +44,15 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.canExerciseInZone = Settings.savedVariables.canExerciseInZone
 	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
 	Settings.savedSettingsTable.isUsingFavoriteCostume = Settings.savedVariables.isUsingFavoriteCostume
+	Settings.savedSettingsTable.isUsingFavoriteHat = Settings.savedVariables.isUsingFavoriteHat
+	Settings.savedSettingsTable.isUsingFavoriteHair = Settings.savedVariables.isUsingFavoriteHair
+	Settings.savedSettingsTable.isUsingFavoriteSkin = Settings.savedVariables.isUsingFavoriteSkin
 	Settings.savedSettingsTable.shouldFavoriteOverride = Settings.savedVariables.shouldFavoriteOverride
 	Settings.savedSettingsTable.equipPreviousCostumeWhenAdventuring = Settings.savedVariables.equipPreviousCostumeWhenAdventuring
 	Settings.savedSettingsTable.favoriteCostumeId = Settings.savedVariables.favoriteCostumeId
 	Settings.savedSettingsTable.favoriteHatId = Settings.savedVariables.favoriteHatId
 	Settings.savedSettingsTable.favoriteHairId = Settings.savedVariables.favoriteHairId
+	Settings.savedSettingsTable.favoriteSkinId = Settings.savedVariables.favoriteSkinId
 	Settings.savedSettingsTable.blacklistedCostumes = Settings.savedVariables.blacklistedCostumes
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
 	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
@@ -526,20 +532,77 @@ function Settings.LoadMenuSettings()
 			width = "half",
 		},
 		[24] = {
+			type = "checkbox",
+			name = "Use Favorite Hat",
+			tooltip = "If enabled, uses your favorite hat when entering cities, along with your favorite costume.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn then
+					return Settings.savedSettingsTable.isUsingFavoriteHat 
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isLoreWearOn then return end
+				Settings.savedSettingsTable.isUsingFavoriteHat = setting
+				Settings.savedVariables.isUsingFavoriteHat = Settings.savedSettingsTable.isUsingFavoriteHat
+			end,
+			width = "full",
+			default = false,
+		},
+		[25] = {
+			type = "checkbox",
+			name = "Use Favorite Hair",
+			tooltip = "If enabled, uses your favorite hair when entering cities, along with your favorite costume.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn then
+					return Settings.savedSettingsTable.isUsingFavoriteHair 
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isLoreWearOn then return end
+				Settings.savedSettingsTable.isUsingFavoriteHair = setting
+				Settings.savedVariables.isUsingFavoriteHair = Settings.savedSettingsTable.isUsingFavoriteHair
+			end,
+			width = "full",
+			default = false,
+		},
+		[26] = {
+			type = "checkbox",
+			name = "Use Favorite Skin",
+			tooltip = "If enabled, uses your favorite skin when entering cities, along with your favorite costume.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn then
+					return Settings.savedSettingsTable.isUsingFavoriteSkin 
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isLoreWearOn then return end
+				Settings.savedSettingsTable.isUsingFavoriteSkin = setting
+				Settings.savedVariables.isUsingFavoriteSkin = Settings.savedSettingsTable.isUsingFavoriteSkin
+			end,
+			width = "full",
+			default = false,
+		},
+		[27] = {
 			type = "button",
 			name = "Blacklist Costume",
 			tooltip = "Sets the current costume your character is wearing as a blacklisted costume, no longer allowing it to be automatically put on/off when entering/exiting cities.",
 			func = function() BlacklistCostume() end,
 			width = "half",
 		},
-		[25] = {
+		[28] = {
 			type = "button",
 			name = "Unblacklist Costume",
 			tooltip = "Removes the current costume your character is wearing from the blacklist, re-allowing it to be automatically put on/off from the random costumes when entering/exiting cities.",
 			func = function() UnblacklistCostume() end,
 			width = "half",
 		},
-		[26] = {
+		[29] = {
 			type = "button",
 			name = "Show Blacklist",
 			tooltip = "Prints the names of all the costumes currently blacklisted to the chat box.",
@@ -552,7 +615,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[27] = {
+		[30] = {
 			type = "button",
 			name = "Clear Blacklist",
 			tooltip = "Wipes your blacklist clean, allowing your character to now automatically equip/unequip anything that was once on the list.",
