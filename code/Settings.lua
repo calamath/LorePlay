@@ -181,6 +181,72 @@ local function UnblacklistCostume()
 end
 
 
+local function SetFavoriteCostume()
+	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
+	if UnblacklistCurrentCostume() then
+		CHAT_SYSTEM:AddMessage("Current costume was on your blacklist, but setting it as your favorite removed it from the blacklist.")
+	end
+	Settings.savedSettingsTable.favoriteCostumeId = collectibleId
+	Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
+	Settings.savedSettingsTable.isUsingFavoriteCostume = true
+	Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
+	CHAT_SYSTEM:AddMessage("Favorite costume set as '"..GetCollectibleName(collectibleId).."'")
+end
+
+
+local function SetFavoriteHat()
+	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAT)
+	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No hat was detected.") return end
+	Settings.savedSettingsTable.favoriteHatId = collectibleId
+	Settings.savedVariables.favoriteHatId = Settings.savedSettingsTable.favoriteHatId
+	--Settings.savedSettingsTable.isUsingFavoriteHat = true
+	Settings.savedVariables.isUsingFavoriteHat = Settings.savedSettingsTable.isUsingFavoriteHat
+	CHAT_SYSTEM:AddMessage("Favorite hat set as '"..GetCollectibleName(collectibleId).."'")
+end
+
+local function SetFavoriteHair()
+	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAIR)
+	--[[ No such thing as a 0 hair?
+	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No hair was detected.") return end
+	]]--
+	Settings.savedSettingsTable.favoriteHairId = collectibleId
+	Settings.savedVariables.favoriteHairId = Settings.savedSettingsTable.favoriteHairId
+	--Settings.savedSettingsTable.isUsingFavoriteHat = true
+	Settings.savedVariables.isUsingFavoriteHair = Settings.savedSettingsTable.isUsingFavoriteHair
+	CHAT_SYSTEM:AddMessage("Favorite hair set as '"..GetCollectibleName(collectibleId).."'")
+end
+
+
+local function SetFavoriteSkin()
+	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_SKIN)
+	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No skin was detected.") return end
+	Settings.savedSettingsTable.favoriteSkinId = collectibleId
+	Settings.savedVariables.favoriteSkinId = Settings.savedSettingsTable.favoriteSkinId
+	--Settings.savedSettingsTable.isUsingFavoriteHat = true
+	Settings.savedVariables.isUsingFavoriteSkin = Settings.savedSettingsTable.isUsingFavoriteSkin
+	CHAT_SYSTEM:AddMessage("Favorite skin set as '"..GetCollectibleName(collectibleId).."'")
+end
+
+
+
+--[[ WIP ]]--
+local function SetFavoriteOutfit()
+	if Settings.savedSettingsTable.isUsingFavoriteCostume then
+		SetFavoriteCostume()
+	end
+	if Settings.savedSettingsTable.isUsingFavoriteHat then
+		SetFavoriteHat()
+	end
+	if Settings.savedSettingsTable.isUsingFavoriteHair then
+		SetFavoriteHair()
+	end
+	if Settings.savedSettingsTable.isUsingFavoriteSkin then
+		SetFavoriteSkin()
+	end
+end
+
+
 
 --[[ MAY NOT WORK
 local function BlacklistOutfit(collectibleType)
@@ -500,19 +566,10 @@ function Settings.LoadMenuSettings()
 		},
 		[22] = {
 			type = "button",
-			name = "Set Favorite Costume",
-			tooltip = "Sets the current costume your character is wearing as your favorite costume, allowing your character to automatically put it on/off when entering/exiting cities. Also turns 'Use Favorite Costume' on upon pressing.",
+			name = "Set Favorite Outfit",
+			tooltip = "Sets the current outfit (costumes, hats, hair, skins) your character is wearing as your favorite, allowing your character to automatically put it on/off when entering/exiting cities.",
 			func = function()
-				local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
-				if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
-				if UnblacklistCurrentCostume() then
-					CHAT_SYSTEM:AddMessage("Current costume was on your blacklist, but setting it as your favorite removed it from the blacklist.")
-				end
-				Settings.savedSettingsTable.favoriteCostumeId = collectibleId
-				Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
-				Settings.savedSettingsTable.isUsingFavoriteCostume = true
-				Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
-				CHAT_SYSTEM:AddMessage("Favorite costume set as '"..GetCollectibleName(collectibleId).."'")
+				SetFavoriteOutfit()
 			end,
 			width = "half",
 		},
