@@ -274,7 +274,7 @@ local function GetPlayerCostumeState()
 		--d("HatCheck: "..tostring(hatCheck))
 		-- If player is wearing nothing, they didn't choose their clothes
 		if currentCostumeID == 0 and currentHatID == 0 and currentSkinID == 0
-		and currentHairID ~= LorePlay.savedSettingsTable.favoriteHairId then
+		and currentHairID == 0 then
 			return false, false
 		else
 			return false, true
@@ -527,8 +527,10 @@ local function UpdateLocation(eventCode)
 	d(areLoreWearChosenClothesActive)
 	d(arePlayerChosenClothesActive)
 	if isInCity then
-		if not areLoreWearChosenClothesActive or 
-		arePlayerChosenClothesActive and LorePlay.savedSettingsTable.shouldFavoriteOverride then
+		if not areLoreWearChosenClothesActive then
+		--if not areLoreWearChosenClothesActive == (arePlayerChosenClothesActive and LorePlay.savedSettingsTable.shouldFavoriteOverride) then
+			if arePlayerChosenClothesActive and not LorePlay.savedSettingsTable.shouldFavoriteOverride then return end
+			d("Equipping!")
 			EquipLoreWearClothes()
 			if wasLastLocationCity == nil then return end
 			wasLastLocationCity = isInCity
@@ -546,42 +548,57 @@ local function UpdateLocation(eventCode)
 		end
 	else
 		if areLoreWearChosenClothesActive or arePlayerChosenClothesActive then
-			if LorePlay.savedSettingsTable.equipPreviousCostumeWhenAdventuring and costumeBeforeCity and costumeBeforeCity ~= 0 then
-				if costumeBeforeCity ~= currentCostumeID or wasLastLocationCity == nil then
-					UseCollectible(costumeBeforeCity)
-
+			if LorePlay.savedSettingsTable.equipPreviousCostumeWhenAdventuring and ((costumeBeforeCity and costumeBeforeCity ~= 0)
+			or (hatBeforeCity and hatBeforeCity ~= 0) or (hairBeforeCity and hairBeforeCity ~= 0) or (skinBeforeCity and skinBeforeCity ~= 0)) then
+				--if wasLastLocationCity == nil then
+					-- Was a costume, is wearing a different costume
+					if costumeBeforeCity ~= 0 and currentCostumeID ~= costumeBeforeCity then
+						UseCollectible(costumeBeforeCity)
+					elseif (costumeBeforeCity ~= 0 and currentCostumeID == 0) then
+						UseCollectible(lastUsedCostume)
+					elseif (costumeBeforeCity == 0 and currentCostumeID ~= 0) then
+						UseCollectible(lastUsedCostume)
+					end
 
 					if LorePlay.savedSettingsTable.isUsingFavoriteHat then 
-						if hatBeforeCity ~= 0 then
+						if hatBeforeCity ~= 0 and currentHatID ~= hatBeforeCity then
+							d(hatBeforeCity)
+							d(currentHatID)
 							--If different than default, equip it
 							UseCollectible(hatBeforeCity) 
-						else
+						elseif (hatBeforeCity ~= 0 and currentHatID == 0) then
 							--Otherwise, revert from last hair to default hair
+							UseCollectible(lastUsedHat)
+						elseif (hatBeforeCity == 0 and currentHatID ~= 0) then
 							UseCollectible(lastUsedHat)
 						end
 					end
 					if LorePlay.savedSettingsTable.isUsingFavoriteHair then 
-						if hairBeforeCity ~= 0 then
+						if hairBeforeCity ~= 0 and currentHairID ~= hairBeforeCity then
 							--If different than default, equip it
 							UseCollectible(hairBeforeCity) 
-						else
+						elseif (hairBeforeCity ~= 0 and currentHairID == 0) then
 							--Otherwise, revert from last hair to default hair
+							UseCollectible(lastUsedHair)
+						elseif (hairBeforeCity == 0 and currentHairID ~= 0) then
 							UseCollectible(lastUsedHair)
 						end
 					end
 					if LorePlay.savedSettingsTable.isUsingFavoriteSkin then 
-						if skinBeforeCity ~= 0 then
+						if skinBeforeCity ~= 0 and currentSkinID ~= skinBeforeCity then
 							--If different than default, equip it
 							UseCollectible(skinBeforeCity) 
-						else
+						elseif (skinBeforeCity ~= 0 and currentSkinID == 0) then
 							--Otherwise, revert from last hair to default hair
+							UseCollectible(lastUsedSkin)
+						elseif (skinBeforeCity == 0 and currentSkinID ~= 0) then
 							UseCollectible(lastUsedSkin)
 						end
 					end
 
 
 
-				end
+				--end
 			else
 				UnequipLoreWearClothes()
 			end
