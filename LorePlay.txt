@@ -1,5 +1,5 @@
 ## Title: LorePlay
-## Description: This addon adds immersion through intelligent, contextual emotes and costumes.
+## Description: This addon adds immersion through intelligent, contextual emotes and outfits.
 ## APIVersion: 100018
 ## Author: Justinon
 ## SavedVariables: LorePlaySavedVars

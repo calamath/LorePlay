@@ -11,6 +11,7 @@ local defaultSettingsTable = {
 	canBeDrunkInCities = true,
 	canExerciseInZone = true,
 	canWorship = true,
+	--isUsingFavoriteOutfit = false,
 	isUsingFavoriteCostume = false,
 	isUsingFavoriteHat = false,
 	isUsingFavoriteHair = false,
@@ -207,9 +208,6 @@ end
 
 local function SetFavoriteHair()
 	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAIR)
-	--[[ No such thing as a 0 hair?
-	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No hair was detected.") return end
-	]]--
 	Settings.savedSettingsTable.favoriteHairId = collectibleId
 	Settings.savedVariables.favoriteHairId = Settings.savedSettingsTable.favoriteHairId
 	--Settings.savedSettingsTable.isUsingFavoriteHat = true
@@ -247,12 +245,34 @@ local function SetFavoriteOutfit()
 end
 
 
-
---[[ MAY NOT WORK
-local function BlacklistOutfit(collectibleType)
-
+local function ClearFavoriteOutfit()
+	if Settings.savedSettingsTable.favoriteCostumeId then 
+		Settings.savedSettingsTable.favoriteCostumeId = nil
+		Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
+		Settings.savedSettingsTable.isUsingFavoriteCostume = false
+		Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
+	end
+	if Settings.savedSettingsTable.favoriteHatId then
+		Settings.savedSettingsTable.favoriteHatId = nil
+		Settings.savedVariables.favoriteHatId = Settings.savedSettingsTable.favoriteHatId
+		Settings.savedSettingsTable.isUsingFavoriteHat = false
+		Settings.savedVariables.isUsingFavoriteHat = Settings.savedSettingsTable.isUsingFavoriteHat
+	end
+	if Settings.savedSettingsTable.favoriteHairId then
+		Settings.savedSettingsTable.favoriteHairId = nil
+		Settings.savedVariables.favoriteHairId = Settings.savedSettingsTable.favoriteHairId
+		Settings.savedSettingsTable.isUsingFavoriteHair = false
+		Settings.savedVariables.isUsingFavoriteHair = Settings.savedSettingsTable.isUsingFavoriteHair
+	end
+	if Settings.savedSettingsTable.favoriteSkinId then
+		Settings.savedSettingsTable.favoriteSkinId = nil
+		Settings.savedVariables.favoriteSkinId = Settings.savedSettingsTable.favoriteSkinId
+		Settings.savedSettingsTable.isUsingFavoriteSkin = false
+		Settings.savedVariables.isUsingFavoriteSkin = Settings.savedSettingsTable.isUsingFavoriteSkin
+	end
+	CHAT_SYSTEM:AddMessage("Favorite outfit cleared.")
 end
-]]--
+
 
 
 function Settings.ToggleIdleEmotes(settings)
@@ -547,51 +567,8 @@ function Settings.LoadMenuSettings()
 		},
 		[21] = {
 			type = "checkbox",
-			name = "Should Favorite Override Others",
-			tooltip = "If enabled, uses your favorite costume when entering cities, even if you enter the city wearing a different costume.\nIf disabled, if you enter a city with a different costume, your favorite will NOT be put on over it.\nThis is to allow for easy, individual costume selection without changing your favorite.",
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn and Settings.savedSettingsTable.isUsingFavoriteCostume then
-					return Settings.savedSettingsTable.shouldFavoriteOverride
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn or not Settings.savedSettingsTable.isUsingFavoriteCostume then return end
-				Settings.savedSettingsTable.shouldFavoriteOverride = setting
-				Settings.savedVariables.shouldFavoriteOverride = Settings.savedSettingsTable.shouldFavoriteOverride 
-			end,
-			width = "full",
-			default = true,
-		},
-		[22] = {
-			type = "button",
-			name = "Set Favorite Outfit",
-			tooltip = "Sets the current outfit (costumes, hats, hair, skins) your character is wearing as your favorite, allowing your character to automatically put it on/off when entering/exiting cities.",
-			func = function()
-				SetFavoriteOutfit()
-			end,
-			width = "half",
-		},
-		[23] = {
-			type = "button",
-			name = "Clear Favorite Costume",
-			tooltip = "Clears the costume you have previously selected as your favorite, re-allowing your character to automatically put on/off random costumes when entering/exiting cities. Also turns 'Use Favorite Costume' off upon pressing.",
-			func = function()
-				if not Settings.savedSettingsTable.favoriteCostumeId then return end 
-				local collectibleName = GetCollectibleName(Settings.savedSettingsTable.favoriteCostumeId)
-				Settings.savedSettingsTable.favoriteCostumeId = nil
-				Settings.savedVariables.favoriteCostumeId = Settings.savedSettingsTable.favoriteCostumeId
-				Settings.savedSettingsTable.isUsingFavoriteCostume = false
-				Settings.savedVariables.isUsingFavoriteCostume = Settings.savedSettingsTable.isUsingFavoriteCostume
-				CHAT_SYSTEM:AddMessage("Favorite costume is no longer '"..collectibleName.."'")
-			end,
-			width = "half",
-		},
-		[24] = {
-			type = "checkbox",
 			name = "Use Favorite Hat",
-			tooltip = "If enabled, uses your favorite hat when entering cities, along with your favorite costume.",
+			tooltip = "If enabled, uses your favorite hat when entering cities, along with your other favorite collectibles.",
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavoriteHat 
@@ -607,10 +584,10 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[25] = {
+		[22] = {
 			type = "checkbox",
 			name = "Use Favorite Hair",
-			tooltip = "If enabled, uses your favorite hair when entering cities, along with your favorite costume.",
+			tooltip = "If enabled, uses your favorite hair when entering cities, along with your other favorite collecibles.",
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavoriteHair 
@@ -626,10 +603,10 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[26] = {
+		[23] = {
 			type = "checkbox",
 			name = "Use Favorite Skin",
-			tooltip = "If enabled, uses your favorite skin when entering cities, along with your favorite costume.",
+			tooltip = "If enabled, uses your favorite skin when entering cities, along with your other favorite collectibles.",
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavoriteSkin 
@@ -644,6 +621,43 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
+		},
+		[24] = {
+			type = "checkbox",
+			name = "Should Favorite Override Others",
+			tooltip = "If enabled, uses your favorite outfit when entering cities, even if you enter the city wearing a different outfit.\nIf disabled, if you enter a city with a different outfit, your favorite will NOT be put on over it.\nThis is to allow for easy, individual outfit selection without changing your favorite.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn and Settings.savedSettingsTable.isUsingFavoriteCostume then
+					return Settings.savedSettingsTable.shouldFavoriteOverride
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isLoreWearOn or not Settings.savedSettingsTable.isUsingFavoriteCostume then return end
+				Settings.savedSettingsTable.shouldFavoriteOverride = setting
+				Settings.savedVariables.shouldFavoriteOverride = Settings.savedSettingsTable.shouldFavoriteOverride 
+			end,
+			width = "full",
+			default = true,
+		},
+		[25] = {
+			type = "button",
+			name = "Set Favorite Outfit",
+			tooltip = "Sets the current outfit (costumes, hats, hair, skins) your character is wearing as your favorite, allowing your character to automatically put it on/off when entering/exiting cities.",
+			func = function()
+				SetFavoriteOutfit()
+			end,
+			width = "half",
+		},
+		[26] = {
+			type = "button",
+			name = "Clear Favorite Outfit",
+			tooltip = "Clears the outfit you have previously selected as your favorite. Also turns 'Use Favorite [collectible]' off upon pressing for each favorited collectible type.",
+			func = function()
+				ClearFavoriteOutfit()
+			end,
+			width = "half",
 		},
 		[27] = {
 			type = "button",
