@@ -67,7 +67,7 @@ local function EquipLoreWearHat()
 			UseCollectible(currentCollectible)
 			lastUsedHat = currentCollectible
 		else
-			CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Hat' is enabled, but you haven't set a favorite hat! Turn off hats, or put on a new hat and set your outfit.")
+			--CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Hat' is enabled, but you haven't set a favorite hat! Turn off hats, or put on a new hat and set your outfit.")
 		end
 	end
 end
@@ -84,7 +84,7 @@ local function EquipLoreWearHair()
 			lastUsedHair = currentCollectible
 			--Maybe here there will be the problem of accidentally taking off a hair that is the same in both favorite and outside cities?
 		else
-			CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Hair' is enabled, but you haven't set a favorite hair! Turn off hairs, or set your outfit with the option on.")
+			--CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Hair' is enabled, but you haven't set a favorite hair! Turn off hairs, or set your outfit with the option on.")
 		end
 	end
 end
@@ -101,12 +101,13 @@ local function EquipLoreWearSkin()
 			lastUsedSkin = currentCollectible
 			--Same problem as above?
 		else
-			CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Skin' is enabled, but you haven't set a favorite skin! Turn off skins, or put on a new skin and set your outfit.")
+			--CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Skin' is enabled, but you haven't set a favorite skin! Turn off skins, or put on a new skin and set your outfit.")
 		end
 	end
 end
 
-
+--[[ MUST FIX THIS. IF THERE'S NO HAT SET IN FAVORITE, BUT OPTION IS ON, THEN IT SHOULD TAKE ANY HAT OFF UPON ENTERING THE CITY.
+ POSSIBLE SOLUTION: Remove 'return' in the Settings.lua favorite section where collectibleId == 0. The, check for 0 here and use lastUsedCollectible? ]]--
 local function EquipLoreWearClothes()
 	EquipLoreWearCostume()
 	EquipLoreWearHat()
