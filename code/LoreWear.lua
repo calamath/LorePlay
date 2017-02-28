@@ -64,6 +64,8 @@ local function EquipLoreWearHat()
 			currentCollectible = LorePlay.savedSettingsTable.favoriteHatId
 			-- Might need to set lastUsedCostume to current collectible here?
 			if currentCollectible == GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAT) then return end
+			-- If favorite is 0 but character is wearing a hat, take off the hat
+			if currentCollectible == 0 then UseCollectible(lastUsedHat) return end
 			UseCollectible(currentCollectible)
 			lastUsedHat = currentCollectible
 		else
@@ -80,6 +82,8 @@ local function EquipLoreWearHair()
 			currentCollectible = LorePlay.savedSettingsTable.favoriteHairId
 			-- Might need to set lastUsedCostume to current collectible here?
 			if currentCollectible == GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAIR) then return end
+			-- If favorite is 0 but you are wearing hair, then take off the hair
+			if currentCollectible == 0 then UseCollectible(lastUsedHair) return end
 			UseCollectible(currentCollectible)
 			lastUsedHair = currentCollectible
 			--Maybe here there will be the problem of accidentally taking off a hair that is the same in both favorite and outside cities?
@@ -97,6 +101,8 @@ local function EquipLoreWearSkin()
 			currentCollectible = LorePlay.savedSettingsTable.favoriteSkinId
 			-- Might need to set lastUsedCostume to current collectible here?
 			if currentCollectible == GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_SKIN) then return end
+			-- If wearing a skin but favorite is 0, then take skin off
+			if currentCollectible == 0 then UseCollectible(lastUsedSkin) return end
 			UseCollectible(currentCollectible)
 			lastUsedSkin = currentCollectible
 			--Same problem as above?

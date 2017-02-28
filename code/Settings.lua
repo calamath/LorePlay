@@ -184,7 +184,7 @@ end
 
 local function SetFavoriteCostume()
 	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
-	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") return end
+	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") end
 	if UnblacklistCurrentCostume() then
 		CHAT_SYSTEM:AddMessage("Current costume was on your blacklist, but setting it as your favorite removed it from the blacklist.")
 	end
@@ -198,32 +198,45 @@ end
 
 local function SetFavoriteHat()
 	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAT)
-	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No hat was detected.") return end
+	local name = GetCollectibleName(collectibleId)
+	if collectibleId == 0 then 
+		CHAT_SYSTEM:AddMessage("No hat was detected.") 
+		name = "None"
+	end
 	Settings.savedSettingsTable.favoriteHatId = collectibleId
 	Settings.savedVariables.favoriteHatId = Settings.savedSettingsTable.favoriteHatId
 	--Settings.savedSettingsTable.isUsingFavoriteHat = true
 	Settings.savedVariables.isUsingFavoriteHat = Settings.savedSettingsTable.isUsingFavoriteHat
-	CHAT_SYSTEM:AddMessage("Favorite hat set as '"..GetCollectibleName(collectibleId).."'")
+	CHAT_SYSTEM:AddMessage("Favorite hat set as '"..name.."'")
 end
 
 local function SetFavoriteHair()
 	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAIR)
+	local name = GetCollectibleName(collectibleId)
+	if collectibleId == 0 then 
+		CHAT_SYSTEM:AddMessage("Default hair detected.") 
+		name = "Default"
+	end
 	Settings.savedSettingsTable.favoriteHairId = collectibleId
 	Settings.savedVariables.favoriteHairId = Settings.savedSettingsTable.favoriteHairId
 	--Settings.savedSettingsTable.isUsingFavoriteHat = true
 	Settings.savedVariables.isUsingFavoriteHair = Settings.savedSettingsTable.isUsingFavoriteHair
-	CHAT_SYSTEM:AddMessage("Favorite hair set as '"..GetCollectibleName(collectibleId).."'")
+	CHAT_SYSTEM:AddMessage("Favorite hair set as '"..name.."'")
 end
 
 
 local function SetFavoriteSkin()
 	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_SKIN)
-	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No skin was detected.") return end
+	local name = GetCollectibleName(collectibleId)
+	if collectibleId == 0 then 
+		CHAT_SYSTEM:AddMessage("No skin was detected.") 
+		name = "None"
+	end
 	Settings.savedSettingsTable.favoriteSkinId = collectibleId
 	Settings.savedVariables.favoriteSkinId = Settings.savedSettingsTable.favoriteSkinId
 	--Settings.savedSettingsTable.isUsingFavoriteHat = true
 	Settings.savedVariables.isUsingFavoriteSkin = Settings.savedSettingsTable.isUsingFavoriteSkin
-	CHAT_SYSTEM:AddMessage("Favorite skin set as '"..GetCollectibleName(collectibleId).."'")
+	CHAT_SYSTEM:AddMessage("Favorite skin set as '"..name.."'")
 end
 
 
@@ -356,7 +369,7 @@ function Settings.LoadMenuSettings()
 		[7] = {
 			type = "description",
 			title = nil,
-			text = "Contextual, automatic emotes that occur when you go idle or AFK (Not moving, not fighting, not stealthing).\n",
+			text = "Contextual, automatic emotes that occur when you go idle or AFK (Not moving, not fighting, not stealthing).\n|cFF0000Don't forget to bind your IdleEmotes keypress for quick toggling!|r",
 			width = "full",
 		},
 		[8] = {
