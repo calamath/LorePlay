@@ -223,15 +223,6 @@ function IdleEmotes.PerformIdleEmote()
 		randomEmote = math.random(#emoteFromEvent)
 		currIdleEmote = emoteFromEvent[randomEmote]
 	else
-		-- Doubles the time checked for Idling to allow current IdleEmote to persist longer
-		
-		--[[
-		if didIdleEmote then
-			didIdleEmote = false
-			return
-		end
-		]]--
-
 		local location = IdleEmotes.GetLocation()
 		randomEmote = math.random(#defaultIdleTable[location])
 		currIdleEmote = defaultIdleTable[location][randomEmote]
@@ -239,8 +230,6 @@ function IdleEmotes.PerformIdleEmote()
 	LPEventHandler:FireEvent(EVENT_ON_IDLE_EMOTE, false, true, currIdleEmote)
 	PlayEmoteByIndex(currIdleEmote)
 	didIdleEmote = true
-
-	-- Try to increase time for actively idle emoting
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.savedSettingsTable.timeBetweenIdleEmotes, IdleEmotes.CheckToPerformIdleEmote)
 end
@@ -264,7 +253,6 @@ function IdleEmotes.UpdateStealthState(eventCode, unitTag, stealthState)
 end
 
 
-
 function IdleEmotes.IsCharacterIdle()
 	if IsMounted() then return end
 	if not isActiveEmoting then
@@ -283,37 +271,6 @@ function IdleEmotes.IsCharacterIdle()
 	end
 	return false
 end
-
-
-
---[[
-function IdleEmotes.IsCharacterIdle()
-	if not isActiveEmoting then
-		local x, y, didMove = LPUtilities.DidPlayerMove(currentPlayerX, currentPlayerY) 
-		if not didMove then
-			if isPlayerStealthed == nil then
-				IdleEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, LorePlay.player, GetUnitStealthState(LorePlay.player))
-			end
-			if not isPlayerStealthed then
-				local interactionType = GetInteractionType()
-  				if interactionType == INTERACTION_NONE then
-					return true
-				end
-			end
-		else
-			currentPlayerX = x
-			currentPlayerY = y
-			if didIdleEmote then
-				didIdleEmote = false
-				-- Back to default idletime checking
-				EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
-				EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
-			end
-		end
-	end
-	return false
-end
-]]--
 
 
 function IdleEmotes.CheckToPerformIdleEmote()

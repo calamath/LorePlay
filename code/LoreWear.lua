@@ -68,8 +68,6 @@ local function EquipLoreWearHat()
 			if currentCollectible == 0 then UseCollectible(lastUsedHat) return end
 			UseCollectible(currentCollectible)
 			lastUsedHat = currentCollectible
-		else
-			--CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Hat' is enabled, but you haven't set a favorite hat! Turn off hats, or put on a new hat and set your outfit.")
 		end
 	end
 end
@@ -87,8 +85,6 @@ local function EquipLoreWearHair()
 			UseCollectible(currentCollectible)
 			lastUsedHair = currentCollectible
 			--Maybe here there will be the problem of accidentally taking off a hair that is the same in both favorite and outside cities?
-		else
-			--CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Hair' is enabled, but you haven't set a favorite hair! Turn off hairs, or set your outfit with the option on.")
 		end
 	end
 end
@@ -106,8 +102,6 @@ local function EquipLoreWearSkin()
 			UseCollectible(currentCollectible)
 			lastUsedSkin = currentCollectible
 			--Same problem as above?
-		else
-			--CHAT_SYSTEM:AddMessage("LorePlay: 'Use Favorite Skin' is enabled, but you haven't set a favorite skin! Turn off skins, or put on a new skin and set your outfit.")
 		end
 	end
 end
@@ -235,8 +229,6 @@ local function GetPlayerCostumeState()
 
 	-- If any one category failed, either player chose clothes or player isn't in city
 	if not costumeCheck or not hatCheck or not hairCheck or not skinCheck then
-		--d("CostumeCheck: "..tostring(costumeCheck))
-		--d("HatCheck: "..tostring(hatCheck))
 		-- If player is wearing nothing, they didn't choose their clothes
 		if currentCostumeID == 0 and currentHatID == 0 and currentSkinID == 0
 		and currentHairID == 0 then
@@ -255,8 +247,6 @@ local function CheckToToggleLoreWearClothes()
 	end
 	return true
 end
-
-
 
 
 local function ForceShowOrHideClothes()

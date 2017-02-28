@@ -35,7 +35,6 @@ local defaultSettingsTable = {
 
 
 function Settings.LoadSavedSettings()
-	--Settings.savedSettingsTable = defaultSettingsTable
 	Settings.savedSettingsTable = {}
 	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
 	Settings.savedSettingsTable.isLoreWearOn = Settings.savedVariables.isLoreWearOn
@@ -207,7 +206,6 @@ local function SetFavoriteHat()
 	end
 	Settings.savedSettingsTable.favoriteHatId = collectibleId
 	Settings.savedVariables.favoriteHatId = Settings.savedSettingsTable.favoriteHatId
-	--Settings.savedSettingsTable.isUsingFavoriteHat = true
 	Settings.savedVariables.isUsingFavoriteHat = Settings.savedSettingsTable.isUsingFavoriteHat
 	CHAT_SYSTEM:AddMessage("Favorite hat set as '"..name.."'")
 end
@@ -221,7 +219,6 @@ local function SetFavoriteHair()
 	end
 	Settings.savedSettingsTable.favoriteHairId = collectibleId
 	Settings.savedVariables.favoriteHairId = Settings.savedSettingsTable.favoriteHairId
-	--Settings.savedSettingsTable.isUsingFavoriteHat = true
 	Settings.savedVariables.isUsingFavoriteHair = Settings.savedSettingsTable.isUsingFavoriteHair
 	CHAT_SYSTEM:AddMessage("Favorite hair set as '"..name.."'")
 end
@@ -236,7 +233,6 @@ local function SetFavoriteSkin()
 	end
 	Settings.savedSettingsTable.favoriteSkinId = collectibleId
 	Settings.savedVariables.favoriteSkinId = Settings.savedSettingsTable.favoriteSkinId
-	--Settings.savedSettingsTable.isUsingFavoriteHat = true
 	Settings.savedVariables.isUsingFavoriteSkin = Settings.savedSettingsTable.isUsingFavoriteSkin
 	CHAT_SYSTEM:AddMessage("Favorite skin set as '"..name.."'")
 end
