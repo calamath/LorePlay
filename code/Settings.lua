@@ -11,6 +11,7 @@ local defaultSettingsTable = {
 	canBeDrunkInCities = true,
 	canExerciseInZone = true,
 	canWorship = true,
+	isCameraSpinDisabled = true,
 	--isUsingFavoriteOutfit = false,
 	isUsingFavoriteCostume = false,
 	isUsingFavoriteHat = false,
@@ -44,6 +45,7 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.canBeDrunkInCities = Settings.savedVariables.canBeDrunkInCities
 	Settings.savedSettingsTable.canExerciseInZone = Settings.savedVariables.canExerciseInZone
 	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
+	Settings.savedSettingsTable.isCameraSpinDisabled = Settings.savedVariables.isCameraSpinDisabled
 	Settings.savedSettingsTable.isUsingFavoriteCostume = Settings.savedVariables.isUsingFavoriteCostume
 	Settings.savedSettingsTable.isUsingFavoriteHat = Settings.savedVariables.isUsingFavoriteHat
 	Settings.savedSettingsTable.isUsingFavoriteHair = Settings.savedVariables.isUsingFavoriteHair
@@ -302,6 +304,24 @@ function Settings.ToggleIdleEmotes(settings)
 end
 
 
+-- Fixes "Cannot play emote at this time"
+local scenes = {}
+local function noCameraSpin()
+	if Settings.savedSettingsTable.isCameraSpinDisabled then
+	    for name, scene in pairs(SCENE_MANAGER.scenes) do
+	      if not name:find("market") and not name:find("store") and not name:find("crownCrate") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
+	        scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
+	        scenes[name] = scene
+	      end
+	    end
+	else
+		for name, scene in pairs(scenes) do
+    		scene:AddFragment(FRAME_PLAYER_FRAGMENT)
+    	end
+    end
+end
+
+
 
 
 function Settings.LoadMenuSettings()
@@ -497,17 +517,36 @@ function Settings.LoadMenuSettings()
 			width = "full",
 		},
 		[15] = {
+			type = "checkbox",
+			name = "Camera Spin Disabler",
+			tooltip = "Allows for emotes to be performed while in menus. Disables camera spin in menus. Removes 'Cannot play emote at this time' message.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isCameraSpinDisabled then
+					return true
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+				Settings.savedSettingsTable.isCameraSpinDisabled = setting
+				Settings.savedVariables.isCameraSpinDisabled = Settings.savedSettingsTable.isCameraSpinDisabled
+				noCameraSpin()
+			end,
+			width = "full",
+		},
+		[16] = {
 			type = "header",
 			name = "Lore Wear",
 			width = "full",
 		},
-		[16] = {
+		[17] = {
 			type = "description",
 			title = nil,
 			text = "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically equip his/her favorite (or a random) costume anytime he/she enters a city, and unequip upon exiting.\n|cFF0000Don't forget to bind your LoreWear show/hide clothes button!|r",
 			width = "full",
 		},
-		[17] = {
+		[18] = {
 			type = "checkbox",
 			name = "Toggle LoreWear On/Off",
 			tooltip = "Turns on/off the automatic, contextual clothing that will be put on when entering cities.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)",
@@ -523,7 +562,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[18] = {
+		[19] = {
 			type = "checkbox",
 			name = "Allow Equip While Mounted",
 			tooltip = "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.",
@@ -541,7 +580,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[19] = {
+		[20] = {
 			type = "checkbox",
 			name = "Equip Last Worn Costume When Adventuring",
 			tooltip = "If enabled, when exiting a city your character will equip the last worn costume from before entering the city.\nIf disabled, your character will show armor when exiting a city regardless of what was previously worn.",
@@ -559,7 +598,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 		},
-		[20] = {
+		[21] = {
 			type = "checkbox",
 			name = "Use Favorite Costume",
 			tooltip = "If enabled, uses your favorite costume when entering cities, as opposed to picking from the defaults randomly.",
@@ -578,7 +617,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[21] = {
+		[22] = {
 			type = "checkbox",
 			name = "Use Favorite Hat",
 			tooltip = "If enabled, uses your favorite hat when entering cities, along with your other favorite collectibles.",
@@ -597,7 +636,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[22] = {
+		[23] = {
 			type = "checkbox",
 			name = "Use Favorite Hair",
 			tooltip = "If enabled, uses your favorite hair when entering cities, along with your other favorite collecibles.",
@@ -616,7 +655,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[23] = {
+		[24] = {
 			type = "checkbox",
 			name = "Use Favorite Skin",
 			tooltip = "If enabled, uses your favorite skin when entering cities, along with your other favorite collectibles.",
@@ -635,7 +674,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = false,
 		},
-		[24] = {
+		[25] = {
 			type = "checkbox",
 			name = "Should Favorite Override Others",
 			tooltip = "If enabled, uses your favorite outfit when entering cities, even if you enter the city wearing a different outfit.\nIf disabled, if you enter a city with a different outfit, your favorite will NOT be put on over it.\nThis is to allow for easy, individual outfit selection without changing your favorite.",
@@ -654,7 +693,7 @@ function Settings.LoadMenuSettings()
 			width = "full",
 			default = true,
 		},
-		[25] = {
+		[26] = {
 			type = "button",
 			name = "Set Favorite Outfit",
 			tooltip = "Sets the current outfit (costumes, hats, hair, skins) your character is wearing as your favorite, allowing your character to automatically put it on/off when entering/exiting cities.",
@@ -663,7 +702,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[26] = {
+		[27] = {
 			type = "button",
 			name = "Clear Favorite Outfit",
 			tooltip = "Clears the outfit you have previously selected as your favorite. Also turns 'Use Favorite [collectible]' off upon pressing for each favorited collectible type.",
@@ -672,21 +711,21 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[27] = {
+		[28] = {
 			type = "button",
 			name = "Blacklist Costume",
 			tooltip = "Sets the current costume your character is wearing as a blacklisted costume, no longer allowing it to be automatically put on/off when entering/exiting cities.",
 			func = function() BlacklistCostume() end,
 			width = "half",
 		},
-		[28] = {
+		[29] = {
 			type = "button",
 			name = "Unblacklist Costume",
 			tooltip = "Removes the current costume your character is wearing from the blacklist, re-allowing it to be automatically put on/off from the random costumes when entering/exiting cities.",
 			func = function() UnblacklistCostume() end,
 			width = "half",
 		},
-		[29] = {
+		[30] = {
 			type = "button",
 			name = "Show Blacklist",
 			tooltip = "Prints the names of all the costumes currently blacklisted to the chat box.",
@@ -699,7 +738,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[30] = {
+		[31] = {
 			type = "button",
 			name = "Clear Blacklist",
 			tooltip = "Wipes your blacklist clean, allowing your character to now automatically equip/unequip anything that was once on the list.",
@@ -723,6 +762,7 @@ function Settings.InitializeSettings()
 	Settings.LoadSavedSettings()
 	LAM2 = LibStub("LibAddonMenu-2.0")
 	Settings.LoadMenuSettings()
+	noCameraSpin()
 	RegisterSettingsEvents()
 end
 

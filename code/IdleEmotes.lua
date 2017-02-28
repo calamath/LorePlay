@@ -409,18 +409,6 @@ function IdleEmotes.OnCraftingStationInteract(eventCode)
 	end
 end
 
---[[ FIX FOR 'CANNOT PERFORM EMOTE'?
-local scenes = {}
-local function noCameraSpin()
-    for name, scene in pairs(SCENE_MANAGER.scenes) do
-      if not name:find("market") and not name:find("store") and not name:find("crownCrate") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
-        scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
-        scenes[name] = scene
-      end
-    end
-end
-]]--
-
 
 function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
@@ -461,7 +449,6 @@ function IdleEmotes.InitializeIdle()
 	IdleEmotes.CreateDefaultIdleEmotesTable()
 	IdleEmotes.CreateEventIdleEmotesTable()
 	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
-	--noCameraSpin()
 	IdleEmotes.RegisterIdleEvents()
 end
 
