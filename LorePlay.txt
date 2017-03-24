@@ -1,5 +1,5 @@
 ## Title: LorePlay
-## Description: This addon adds immersion through intelligent, contextual emotes and outfits.
+## Description: Adds immersion through intelligent, contextual emotes and outfits.
 ## APIVersion: 100018
 ## Author: Justinon
 ## SavedVariables: LorePlaySavedVars
@@ -22,6 +22,11 @@ libs\LibAddonMenu-2.0\controls\texture.lua
 libs\LibAddonMenu-2.0\controls\iconpicker.lua
 libs\LibEventHandler\LibEventHandler.lua
 
+
+code\locales\en.lua
+code\locales\$(language).lua
+
+
 code\Utilities.lua
 code\LPEmotesTable.lua
 code\LPEmoteHandler.lua
@@ -33,7 +38,6 @@ code\IdleEmotes.lua
 code\LoreWear.lua
 bindings\bindings.xml
 bindings\bindings.lua
-
 
 
 ; DISCLOSURE:
@@ -49,6 +53,9 @@ bindings\bindings.lua
 ; that need tweaking, and of course there are interesting updates on my to-do list. However,
 ; your feedback is needed to ensure the desired experience for fellow roleplayers,
 ; so don't hesistate to inform me of your thoughts!
+
+; SPECIAL THANKS:
+; Huge shoutout to @iladrion for translating the titles and locations to german for me!
 
 ; Again, thank you!
 ; -Justinon

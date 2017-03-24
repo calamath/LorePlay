@@ -39,8 +39,6 @@ local isMounted
 local isInCombat
 local lockpickQuality
 local defaultEmotes
-local defaultEmotesByRegion
-local zoneToRegionEmotes
 local defaultEmotesByCity
 local defaultEmotesForDungeons
 local eventTTLEmotes
@@ -67,19 +65,6 @@ local runeQualityToEvents = {
 	[ITEM_QUALITY_NORMAL] = EVENT_LOOT_RECEIVED_RUNE_TA,
 	[ITEM_QUALITY_ARTIFACT] = EVENT_LOOT_RECEIVED_RUNE_REKUTA,
 	[ITEM_QUALITY_LEGENDARY] = EVENT_LOOT_RECEIVED_RUNE_KUTA
-}
-local playerTitles = {
-	["Emperor"] = "Emperor",
-	["Empress"] = "Empress",
-	["Former Emperor"] = "Former Emperor",
-	["Former Empress"] = "Former Empress",
-	["Ophidian Overlord"] = "Ophidian Overlord",
-	["Savior of Nirn"] = "Savior of Nirn",
-	["Daedric Lord Slayer"] = "Daedric Lord Slayer",
-	["Tamriel Hero"] = "Tamriel Hero",
-	["Maelstrom Arena Champion"] = "Maelstrom Arena Champion",
-	["Dragonstar Arena Champion"] = "Dragonstar Arena Champion",
-	["The Flawless Conqueror"] = "The Flawless Conqueror"
 }
 
 
@@ -112,8 +97,8 @@ local function UpdateEmoteFromReticle()
 		else
 			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND]
 		end
-	elseif playerTitles[unitTitle] ~= nil then
-		if GetUnitTitle("player") == playerTitles[unitTitle] then
+	elseif languageTable.playerTitles[unitTitle] ~= nil then
+		if GetUnitTitle("player") == languageTable.playerTitles[unitTitle] then
 			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME]
 		else 
 			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC]
@@ -219,7 +204,7 @@ end
 
 
 function SmartEmotes.CreateEmotesByRegionTable()
-	defaultEmotesByRegion = {
+	SmartEmotes.defaultEmotesByRegion = {
 		["ad1"] = { --Summerset
 			["Emotes"] = {
 				[1] = 191,
@@ -365,41 +350,9 @@ function SmartEmotes.CreateEmotesByRegionTable()
 			}
 		}
 	}
+	LorePlay = SmartEmotes
 end
 
-
-function SmartEmotes.CreateZoneToRegionEmotesTable()
-	zoneToRegionEmotes = {
-		["Auridon"] = defaultEmotesByRegion["ad1"],
-		["Grahtwood"] = defaultEmotesByRegion["ad2"],
-		["Greenshade"] = defaultEmotesByRegion["ad2"],
-		["Khenarthi's Roost"] = defaultEmotesByRegion["ad1"],
-		["Malabal Tor"] = defaultEmotesByRegion["ad2"],
-		["Reaper's March"] = defaultEmotesByRegion["ad2"],
-		["Alik'r Desert"] = defaultEmotesByRegion["dc1"],
-		["Bangkorai"] = defaultEmotesByRegion["dc1"],
-		["Betnikh"] = defaultEmotesByRegion["dc2"],
-		["Glenumbra"] = defaultEmotesByRegion["dc2"],
-		["Rivenspire"] = defaultEmotesByRegion["dc2"],
-		["Stormhaven"] = defaultEmotesByRegion["dc2"],
-		["Stros M'Kai"] = defaultEmotesByRegion["dc1"],
-		["Bal Foyen"] = defaultEmotesByRegion["ep2"],
-		["Bleakrock Isle"] = defaultEmotesByRegion["ep2"],
-		["Deshaan"] = defaultEmotesByRegion["ep2"],
-		["Eastmarch"] = defaultEmotesByRegion["ep1"],
-		["The Rift"] = defaultEmotesByRegion["ep1"],
-		["Shadowfen"] = defaultEmotesByRegion["ep3"],
-		["Stonefalls"] = defaultEmotesByRegion["ep2"],
-		["Coldharbour"] = defaultEmotesByRegion["ch"],
-		["Craglorn"] = defaultEmotesByRegion["other"],
-		["Cyrodiil"] = defaultEmotesByRegion["ip"],
-		["Gold Coast"] = defaultEmotesByRegion["other"],
-		["Hew's Bane"] = defaultEmotesByRegion["other"],
-		["Murkmire"] = defaultEmotesByRegion["ep3"],
-		["Bangkorai"] = defaultEmotesByRegion["dc1"],
-		["Wrothgar"] = defaultEmotesByRegion["other"],
-	}
-end
 
 
 function SmartEmotes.CreateEmotesByCityTable()
@@ -645,6 +598,9 @@ function SmartEmotes.CreateEmotesByCityTable()
 		["Daggerfall"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["DC"]
 		},
+		["Daggerfall Castle Town"] = {
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
 		["Davon's Watch"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["EP"]
 		},
@@ -777,7 +733,7 @@ end
 
 function SmartEmotes.CreateDefaultEmoteTables()
 	SmartEmotes.CreateEmotesByRegionTable()
-	SmartEmotes.CreateZoneToRegionEmotesTable()
+	languageTable.CreateZoneToRegionEmotesTable()
 	SmartEmotes.CreateEmotesByCityTable()
 	SmartEmotes.CreateDungeonTable()
 	SmartEmotes.CreateDolmenTable()
@@ -1157,7 +1113,7 @@ end
 
 
 function SmartEmotes.IsPlayerInZone(zoneName)
-	if zoneToRegionEmotes[zoneName] ~= nil then
+	if languageTable.zoneToRegionEmotes[zoneName] ~= nil then
 		return true
 	end
 	return false
@@ -1174,7 +1130,7 @@ end
 
 function SmartEmotes.IsPlayerInDungeon(POI, zoneName)
 	if defaultEmotesByCity[POI] == nil then
-		if zoneToRegionEmotes[zoneName] == nil then 
+		if languageTable.zoneToRegionEmotes[zoneName] == nil then 
 			return true
 		end
 	end
@@ -1241,7 +1197,7 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 		defaultEmotes = defaultEmotesForDolmens
 		return
 	elseif SmartEmotes.IsPlayerInZone(zoneName) then
-		defaultEmotes = zoneToRegionEmotes[zoneName]
+		defaultEmotes = languageTable.zoneToRegionEmotes[zoneName]
 		return
 	elseif SmartEmotes.IsPlayerInDungeon(location, zoneName) then
 		defaultEmotes = defaultEmotesForDungeons
