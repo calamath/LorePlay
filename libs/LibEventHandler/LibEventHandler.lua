@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibEventHandler-1.1", 1.0
+local MAJOR, MINOR = "LibEventHandler-1.2", 1.1
 local LEH, LEHminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not LEH then return end
 
@@ -19,7 +19,6 @@ end
 function LEH:FireEvent(eventCode, async, ...)
 	if not eventCode then return end
 	if not eventToFunctionTable[eventCode] or #eventToFunctionTable[eventCode] == 0 then
-		d("Event "..eventCode.." trying to be fired is not yet registered with any functions.")
 		return
 	end
 	local arg = {...}

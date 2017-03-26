@@ -8,7 +8,7 @@ LorePlay.player = "player"
 
 function LorePlay.OnAddOnLoaded(event, addonName)
 	if addonName ~= LorePlay.name then return end
-	LPEventHandler = LibStub:GetLibrary("LibEventHandler-1.1")
+	LPEventHandler = LibStub:GetLibrary("LibEventHandler-1.2")
 	LPEmotesTable.CreateAllEmotesTable()
 	LPEmoteHandler.InitializeEmoteHandler()
 	LorePlay.InitializeSettings()
