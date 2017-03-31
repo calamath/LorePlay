@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibEventHandler-1.2", 1.1
+local MAJOR, MINOR = "LibEventHandler-1.2", "LibEventHandler-1.1"
 local LEH, LEHminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not LEH then return end
 

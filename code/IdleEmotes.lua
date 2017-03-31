@@ -158,7 +158,7 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 			[10] = 38,
 			[11] = 191
 		},
-		["City"] = {
+		[City] = {
 			[1] = 202,
 			[2] = 107,
 			[3] = 195,
@@ -171,7 +171,7 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 			[10] = 191,
 			[11] = 199
 		},
-		["Dungeon"] = {
+		[Dungeon] = {
 			[1] = 195,
 			[2] = 1,
 			[3] = 154,
@@ -179,6 +179,24 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 			[5] = 1,
 			[6] = 122,
 			[7] = 101
+		},
+		[Housing] = {
+			[1] = 10,
+			[2] = 10,
+			[3] = 99,
+			[4] = 119,
+			[5] = 192,
+			[6] = 192,
+			[7] = 193,
+			[8] = 193,
+			[9] = 9,
+			[10] = 178,
+			[11] = 208,
+			[12] = 209,
+			[13] = 125,
+			[14] = 125,
+			[15] = 118,
+			[16] = 116,
 		}
 	}
 
@@ -207,11 +225,13 @@ function IdleEmotes.GetLocation()
 	local zoneName = GetPlayerActiveZoneName()
 
 	if LorePlay.IsPlayerInCity(location) then
-		return "City"
+		return City
+	elseif LorePlay.IsPlayerInHouse() then
+		return Housing
 	elseif LorePlay.IsPlayerInZone(zoneName) then
 		return "Zone"
 	elseif LorePlay.IsPlayerInDungeon(location, zoneName) then
-		return "Dungeon"
+		return Dungeon
 	end
 end
 

@@ -388,12 +388,29 @@ function SmartEmotes.CreateDolmenTable()
 end
 
 
+function SmartEmotes.CreateHousingTable()
+	defaultEmotesForHousing = {
+		["Emotes"] = {
+			[1] = 10,
+			[2] = 138,
+			[3] = 192,
+			[4] = 193,
+			[5] = 125,
+			[6] = 113,
+			[7] = 100,
+			[8] = 91,
+		}
+	}
+end
+
+
 function SmartEmotes.CreateDefaultEmoteTables()
 	SmartEmotes.CreateEmotesByRegionTable()
 	languageTable.CreateZoneToRegionEmotesTable()
 	languageTable.CreateEmotesByCityTable()
 	SmartEmotes.CreateDungeonTable()
 	SmartEmotes.CreateDolmenTable()
+	SmartEmotes.CreateHousingTable()
 end
 
 
@@ -880,6 +897,9 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 	-- Must remain in this order for proper detection
 	if SmartEmotes.IsPlayerInCity(location) then
 		defaultEmotes = languageTable.defaultEmotesByCity[location]
+		return
+	elseif SmartEmotes.IsPlayerInHouse() then
+		defaultEmotes = defaultEmotesForHousing
 		return
 	elseif SmartEmotes.IsPlayerInDolmen(location) then
 		defaultEmotes = defaultEmotesForDolmens

@@ -3,27 +3,10 @@ local LoreWear = LorePlay
 local isMounted
 local isFastTraveling
 local isInCombat
-local currentCostumeID
-
-local currentHatID
-local currentHairID
-local currentSkinID
-
-local lastUsedCostume
-local lastUsedHat
-local lastUsedHair
-local lastUsedSkin
 local outfitToToggle
-
-local lastUsedCollectible
-local costumeBeforeCity
-local hatBeforeCity
-local hairBeforeCity
-local skinBeforeCity
 local collectiblesMenu
 local lastTimeStamp
 local wasLastLocationCity
-
 local toggleTable = {}
 local keypressWhileMountedString = "Your current settings indicate you cannot equip/unequip clothing while mounted. Do '/loreplay' for more information."
 
@@ -230,7 +213,7 @@ local function ChangeLoreWearClothes(isCurrentlyInCity, POI, zone)
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Housing]
 	elseif LorePlay.IsPlayerInZone(zone) then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Adventure]
-	elseif LorePlay.IsPlayerInDungeon(POI, zone) then
+	elseif LorePlay.IsPlayerInDungeon(POI, zone) or LorePlay.isPlayerInDolmen(POI) then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Dungeon]
 	end
 	EquipLoreWearClothes(outfitToToggle)
