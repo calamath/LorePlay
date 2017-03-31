@@ -27,15 +27,16 @@ code\locales\en.lua
 code\locales\$(language).lua
 
 
+code\LPCategoryStrings.lua
 code\Utilities.lua
 code\LPEmotesTable.lua
 code\LPEmoteHandler.lua
-code\Settings.lua
+code\Settings2.lua
 LorePlay.lua
 code\SmartEmotesIndicator.xml
 code\SmartEmotes.lua
 code\IdleEmotes.lua
-code\LoreWear.lua
+code\LoreWear2.lua
 bindings\bindings.xml
 bindings\bindings.lua
 

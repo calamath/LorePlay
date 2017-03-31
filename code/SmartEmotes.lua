@@ -8,7 +8,6 @@ local indicatorFadeOut
 local timelineFadeIn
 local timelineFadeOut
 
-
 local EVENT_STARTUP = "EVENT_STARTUP"
 local EVENT_KILLED_CREATURE = "EVENT_KILLED_CREATURE"
 local EVENT_POWER_UPDATE_STAMINA = "EVENT_POWER_UPDATE_STAMINA"
@@ -34,7 +33,6 @@ local EVENT_LOOT_RECEIVED_RARE_RECIPE_OR_MATERIAL = "EVENT_LOOT_RECEIVED_RARE_RE
 local EVENT_KILLED_BOSS = "EVENT_KILLED_BOSS"
 local EVENT_INDICATOR_ON = "EVENT_INDICATOR_ON"
 
-
 local isMounted
 local isInCombat
 local lockpickQuality
@@ -48,7 +46,6 @@ local existsPreviousEvent
 local lastLatchedEvent
 local emoteFromLatched
 local emoteFromReticle
-
 
 local emoteFromTTL = {}
 local lockpickValues = {
@@ -767,6 +764,15 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Duration"] = defaultDuration
 		}
 	}
+end
+
+
+function SmartEmotes.IsPlayerInHouse()
+	local currHouseId = GetCurrentZoneHouseId()
+	if currHouseId ~= 0 then
+		return true
+	end
+	return false
 end
 
 

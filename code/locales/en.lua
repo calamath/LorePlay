@@ -145,25 +145,6 @@ function languageTable.CreateEmotesByCityTable()
 				[12] = 5,
 				[13] = 6,
 				[14] = 7,
-				[15] = 79
-			}
-		},
-		["Elden Root Services"] = { 
-			["Emotes"] = {
-				[1] = 203,
-				[2] = 203,
-				[3] = 203,
-				[4] = 203,
-				[5] = 177,
-				[6] = 174,
-				[7] = 202,
-				[8] = 99,
-				[9] = 8,
-				[10] = 52,
-				[11] = 184,
-				[12] = 5,
-				[13] = 6,
-				[14] = 7,
 				[15] = 79,
 				[16] = 8
 			}
@@ -297,6 +278,15 @@ function languageTable.CreateEmotesByCityTable()
 		["Daggerfall Castle Town"] = {
 			["Emotes"] = defaultCityToRegionEmotes["DC"]
 		},
+		["Daggerfall Harbor District"] = {
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Daggerfall Trade District"] = {
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
+		["Castle Daggerfall"] = {
+			["Emotes"] = defaultCityToRegionEmotes["DC"]
+		},
 		["Davon's Watch"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["EP"]
 		},
@@ -383,9 +373,22 @@ function languageTable.CreateEmotesByCityTable()
 		}
 	}
 
-	local cityWayshrine
+	-- Add Wayshrines
 	for i,v in pairs(languageTable.defaultEmotesByCity) do
-		cityWayshrine = i.." Wayshrine"
+		local cityWayshrine = i.." Wayshrine"
 		languageTable.defaultEmotesByCity[cityWayshrine] = languageTable.defaultEmotesByCity[i]
 	end
+
+	-- Add special cases, such as name variations
+	languageTable.defaultEmotesByCity["Mournhold Plaza of the Gods"] = {
+		["Emotes"] = languageTable.defaultEmotesByCity["Mournhold"]["Emotes"]
+	}
+
+	languageTable.defaultEmotesByCity["Mournhold Banking District"] = {
+		["Emotes"] = languageTable.defaultEmotesByCity["Mournhold"]["Emotes"]
+	}
+
+	languageTable.defaultEmotesByCity["Elden Root Services"] = {
+		["Emotes"] = languageTable.defaultEmotesByCity["Elden Root"]["Emotes"]
+	}
 end

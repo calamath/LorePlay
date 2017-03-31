@@ -574,7 +574,7 @@ local function OnMountedStateChanged(eventCode, mounted)
 	else 
 		isMounted = false
 		if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
-			zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1400)
+			zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1525)
 		end	
 	end
 end

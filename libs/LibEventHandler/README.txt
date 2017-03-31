@@ -1,5 +1,5 @@
 Author: Justin Glommen (Justinon)
-Version: 1.1
+Version: 1.2
 
 Thank you for downloading LibEventHandler!
 

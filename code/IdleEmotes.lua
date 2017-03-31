@@ -8,6 +8,7 @@ local defaultIdleTable
 local eventIdleTable
 local didIdleEmote = false
 local isActiveEmoting = false
+local isFastTraveling = false
 
 
 
@@ -254,7 +255,7 @@ end
 
 
 function IdleEmotes.IsCharacterIdle()
-	if IsMounted() then return end
+	if IsMounted() or isFastTraveling then return end
 	if not isActiveEmoting then
 		local didMove = IdleEmotes.UpdateIfMoved() 
 		if not didMove then
@@ -358,6 +359,15 @@ local function OnActiveEmote(eventCode, isEmotingNow)
 end
 
 
+local function OnFastTravelInteraction(eventCode)
+	if eventCode == EVENT_START_FAST_TRAVEL_INTERACTION then
+		isFastTraveling = true
+	else
+		isFastTraveling = false
+	end
+end
+
+
 function IdleEmotes.OnCraftingStationInteract(eventCode)
 	if eventCode == EVENT_CRAFTING_STATION_INTERACT then
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
@@ -378,6 +388,8 @@ function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotesMoveTimer")
@@ -395,6 +407,8 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_TRADE_CANCELED, IdleEmotes.OnTradeEvent_For_TRADE_CESSATION)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotesMoveTimer", idleTime, IdleEmotes.UpdateIfMoved)
