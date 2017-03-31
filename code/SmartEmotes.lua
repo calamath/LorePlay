@@ -32,6 +32,8 @@ local EVENT_LOOT_RECEIVED_RECIPE_OR_MATERIAL = "EVENT_LOOT_RECEIVED_RECIPE_OR_MA
 local EVENT_LOOT_RECEIVED_RARE_RECIPE_OR_MATERIAL = "EVENT_LOOT_RECEIVED_RARE_RECIPE_OR_MATERIAL"
 local EVENT_KILLED_BOSS = "EVENT_KILLED_BOSS"
 local EVENT_INDICATOR_ON = "EVENT_INDICATOR_ON"
+local EVENT_BANKED_MONEY_UPDATE_GROWTH = "EVENT_BANKED_MONEY_UPDATE_GROWTH"
+local EVENT_BANKED_MONEY_UPDATE_DOUBLE = "EVENT_BANKED_MONEY_UPDATE_DOUBLE"
 
 local isMounted
 local isInCombat
@@ -762,6 +764,28 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[4] = 165
 			},
 			["Duration"] = defaultDuration
+		},
+		[EVENT_BANKED_MONEY_UPDATE_GROWTH] = {
+			["EventName"] = EVENT_BANKED_MONEY_UPDATE_GROWTH,
+			["Emotes"] = {
+				[1] = 194,
+				[2] = 194,
+				[3] = 174,
+				[4] = 199,
+				[5] = 54
+			},
+			["Duration"] = defaultDuration
+		},
+		[EVENT_BANKED_MONEY_UPDATE_DOUBLE] = {
+			["EventName"] = EVENT_BANKED_MONEY_UPDATE_DOUBLE,
+			["Emotes"] = {
+				[1] = 25,
+				[2] = 194,
+				[3] = 78,
+				[4] = 82,
+				[5] = 97
+			},
+			["Duration"] = defaultDuration
 		}
 	}
 end
@@ -937,8 +961,6 @@ end
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOOT_RECEIVED_GENERAL(eventCode, itemName)
 	if eventCode ~= EVENT_LOOT_RECEIVED_GENERAL then return end
-	--local equipType = GetItemLinkEquipType(itemName)
-	--if equipType == EQUIP_TYPE_INVALID then return end
 	local equipSlot1, equipSlot2 = GetComparisonEquipSlotsFromItemLink(itemName)
 	if not equipSlot1 or equipSlot1 == EQUIP_SLOT_NONE or equipSlot1 == EQUIP_SLOT_COSTUME then return end
 	local qualityReceived = GetItemLinkQuality(itemName)
@@ -1059,6 +1081,24 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LOCKPICK_SUCCESS(eventCode)
 end
 
 
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_BANKED_MONEY_UPDATE(eventCode, newBankedMoney, oldBankedMoney)
+	if eventCode ~= EVENT_BANKED_MONEY_UPDATE then return end
+	
+	local doubleOld = 2*oldBankedMoney
+	if newBankedMoney >= doubleOld then
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_BANKED_MONEY_UPDATE_DOUBLE)
+		return
+	end
+
+	local acquisition = newBankedMoney - oldBankedMoney
+	local threshold = (.1)*oldBankedMoney
+	if acquisition >= threshold then
+		SmartEmotes.UpdateTTLEmoteTable(EVENT_BANKED_MONEY_UPDATE_GROWTH)
+		return
+	end
+end
+
+
 local function OnBeginLockpick(eventCode)
 	if eventCode ~= EVENT_BEGIN_LOCKPICK then return end
 	lockpickQuality = lockpickValues[GetLockQuality()]
@@ -1084,6 +1124,7 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_BEGIN_LOCKPICK, OnBeginLockpick)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, OnCombatEvent)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_LOOT_RECEIVED, OnLootReceived)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_BANKED_MONEY_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_BANKED_MONEY_UPDATE)
 end
 
 
