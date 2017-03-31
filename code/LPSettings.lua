@@ -229,42 +229,6 @@ local function SetFavoriteOutfit(outfitsTable, whichOutfitString)
 			SetFavoriteCollectible(outfitsTable[whichOutfitString], i)
 		end
 	end
-
-	--[[
-	if Settings.savedSettingsTable.isUsingFavorite[Costumes] then
-		SetFavoriteCollectible(tableToPassedOutfit, Costumes)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[Hats] then
-		SetFavoriteCollectible(tableToPassedOutfit, Hats)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[Hair] then
-		SetFavoriteCollectible(tableToPassedOutfit, Hair)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[Skins] then
-		SetFavoriteCollectible(tableToPassedOutfit, Skins)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[Polymorphs] then
-		SetFavoriteCollectible(tableToPassedOutfit, Polymorphs)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[FacialAcc] then
-		SetFavoriteCollectible(tableToPassedOutfit, FacialAcc)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[FacialHair] then
-		SetFavoriteCollectible(tableToPassedOutfit, FacialHair)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[Jewelry] then
-		SetFavoriteCollectible(tableToPassedOutfit, Jewelry)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[BodyMarkings] then
-		SetFavoriteCollectible(tableToPassedOutfit, BodyMarkings)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[HeadMarkings] then
-		SetFavoriteCollectible(tableToPassedOutfit, HeadMarkings)
-	end
-	if Settings.savedSettingsTable.isUsingFavorite[Personalities] then
-		SetFavoriteCollectible(tableToPassedOutfit, Personalities)
-	end
-	]]--
 	CHAT_SYSTEM:AddMessage("Success.")
 end
 
@@ -283,7 +247,7 @@ function Settings.ToggleIdleEmotes(settings)
 end
 
 
--- Fixes "Cannot play emote at this time"
+-- Fixes "Cannot play emote at this time" in most circumstances
 local scenes = {}
 local function noCameraSpin()
 	if Settings.savedSettingsTable.isCameraSpinDisabled then
