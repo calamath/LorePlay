@@ -23,10 +23,8 @@ libs\LibAddonMenu-2.0\controls\texture.lua
 libs\LibAddonMenu-2.0\controls\iconpicker.lua
 libs\LibEventHandler\LibEventHandler.lua
 
-
 code\locales\en.lua
 code\locales\$(language).lua
-
 
 code\LPCategoryStrings.lua
 code\LPUtilities.lua

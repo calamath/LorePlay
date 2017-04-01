@@ -57,7 +57,7 @@ end
 
 
 local function ForceShowOrHideClothes()
-	local colToStore, colType, curCol
+	local colType, curCol
 	for i,v in pairs(toggleTable) do
 		if LorePlay.savedSettingsTable.isUsingFavorite[i] then
 			colType = stringToColTypeTable[i]
@@ -84,6 +84,22 @@ function LoreWear.KeypressToggleLoreWearClothes()
 	end
 	if not IsCooldownOver() then return end
 	ForceShowOrHideClothes()
+end
+
+
+function LoreWear.KeypressEquipOutfit(outfitSetString)
+	local colType, curCol
+	for i,v in pairs(LorePlay.savedSettingsTable.outfitTable[outfitSetString]) do
+		if LorePlay.savedSettingsTable.isUsingFavorite[i] then
+			colType = stringToColTypeTable[i]
+			curCol = GetActiveCollectibleByType(colType)
+			if v ~= 0 and curCol ~= v then
+				UseCollectible(v)
+			elseif v == 0 and curCol ~= 0 then
+				UseCollectible(curCol)
+			end
+		end
+	end
 end
 
 
