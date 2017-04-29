@@ -30,6 +30,7 @@ function languageTable.CreateZoneToRegionEmotesTable()
 		["Murkmire"] = LorePlay.defaultEmotesByRegion["ep3"],
 		["Bangkorai"] = LorePlay.defaultEmotesByRegion["dc1"],
 		["Wrothgar"] = LorePlay.defaultEmotesByRegion["other"],
+		["Vvardenfell"] = LorePlay.defaultEmotesByRegion["ep1"],
 	}
 end
 
@@ -370,14 +371,23 @@ function languageTable.CreateEmotesByCityTable()
 		},
 		["Woodhearth"] = { 
 			["Emotes"] = defaultCityToRegionEmotes["AD"]
-		}
+		},
+		["Vivec City"] = {
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
+		["Seyda Neen"] = {
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
 	}
 
 	-- Add Wayshrines
+	local temp = {}
 	for i,v in pairs(languageTable.defaultEmotesByCity) do
 		local cityWayshrine = i.." Wayshrine"
-		languageTable.defaultEmotesByCity[cityWayshrine] = languageTable.defaultEmotesByCity[i]
+		temp[i] = languageTable.defaultEmotesByCity[i]
+		temp[cityWayshrine] = languageTable.defaultEmotesByCity[i]
 	end
+	languageTable.defaultEmotesByCity = temp
 
 	-- Add special cases, such as name variations
 	languageTable.defaultEmotesByCity["Mournhold Plaza of the Gods"] = {
