@@ -47,7 +47,8 @@ function languageTable.CreatePlayerTitles()
 		["Tamriel Hero"] = "Tamriel Hero",
 		["Maelstrom Arena Champion"] = "Maelstrom Arena Champion",
 		["Dragonstar Arena Champion"] = "Dragonstar Arena Champion",
-		["The Flawless Conqueror"] = "The Flawless Conqueror"
+		["The Flawless Conqueror"] = "The Flawless Conqueror",
+		["Stormproof"] = "Stormproof",
 	}
 end
 
@@ -376,6 +377,12 @@ function languageTable.CreateEmotesByCityTable()
 			["Emotes"] = defaultCityToRegionEmotes["EP"]
 		},
 		["Seyda Neen"] = {
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
+		["Balmora"] = {
+			["Emotes"] = defaultCityToRegionEmotes["EP"]
+		},
+		["Sadrith Mora"] = {
 			["Emotes"] = defaultCityToRegionEmotes["EP"]
 		},
 	}

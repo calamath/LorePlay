@@ -619,7 +619,7 @@ function Settings.LoadMenuSettings()
 		[25] = {
 			type = "checkbox",
 			name = "Use Favorite Facial Accessories",
-			tooltip = "If enabled, uses your favorite facial accessoreis in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			tooltip = "If enabled, uses your favorite facial accessories in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[FacialAcc] 
