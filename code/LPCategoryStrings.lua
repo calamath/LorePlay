@@ -1,4 +1,4 @@
-Appearance, Hats, Costumes, Skins, Polymorphs, Hair, FacialAcc, FacialHair, BodyMarkings, HeadMarkings, Jewelry, Personalities = "Appearance", "Hat", "Costume", "Skin", "Polymorph", "Hair", "Facial Accessory", "Facial Hair", "Body Marking", "Head Marking", "Jewelry", "Personality"
+Appearance, Hats, Costumes, Skins, Polymorphs, Hair, FacialAcc, FacialHair, BodyMarkings, HeadMarkings, Jewelry, Personalities, VanityPets = "Appearance", "Hat", "Costume", "Skin", "Polymorph", "Hair", "Facial Accessory", "Facial Hair", "Body Marking", "Head Marking", "Jewelry", "Personality", "Vanity Pets"
 City, Housing, Dungeon, Adventure = "City", "Housing", "Dungeon", "Adventure"
 Total = "Total"
 
@@ -14,4 +14,5 @@ stringToColTypeTable = {
 	[HeadMarkings] = COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING,
 	[Jewelry] = COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY,
 	[Personalities] = COLLECTIBLE_CATEGORY_TYPE_PERSONALITY
+	[VanityPets] = COLLECTIBLE_CATEGORY_TYPE_VANITY_PET
 }
