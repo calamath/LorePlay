@@ -25,7 +25,8 @@ local defaultSettingsTable = {
 		[BodyMarkings] = false,
 		[HeadMarkings] = false,
 		[Jewelry] = false,
-		[Personalities] = false
+		[Personalities] = false,
+		[VanityPets] = false,
 	},
 
 	outfitTable = {
@@ -40,7 +41,8 @@ local defaultSettingsTable = {
 			[BodyMarkings] = 0,
 			[HeadMarkings] = 0,
 			[Jewelry] = 0,
-			[Personalities] = 0
+			[Personalities] = 0,
+			[VanityPets] = 0,
 		},
 		[Housing] = {
 			[Costumes] = 0,
@@ -53,7 +55,8 @@ local defaultSettingsTable = {
 			[BodyMarkings] = 0,
 			[HeadMarkings] = 0,
 			[Jewelry] = 0,
-			[Personalities] = 0
+			[Personalities] = 0,
+			[VanityPets] = 0,
 		},
 		[Dungeon] = {
 			[Costumes] = 0,
@@ -66,7 +69,8 @@ local defaultSettingsTable = {
 			[BodyMarkings] = 0,
 			[HeadMarkings] = 0,
 			[Jewelry] = 0,
-			[Personalities] = 0
+			[Personalities] = 0,
+			[VanityPets] = 0,
 		},
 		[Adventure] = {
 			[Costumes] = 0,
@@ -79,7 +83,8 @@ local defaultSettingsTable = {
 			[BodyMarkings] = 0,
 			[HeadMarkings] = 0,
 			[Jewelry] = 0,
-			[Personalities] = 0
+			[Personalities] = 0,
+			[VanityPets] = 0,
 		}
 	},
 
@@ -89,6 +94,12 @@ local defaultSettingsTable = {
 	indicatorTop = nil,
 	timeBetweenIdleEmotes = 30000
 }
+
+
+function Settings.updateSpouseName(newMaraSpouseName)
+	Settings.savedSettingsTable.maraSpouseName = newMaraSpouseName
+	Settings.savedVariables.maraSpouseName = Settings.savedSettingsTable.maraSpouseName
+end
 
 
 function Settings.LoadSavedSettings()
@@ -102,10 +113,8 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.canExerciseInZone = Settings.savedVariables.canExerciseInZone
 	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
 	Settings.savedSettingsTable.isCameraSpinDisabled = Settings.savedVariables.isCameraSpinDisabled
-
 	Settings.savedSettingsTable.isUsingFavorite = Settings.savedVariables.isUsingFavorite
 	Settings.savedSettingsTable.outfitTable = Settings.savedVariables.outfitTable
-
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
 	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
 	Settings.savedSettingsTable.indicatorLeft = Settings.savedVariables.indicatorLeft
@@ -131,7 +140,7 @@ local function OnIndicatorMoved(eventCode, top, left)
 	Settings.savedVariables.indicatorLeft = Settings.savedSettingsTable.indicatorLeft
 end
 
-
+--[[
 local function SetFavoriteCostume(tableToOutfit)
 	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") end
@@ -198,6 +207,8 @@ local function SetFavoriteSkin(tableToOutfit)
 	end
 	CHAT_SYSTEM:AddMessage("Favorite skin set as '"..name.."'")
 end
+]]--
+
 
 
 
@@ -731,6 +742,25 @@ function Settings.LoadMenuSettings()
 			default = false,
 		},
 		[31] = {
+			type = "checkbox",
+			name = "Use Favorite Pets",
+			tooltip = "If enabled, uses your favorite vanity pets in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			getFunc = function() 
+				if Settings.savedSettingsTable.isLoreWearOn then
+					return Settings.savedSettingsTable.isUsingFavorite[VanityPets] 
+				else
+					return false
+				end
+			end,
+			setFunc = function(setting)
+				if not Settings.savedSettingsTable.isLoreWearOn then return end
+				Settings.savedSettingsTable.isUsingFavorite[VanityPets] = setting
+				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+			end,
+			width = "full",
+			default = false,
+		},
+		[32] = {
 			type = "button",
 			name = "Set City Outfit",
 			tooltip = "Sets the current outfit (collectibles) your character is wearing as their city outfit, allowing for automatic collectible changing when entering a city.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!",
@@ -739,7 +769,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[32] = {
+		[33] = {
 			type = "button",
 			name = "Set Housing Outfit",
 			tooltip = "Sets the current outfit (collectibles) your character is wearing as their housing outfit, allowing for automatic collectible changing when entering a house.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!",
@@ -748,7 +778,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[33] = {
+		[34] = {
 			type = "button",
 			name = "Set Dungeon Outfit",
 			tooltip = "Sets the current outfit (collectibles) your character is wearing as their dungeon outfit, allowing for automatic collectible changing when entering a dungeon.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!",
@@ -757,7 +787,7 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "half",
 		},
-		[34] = {
+		[35] = {
 			type = "button",
 			name = "Set Adventure Outfit",
 			tooltip = "Sets the current outfit (collectibles) your character is wearing as their adventuring outfit, allowing for automatic collectible changing when running around the land of Tamriel.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!",

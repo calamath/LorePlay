@@ -9,6 +9,7 @@ local eventIdleTable
 local didIdleEmote = false
 local isActiveEmoting = false
 local isFastTraveling = false
+local isDead = false
 
 
 
@@ -295,7 +296,7 @@ end
 
 
 function IdleEmotes.CheckToPerformIdleEmote()
-	if IdleEmotes.IsCharacterIdle() then
+	if IdleEmotes.IsCharacterIdle() and not isDead then
 		IdleEmotes.PerformIdleEmote()
 	end
 end
@@ -397,6 +398,16 @@ function IdleEmotes.OnCraftingStationInteract(eventCode)
 end
 
 
+local function OnPlayerDeathStateChanged(eventCode)
+	if eventCode ~= EVENT_PLAYER_DEAD and eventCode ~= EVENT_PLAYER_ALIVE then return end
+	if eventCode == EVENT_PLAYER_DEAD then
+		isDead = true
+	else
+		isDead = false
+	end
+end
+
+
 function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
@@ -410,6 +421,8 @@ function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_DEAD, OnPlayerDeathStateChanged)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_ALIVE, OnPlayerDeathStateChanged)
 	LPEventHandler:UnregisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotesMoveTimer")
@@ -429,6 +442,8 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_DEAD, OnPlayerDeathStateChanged)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ALIVE, OnPlayerDeathStateChanged)
 	LPEventHandler:RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotesMoveTimer", idleTime, IdleEmotes.UpdateIfMoved)
@@ -437,6 +452,7 @@ end
 
 function IdleEmotes.InitializeIdle()
 	if not LorePlay.savedSettingsTable.isIdleEmotesOn then return end
+	isDead = IsUnitDead(player)
 	IdleEmotes.CreateDefaultIdleEmotesTable()
 	IdleEmotes.CreateEventIdleEmotesTable()
 	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)

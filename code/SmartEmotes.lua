@@ -8,6 +8,8 @@ local indicatorFadeOut
 local timelineFadeIn
 local timelineFadeOut
 
+EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = "EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE"
+
 local EVENT_STARTUP = "EVENT_STARTUP"
 local EVENT_KILLED_CREATURE = "EVENT_KILLED_CREATURE"
 local EVENT_POWER_UPDATE_STAMINA = "EVENT_POWER_UPDATE_STAMINA"
@@ -34,6 +36,8 @@ local EVENT_KILLED_BOSS = "EVENT_KILLED_BOSS"
 local EVENT_INDICATOR_ON = "EVENT_INDICATOR_ON"
 local EVENT_BANKED_MONEY_UPDATE_GROWTH = "EVENT_BANKED_MONEY_UPDATE_GROWTH"
 local EVENT_BANKED_MONEY_UPDATE_DOUBLE = "EVENT_BANKED_MONEY_UPDATE_DOUBLE"
+local EVENT_CAPTURE_FLAG_STATE_CHANGED_LOST_FLAG = "EVENT_CAPTURE_FLAG_STATE_CHANGED_LOST_FLAG"
+local EVENT_PLEDGE_OF_MARA_RESULT_PLEDGED = "EVENT_PLEDGE_OF_MARA_RESULT_PLEDGED"
 
 local isMounted
 local isInCombat
@@ -48,6 +52,7 @@ local existsPreviousEvent
 local lastLatchedEvent
 local emoteFromLatched
 local emoteFromReticle
+local lastEmoteUsed = 0
 
 local emoteFromTTL = {}
 local lockpickValues = {
@@ -115,22 +120,33 @@ local function GetSmartEmoteIndex(emoteTable)
 end
 
 
+local function GetNonRepeatEmoteIndex(emoteTable)
+	local smartEmoteIndex
+	do
+		smartEmoteIndex = GetSmartEmoteIndex(emoteTable)
+	while
+		lastEmoteUsed == smartEmoteIndex
+	end
+	return smartEmoteIndex
+end
+
+
 function SmartEmotes.PerformSmartEmote()
 	if IsPlayerMoving() or isMounted then return end
 	local smartEmoteIndex, wasReticle, wasTTL
 	if IsUnitPlayer("reticleover") and 
 	not SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_TRADE_SUCCEEDED, EVENT_TRADE_CANCELED) then
 		UpdateEmoteFromReticle()
-		smartEmoteIndex = GetSmartEmoteIndex(emoteFromReticle)
+		smartEmoteIndex = GetNonRepeatEmoteIndex(emoteFromReticle)
 		wasReticle = true
 	elseif eventLatchedEmotes["isEnabled"] then
-		smartEmoteIndex = GetSmartEmoteIndex(emoteFromLatched)
+		smartEmoteIndex = GetNonRepeatEmoteIndex(emoteFromLatched)
 	elseif eventTTLEmotes["isEnabled"] then
-		smartEmoteIndex = GetSmartEmoteIndex(emoteFromTTL)
+		smartEmoteIndex = GetNonRepeatEmoteIndex(emoteFromTTL)
 		wasTTL = true
 	else
 		SmartEmotes.UpdateDefaultEmotesTable()
-		smartEmoteIndex = GetSmartEmoteIndex(defaultEmotes)
+		smartEmoteIndex = GetNonRepeatEmoteIndex(defaultEmotes)
 	end
 	LPEventHandler:FireEvent(EVENT_ON_SMART_EMOTE, false, smartEmoteIndex)
 	PlayEmoteByIndex(smartEmoteIndex)
@@ -141,6 +157,7 @@ function SmartEmotes.PerformSmartEmote()
 			wasIndicatorTurnedOffForTTL = true
 		end
 	end
+	lastEmoteUsed = smartEmoteIndex
 end
 
 
@@ -803,7 +820,29 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[5] = 97
 			},
 			["Duration"] = defaultDuration
-		}
+		},
+		[EVENT_CAPTURE_FLAG_STATE_CHANGED_LOST_FLAG] = {
+			["EventName"] = EVENT_CAPTURE_FLAG_STATE_CHANGED_LOST_FLAG,
+			["Emotes"] = {
+				[1] = 115,
+				[2] = 62,
+				[3] = 22,
+				[4] = 149,
+				[5] = 134
+			},
+			["Duration"] = defaultDuration/6
+		},
+		[EVENT_PLEDGE_OF_MARA_RESULT_PLEDGED] = {
+			["EventName"] = EVENT_PLEDGE_OF_MARA_RESULT_PLEDGED,
+			["Emotes"] = {
+				[1] = 20,
+				[2] = 21,
+				[3] = 130,
+				[4] = ,
+				[5] = 
+			},
+			["Duration"] = defaultDuration*4
+		},
 	}
 end
 
@@ -1119,6 +1158,35 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_BANKED_MONEY_UPDATE(eventCode
 end
 
 
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_CAPTURE_FLAG_STATE_CHANGED(eventCode, objectiveKeepId, objectiveObjectiveId, battlegroundContext, objectiveName, objectiveControlEvent, objectiveControlState, originalOwnerAlliance, holderAlliance, lastHolderAlliance, pinType)
+	if eventCode ~= EVENT_CAPTURE_FLAG_STATE_CHANGED then return end
+
+	local playerAlliance = GetUnitBattlegroundAlliance(player)
+	if objectiveControlEvent == OBJECTIVE_CONTROL_EVENT_FLAG_TAKEN then
+		if originalOwnerAlliance == playerAlliance and holderAlliance ~= playerAlliance then 
+			SmartEmotes.UpdateTTLEmoteTable(EVENT_CAPTURE_FLAG_STATE_CHANGED_LOST_FLAG)
+		end
+	end
+end
+
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLEDGE_OF_MARA_RESULT(eventCode, reason, targetCharacterName, targetDisplayName)
+ 	if eventCode ~= EVENT_PLEDGE_OF_MARA_RESULT then return end
+ 	local isReasonPledged = false
+ 	local isReasonBegin = false
+ 	if reason == PLEDGE_OF_MARA_RESULT_BEGIN_PLEDGE then
+ 		isReasonBegin = true
+ 		--PUT ON SUIT IN LOREWEAR
+ 		LPEventHandler:FireEvent(EVENT_PLEDGE_OF_MARA_MARRIAGE, true, true) --isGettingMarried
+ 	elseif reason == PLEDGE_OF_MARA_RESULT_PLEDGED then 
+ 		isReasonPledged = true 
+ 		LorePlay.updateSpouseName(targetCharacterName)
+ 	end
+ 	if isReasonBegin or isReasonPledged then
+ 		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE)
+ 	end
+end
+
+
 local function OnBeginLockpick(eventCode)
 	if eventCode ~= EVENT_BEGIN_LOCKPICK then return end
 	lockpickQuality = lockpickValues[GetLockQuality()]
@@ -1145,6 +1213,8 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_COMBAT_EVENT, OnCombatEvent)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_LOOT_RECEIVED, OnLootReceived)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_BANKED_MONEY_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_BANKED_MONEY_UPDATE)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_CAPTURE_FLAG_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_CAPTURE_FLAG_STATE_CHANGED)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLEDGE_OF_MARA_RESULT)
 end
 
 

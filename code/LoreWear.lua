@@ -38,6 +38,29 @@ local function EquipLoreWearClothes(tableToOutfit)
 end
 
 
+local function EquipWeddingClothes()
+	local weddingSuit = 0
+	local weddingGown = 0
+	local eveningDress = 0
+	local currCostume = GetActiveCollectibleByType(stringToColTypeTable[Costumes])
+	local gender = GetUnitGender(player)
+	if gender == GENDER_MALE then
+		-- Put on wedding suit
+		if currCostume ~= weddingSuit and IsCollectibleUnlocked(weddingSuit) then
+			UseCollectible(weddingSuit)
+		end
+	elseif gender == GENDER_FEMALE then
+		-- Put on wedding gown or evening dress
+		if currCostume ~= weddingGown and IsCollectibleUnlocked(weddingGown) then
+			UseCollectible(weddingGown)
+			return
+		elseif currCostume ~= eveningDress and IsCollectibleUnlocked(eveningDress) then
+			UseCollectible(eveningDress)
+		end
+	end
+end
+
+
 local function IsCooldownOver()
 	local now = GetTimeStamp()
 	if lastTimeStamp then
@@ -194,6 +217,13 @@ local function OnPlayerCombatState(eventCode, inCombat)
 	end
 end
 
+local function OnPlayerMaraPledge(eventCode, isGettingMarried)
+	if eventCode ~= EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE then return end
+	if isGettingMarried then
+		EquipWeddingClothes()
+	end
+end
+
 
 function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
@@ -204,6 +234,7 @@ function LoreWear.UnregisterLoreWearEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraPledge)
 end
 
 
@@ -214,6 +245,7 @@ function LoreWear.RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraPledge)
 end
 
 
