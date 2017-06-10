@@ -8,6 +8,8 @@ local indicatorFadeOut
 local timelineFadeIn
 local timelineFadeOut
 
+EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = "EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE"
+
 local EVENT_STARTUP = "EVENT_STARTUP"
 local EVENT_KILLED_CREATURE = "EVENT_KILLED_CREATURE"
 local EVENT_POWER_UPDATE_STAMINA = "EVENT_POWER_UPDATE_STAMINA"
@@ -35,6 +37,7 @@ local EVENT_INDICATOR_ON = "EVENT_INDICATOR_ON"
 local EVENT_BANKED_MONEY_UPDATE_GROWTH = "EVENT_BANKED_MONEY_UPDATE_GROWTH"
 local EVENT_BANKED_MONEY_UPDATE_DOUBLE = "EVENT_BANKED_MONEY_UPDATE_DOUBLE"
 local EVENT_CAPTURE_FLAG_STATE_CHANGED_LOST_FLAG = "EVENT_CAPTURE_FLAG_STATE_CHANGED_LOST_FLAG"
+local EVENT_PLEDGE_OF_MARA_RESULT_PLEDGED = "EVENT_PLEDGE_OF_MARA_RESULT_PLEDGED"
 
 local isMounted
 local isInCombat
@@ -829,6 +832,17 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			},
 			["Duration"] = defaultDuration/6
 		},
+		[EVENT_PLEDGE_OF_MARA_RESULT_PLEDGED] = {
+			["EventName"] = EVENT_PLEDGE_OF_MARA_RESULT_PLEDGED,
+			["Emotes"] = {
+				[1] = 20,
+				[2] = 21,
+				[3] = 130,
+				[4] = ,
+				[5] = 
+			},
+			["Duration"] = defaultDuration*4
+		},
 	}
 end
 
@@ -1143,6 +1157,7 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_BANKED_MONEY_UPDATE(eventCode
 	end
 end
 
+
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_CAPTURE_FLAG_STATE_CHANGED(eventCode, objectiveKeepId, objectiveObjectiveId, battlegroundContext, objectiveName, objectiveControlEvent, objectiveControlState, originalOwnerAlliance, holderAlliance, lastHolderAlliance, pinType)
 	if eventCode ~= EVENT_CAPTURE_FLAG_STATE_CHANGED then return end
 
@@ -1154,6 +1169,22 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_CAPTURE_FLAG_STATE_CHANGED(ev
 	end
 end
 
+function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLEDGE_OF_MARA_RESULT(eventCode, reason, targetCharacterName, targetDisplayName)
+ 	if eventCode ~= EVENT_PLEDGE_OF_MARA_RESULT then return end
+ 	local isReasonPledged = false
+ 	local isReasonBegin = false
+ 	if reason == PLEDGE_OF_MARA_RESULT_BEGIN_PLEDGE then
+ 		isReasonBegin = true
+ 		--PUT ON SUIT IN LOREWEAR
+ 		LPEventHandler:FireEvent(EVENT_PLEDGE_OF_MARA_MARRIAGE, true, true) --isGettingMarried
+ 	elseif reason == PLEDGE_OF_MARA_RESULT_PLEDGED then 
+ 		isReasonPledged = true 
+ 		LorePlay.updateSpouseName(targetCharacterName)
+ 	end
+ 	if isReasonBegin or isReasonPledged then
+ 		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE)
+ 	end
+end
 
 
 local function OnBeginLockpick(eventCode)
@@ -1183,6 +1214,7 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_LOOT_RECEIVED, OnLootReceived)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_BANKED_MONEY_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_BANKED_MONEY_UPDATE)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_CAPTURE_FLAG_STATE_CHANGED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_CAPTURE_FLAG_STATE_CHANGED)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLEDGE_OF_MARA_RESULT)
 end
 
 

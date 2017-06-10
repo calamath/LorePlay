@@ -96,6 +96,12 @@ local defaultSettingsTable = {
 }
 
 
+function Settings.updateSpouseName(newMaraSpouseName)
+	Settings.savedSettingsTable.maraSpouseName = newMaraSpouseName
+	Settings.savedVariables.maraSpouseName = Settings.savedSettingsTable.maraSpouseName
+end
+
+
 function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable = {}
 	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
@@ -107,10 +113,8 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.canExerciseInZone = Settings.savedVariables.canExerciseInZone
 	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
 	Settings.savedSettingsTable.isCameraSpinDisabled = Settings.savedVariables.isCameraSpinDisabled
-
 	Settings.savedSettingsTable.isUsingFavorite = Settings.savedVariables.isUsingFavorite
 	Settings.savedSettingsTable.outfitTable = Settings.savedVariables.outfitTable
-
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
 	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
 	Settings.savedSettingsTable.indicatorLeft = Settings.savedVariables.indicatorLeft

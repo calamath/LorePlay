@@ -1,6 +1,7 @@
 Appearance, Hats, Costumes, Skins, Polymorphs, Hair, FacialAcc, FacialHair, BodyMarkings, HeadMarkings, Jewelry, Personalities, VanityPets = "Appearance", "Hat", "Costume", "Skin", "Polymorph", "Hair", "Facial Accessory", "Facial Hair", "Body Marking", "Head Marking", "Jewelry", "Personality", "Vanity Pets"
 City, Housing, Dungeon, Adventure = "City", "Housing", "Dungeon", "Adventure"
 Total = "Total"
+player = "player"
 
 stringToColTypeTable = {
 	[Hats] = COLLECTIBLE_CATEGORY_TYPE_HAT,
