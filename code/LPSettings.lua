@@ -96,7 +96,7 @@ local defaultSettingsTable = {
 }
 
 
-function Settings.updateSpouseName(newMaraSpouseName)
+local function updateSpouseName(newMaraSpouseName)
 	Settings.savedSettingsTable.maraSpouseName = newMaraSpouseName
 	Settings.savedVariables.maraSpouseName = Settings.savedSettingsTable.maraSpouseName
 end
@@ -273,6 +273,13 @@ local function noCameraSpin()
     		scene:AddFragment(FRAME_PLAYER_FRAGMENT)
     	end
     end
+end
+
+local function OnPlayerMaraResult(eventCode, isGettingMarried, playerMarriedTo)
+	if eventCode ~= EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE then return end
+	if not isGettingMarried then
+		updateSpouseName(playerMarriedTo)
+	end
 end
 
 
@@ -805,6 +812,7 @@ end
 
 local function RegisterSettingsEvents()
 	LPEventHandler:RegisterForLocalEvent(EVENT_INDICATOR_MOVED, OnIndicatorMoved)
+	LPEventHandler:RegisterForLocalEvent(EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraResult)
 end
 
 

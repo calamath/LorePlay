@@ -39,9 +39,9 @@ end
 
 
 local function EquipWeddingClothes()
-	local weddingSuit = 0
-	local weddingGown = 0
-	local eveningDress = 0
+	local weddingSuit = 95
+	local weddingGown = 79
+	local eveningDress = 76
 	local currCostume = GetActiveCollectibleByType(stringToColTypeTable[Costumes])
 	local gender = GetUnitGender(player)
 	if gender == GENDER_MALE then

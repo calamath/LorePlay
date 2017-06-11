@@ -408,4 +408,8 @@ function languageTable.CreateEmotesByCityTable()
 	languageTable.defaultEmotesByCity["Elden Root Services"] = {
 		["Emotes"] = languageTable.defaultEmotesByCity["Elden Root"]["Emotes"]
 	}
+
+	languageTable.defaultEmotesByCity["Vivec Temple Wayshrine"] = {
+		["Emotes"] = languageTable.defaultEmotesByCity["Vivec City"]["Emotes"]
+	}
 end

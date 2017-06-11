@@ -122,11 +122,9 @@ end
 
 local function GetNonRepeatEmoteIndex(emoteTable)
 	local smartEmoteIndex
-	do
+	repeat
 		smartEmoteIndex = GetSmartEmoteIndex(emoteTable)
-	while
-		lastEmoteUsed == smartEmoteIndex
-	end
+	until lastEmoteUsed ~= smartEmoteIndex
 	return smartEmoteIndex
 end
 
@@ -838,8 +836,6 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[1] = 20,
 				[2] = 21,
 				[3] = 130,
-				[4] = ,
-				[5] = 
 			},
 			["Duration"] = defaultDuration*4
 		},
@@ -1179,7 +1175,7 @@ function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLEDGE_OF_MARA_RESULT(eventCo
  		LPEventHandler:FireEvent(EVENT_PLEDGE_OF_MARA_MARRIAGE, true, true) --isGettingMarried
  	elseif reason == PLEDGE_OF_MARA_RESULT_PLEDGED then 
  		isReasonPledged = true 
- 		LorePlay.updateSpouseName(targetCharacterName)
+ 		LPEventHandler:FireEvent(EVENT_PLEDGE_OF_MARA_MARRIAGE, true, false, targetCharacterName) --isGettingMarried
  	end
  	if isReasonBegin or isReasonPledged then
  		SmartEmotes.UpdateTTLEmoteTable(EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE)
