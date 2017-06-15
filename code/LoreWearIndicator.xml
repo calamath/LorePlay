@@ -1,0 +1,17 @@
+<GuiXml>
+	<Controls>
+		<TopLevelControl name="LoreWearIndicator" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="false">  
+         <Dimensions x="75" y="75" />
+         <Anchor point="TOPRIGHT" relativeTo="GuiRoot" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+         <OnMoveStop>
+            LPEventHandler:FireEvent(EVENT_LOREWEAR_INDICATOR_MOVED, true, LoreWearIndicator:GetTop(), LoreWearIndicator:GetRight())
+         </OnMoveStop>
+         <Controls>
+            <Texture name = "AdventureImage" textureFile="esoui\art\tutorial\tutorial_idexicon_adventuring_over.dds" alpha = "1">
+               <Dimensions x="75" y="75" />
+               <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+            </Texture>
+         </Controls>
+      </TopLevelControl>
+	</Controls>
+</GuiXml>

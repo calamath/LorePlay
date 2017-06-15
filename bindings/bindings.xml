@@ -10,6 +10,9 @@
       <Action name="SHOW/HIDE_LOREWEAR_CLOTHES">
         <Down>LorePlay.KeypressToggleLoreWearClothes()</Down>
       </Action>
+      <Action name="PERFORM_LOREWEAR_INDICATOR_CHANGE">
+        <Down>LorePlay.OnHandleChangeLoreWearKeybindPress()</Down>
+      </Action>
       <Action name="FORCE_EQUIP_CITY_OUTFIT">
         <Down>LorePlay.KeypressEquipOutfit("City")</Down>
       </Action>

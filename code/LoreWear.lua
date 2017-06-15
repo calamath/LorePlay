@@ -1,5 +1,16 @@
 local LoreWear = LorePlay
 
+local indicator
+local keybindCanBePressed
+local indicatorFadeIn
+local indicatorFadeOut
+local timelineFadeIn
+local timelineFadeOut
+
+local location
+local zoneName
+local isInCity
+
 local isMounted
 local isFastTraveling
 local isInCombat
@@ -9,6 +20,21 @@ local lastTimeStamp
 local wasLastLocationCity
 local toggleTable = {}
 local keypressWhileMountedString = "Your current settings indicate you cannot equip/unequip clothing while mounted. Do '/loreplay' for more information."
+
+
+local function TurnIndicatorOff()
+	timelineFadeOut:PlayFromStart()
+	indicator = false
+	keybindCanBePressed = false
+end
+
+
+local function TurnIndicatorOn()
+	LoreWearIndicator:SetHidden(false)
+	timelineFadeIn:PlayFromStart()
+	indicator = true
+	keybindCanBePressed = true
+end
 
 
 local function BuildToggleTable()
@@ -161,18 +187,60 @@ local function ChangeLoreWearClothes(isCurrentlyInCity, POI, zone)
 end
 
 
+function LoreWear.OnHandleChangeLoreWearKeybindPress()
+	if LorePlay.savedSettingsTable.isLoreWearIndicatorOn then 
+		if keybindCanBePressed then
+			ChangeLoreWearClothes(isInCity, location, zoneName)
+			TurnIndicatorOff()
+		end
+	end
+end
+
+
+local function IndicatorMethod()
+	if not indicator then
+		TurnIndicatorOn()
+		zo_callLater(function() TurnIndicatorOff() end, 20000)
+	end
+	wasLastLocationCity = isInCity
+end
+
+
+local function AutomaticMethod()
+	ChangeLoreWearClothes(isInCity, location, zoneName)
+	wasLastLocationCity = isInCity
+end
+
+
+local function BeginUpdate()
+	if LorePlay.savedSettingsTable.isLoreWearIndicatorOn then
+		IndicatorMethod()
+	else
+		AutomaticMethod()
+	end
+end
+
+
 local function UpdateLocation(eventCode)
-	local location = GetPlayerLocationName()
-	local zoneName = GetPlayerActiveZoneName()
-	local isInCity = LorePlay.IsPlayerInCity(location)
+	location = GetPlayerLocationName()
+	zoneName = GetPlayerActiveZoneName()
+	isInCity = LorePlay.IsPlayerInCity(location)
 	if isFastTraveling or isInCombat then return end
-	if not ShouldUpdateLocation(isInCity) then return end
+	if not ShouldUpdateLocation(isInCity) then 
+		-- GET RID OF EVERYTHING BUT RETURN???
+		--[[
+		if indicator then
+			TurnIndicatorOff()
+			return 
+		end
+		]]--
+		return
+	end
 	if not IsCooldownOver() then
 		zo_callLater(function() UpdateLocation(eventCode) end, 3000)
 		return
 	end
-	ChangeLoreWearClothes(isInCity, location, zoneName)
-	wasLastLocationCity = isCurrentlyInCity
+	BeginUpdate()
 end
 
 
@@ -229,21 +297,23 @@ local function initializeIndicator()
 	if not LorePlay.savedSettingsTable.isLoreWearIndicatorOn then 
 		LoreWearIndicator:SetHidden(true)
 	end
-	if LorePlay.savedSettingsTable.indicatorTop then
+	if LorePlay.savedSettingsTable.loreWearIndicatorTop then
 		LoreWearIndicator:ClearAnchors()
-		LoreWearIndicator:SetAnchor(TOPRIGHT, GuiRoot, TOPRIGHT, LorePlay.savedSettingsTable.indicatorLeft, LorePlay.savedSettingsTable.indicatorTop)
+		LoreWearIndicator:SetAnchor(TOPRIGHT, GuiRoot, TOPRIGHT, LorePlay.savedSettingsTable.loreWearIndicatorRight, LorePlay.savedSettingsTable.loreWearIndicatorTop)
 	end
 	local fadeTime = 1500
 	indicatorFadeIn, timelineFadeIn = CreateSimpleAnimation(ANIMATION_ALPHA, LoreWearIndicator)
 	indicatorFadeOut, timelineFadeOut = CreateSimpleAnimation(ANIMATION_ALPHA, LoreWearIndicator) --LoreWearIndicator defined in xml file of same name
-	indicatorFadeIn:SetAlphaValues(0, EmoteImage:GetAlpha())
+	indicatorFadeIn:SetAlphaValues(0, AdventureImage:GetAlpha())
 	indicatorFadeIn:SetDuration(fadeTime)
-	indicatorFadeOut:SetAlphaValues(EmoteImage:GetAlpha(), 0)
+	indicatorFadeOut:SetAlphaValues(AdventureImage:GetAlpha(), 0)
 	indicatorFadeOut:SetDuration(fadeTime)
 	timelineFadeIn:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
 	timelineFadeOut:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
 	indicator = false
+	keybindCanBePressed = false
 end
+
 
 function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
@@ -272,8 +342,8 @@ end
 function LoreWear.InitializeLoreWear()
 	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
 	BuildToggleTable()
-	LoreWear.RegisterLoreWearEvents()
 	initializeIndicator()
+	LoreWear.RegisterLoreWearEvents()
 end
 
 

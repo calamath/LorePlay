@@ -1218,9 +1218,9 @@ function SmartEmotes.InitializeIndicator()
 	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then 
 		SmartEmotesIndicator:SetHidden(true)
 	end
-	if LorePlay.savedSettingsTable.indicatorTop then
+	if LorePlay.savedSettingsTable.smartEmotesIndicatorTop then
 		SmartEmotesIndicator:ClearAnchors()
-		SmartEmotesIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, LorePlay.savedSettingsTable.indicatorLeft, LorePlay.savedSettingsTable.indicatorTop)
+		SmartEmotesIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, LorePlay.savedSettingsTable.smartEmotesIndicatorLeft, LorePlay.savedSettingsTable.smartEmotesIndicatorTop)
 	end
 	local fadeTime = 1500
 	indicatorFadeIn, timelineFadeIn = CreateSimpleAnimation(ANIMATION_ALPHA, SmartEmotesIndicator)

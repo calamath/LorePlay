@@ -1,12 +1,14 @@
 local Settings = {}
 local LAM2
 
-EVENT_INDICATOR_MOVED = "EVENT_INDICATOR_MOVED"
+EVENT_SMARTEMOTES_INDICATOR_MOVED = "EVENT_SMARTEMOTES_INDICATOR_MOVED"
+EVENT_LOREWEAR_INDICATOR_MOVED = "EVENT_LOREWEAR_INDICATOR_MOVED"
 
 local defaultSettingsTable = {
 	isIdleEmotesOn = true,
 	isLoreWearOn = true,
 	isSmartEmotesIndicatorOn = true,
+	isLoreWearIndicatorOn = true, -- MAKE SURE TO ADD A SETTING FOR THIS TO THE USER!!!!!!
 	canPlayInstrumentsInCities = true,
 	canDanceInCities = true,
 	canBeDrunkInCities = true,
@@ -90,8 +92,10 @@ local defaultSettingsTable = {
 
 	canActivateLWClothesWhileMounted = false,
 	maraSpouseName = "",
-	indicatorLeft = nil,
-	indicatorTop = nil,
+	smartEmotesIndicatorLeft = nil,
+	smartEmotesIndicatorTop = nil,
+	loreWearIndicatorRight = nil,
+	loreWearIndicatorTop = nil,
 	timeBetweenIdleEmotes = 30000
 }
 
@@ -107,6 +111,7 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
 	Settings.savedSettingsTable.isLoreWearOn = Settings.savedVariables.isLoreWearOn
 	Settings.savedSettingsTable.isSmartEmotesIndicatorOn = Settings.savedVariables.isSmartEmotesIndicatorOn
+	Settings.savedSettingsTable.isLoreWearIndicatorOn = Settings.savedVariables.isSmartEmotesIndicatorOn
 	Settings.savedSettingsTable.canPlayInstrumentsInCities = Settings.savedVariables.canPlayInstrumentsInCities
 	Settings.savedSettingsTable.canDanceInCities = Settings.savedVariables.canDanceInCities
 	Settings.savedSettingsTable.canBeDrunkInCities = Settings.savedVariables.canBeDrunkInCities
@@ -117,8 +122,10 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.outfitTable = Settings.savedVariables.outfitTable
 	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
 	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
-	Settings.savedSettingsTable.indicatorLeft = Settings.savedVariables.indicatorLeft
-	Settings.savedSettingsTable.indicatorTop = Settings.savedVariables.indicatorTop
+	Settings.savedSettingsTable.smartEmotesIndicatorLeft = Settings.savedVariables.smartEmotesIndicatorLeft
+	Settings.savedSettingsTable.smartEmotesIndicatorTop = Settings.savedVariables.smartEmotesIndicatorTop
+	Settings.savedSettingsTable.loreWearIndicatorRight = Settings.savedVariables.loreWearIndicatorRight
+	Settings.savedSettingsTable.loreWearIndicatorTop = Settings.savedVariables.loreWearIndicatorTop
 	Settings.savedSettingsTable.timeBetweenIdleEmotes = Settings.savedVariables.timeBetweenIdleEmotes
 end
 
@@ -133,11 +140,18 @@ local function ResetIndicator()
 end
 
 
-local function OnIndicatorMoved(eventCode, top, left)
-	Settings.savedSettingsTable.indicatorTop = top
-	Settings.savedSettingsTable.indicatorLeft = left
-	Settings.savedVariables.indicatorTop = Settings.savedSettingsTable.indicatorTop
-	Settings.savedVariables.indicatorLeft = Settings.savedSettingsTable.indicatorLeft
+local function OnSmartEmotesIndicatorMoved(eventCode, top, left)
+	Settings.savedSettingsTable.smartEmotesIndicatorTop = top
+	Settings.savedSettingsTable.smartEmotesIndicatorLeft = left
+	Settings.savedVariables.smartEmotesIndicatorTop = Settings.savedSettingsTable.smartEmotesIndicatorTop
+	Settings.savedVariables.smartEmotesIndicatorLeft = Settings.savedSettingsTable.smartEmotesIndicatorLeft
+end
+
+local function OnLoreWearIndicatorMoved(eventCode, top, right)
+	Settings.savedSettingsTable.loreWearIndicatorTop = top
+	Settings.savedSettingsTable.loreWearIndicatorRight = right
+	Settings.savedVariables.loreWearIndicatorTop = Settings.savedSettingsTable.loreWearIndicatorTop
+	Settings.savedVariables.loreWearIndicatorRight = Settings.savedSettingsTable.loreWearIndicatorRight
 end
 
 --[[
@@ -811,7 +825,8 @@ end
 
 
 local function RegisterSettingsEvents()
-	LPEventHandler:RegisterForLocalEvent(EVENT_INDICATOR_MOVED, OnIndicatorMoved)
+	LPEventHandler:RegisterForLocalEvent(EVENT_SMARTEMOTES_INDICATOR_MOVED, OnSmartEmotesIndicatorMoved)
+	LPEventHandler:RegisterForLocalEvent(EVENT_LOREWEAR_INDICATOR_MOVED, OnLoreWearIndicatorMoved)
 	LPEventHandler:RegisterForLocalEvent(EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraResult)
 end
 

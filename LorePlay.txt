@@ -1,6 +1,6 @@
 ## Title: LorePlay
 ## Description: Adds immersion through intelligent, contextual emotes and outfits.
-## Version: 1.5.0
+## Version: 1.6.0
 ## APIVersion: 100019 100018
 ## Author: Justinon
 ## SavedVariables: LorePlaySavedVars
@@ -35,6 +35,7 @@ LorePlay.lua
 code\SmartEmotesIndicator.xml
 code\SmartEmotes.lua
 code\IdleEmotes.lua
+code\LoreWearIndicator.xml
 code\LoreWear.lua
 bindings\bindings.xml
 bindings\bindings.lua

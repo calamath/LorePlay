@@ -30,7 +30,7 @@ function languageTable.CreateZoneToRegionEmotesTable()
 		["Murkmire"] = LorePlay.defaultEmotesByRegion["ep3"],
 		["Bangkorai"] = LorePlay.defaultEmotesByRegion["dc1"],
 		["Wrothgar"] = LorePlay.defaultEmotesByRegion["other"],
-		["Vvardenfell"] = LorePlay.defaultEmotesByRegion["ep1"],
+		["Vvardenfell"] = LorePlay.defaultEmotesByRegion["ep2"],
 	}
 end
 
