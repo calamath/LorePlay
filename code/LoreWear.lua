@@ -225,6 +225,26 @@ local function OnPlayerMaraPledge(eventCode, isGettingMarried)
 end
 
 
+local function initializeIndicator()
+	if not LorePlay.savedSettingsTable.isLoreWearIndicatorOn then 
+		LoreWearIndicator:SetHidden(true)
+	end
+	if LorePlay.savedSettingsTable.indicatorTop then
+		LoreWearIndicator:ClearAnchors()
+		LoreWearIndicator:SetAnchor(TOPRIGHT, GuiRoot, TOPRIGHT, LorePlay.savedSettingsTable.indicatorLeft, LorePlay.savedSettingsTable.indicatorTop)
+	end
+	local fadeTime = 1500
+	indicatorFadeIn, timelineFadeIn = CreateSimpleAnimation(ANIMATION_ALPHA, LoreWearIndicator)
+	indicatorFadeOut, timelineFadeOut = CreateSimpleAnimation(ANIMATION_ALPHA, LoreWearIndicator) --LoreWearIndicator defined in xml file of same name
+	indicatorFadeIn:SetAlphaValues(0, EmoteImage:GetAlpha())
+	indicatorFadeIn:SetDuration(fadeTime)
+	indicatorFadeOut:SetAlphaValues(EmoteImage:GetAlpha(), 0)
+	indicatorFadeOut:SetDuration(fadeTime)
+	timelineFadeIn:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
+	timelineFadeOut:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
+	indicator = false
+end
+
 function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
 		LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
@@ -253,6 +273,7 @@ function LoreWear.InitializeLoreWear()
 	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
 	BuildToggleTable()
 	LoreWear.RegisterLoreWearEvents()
+	initializeIndicator()
 end
 
 
