@@ -1,14 +1,17 @@
-===================================================================
-This is a modification version of LorePlay, originally by Justinon.
-===================================================================
+================================================================
+This is a modified version of LorePlay, originally by Justinon.
+================================================================
 original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfitsandmore.html
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.5.90 beta2 : by Calamath
+- To reduce the potential for variable name conflicts in the Lua global namespace, some global variables have been converted to local variables or immediate values or stored in the LorePlay table. (see _header_template.lua)
+- Changed initialization processing of LPEMotesTable.
+- Added Readme.md
 
-
-Version 1.5.90 beta1 : modified by Calamath
-- Forked LorePlay original Version 1.5.1 from GitHub, released under the Artistic License 2.0
+Version 1.5.90 beta1 : by Calamath
+- Forked LorePlay Standard Version 1.5.1 from GitHub, released under the Artistic License 2.0
 - Deleted the unfinished LoreWear indicator feature that the original author was once working in progress, it has only found in his GitHub repository source code.
 - Removed embedded LibStub and LibAddonMenu-2.0 libraries, you now need to have the following separately:
      LibAddonMenu-2.0
@@ -18,7 +21,7 @@ Version 1.5.90 beta1 : modified by Calamath
 
 
 ------------------------------------------------------------------------------
-The following are changes to the original version by original author Justinon.
+The following are changes to the standard version by original author Justinon.
 ------------------------------------------------------------------------------
 
 Version 1.5.1:

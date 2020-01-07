@@ -1,3 +1,41 @@
+LorePlay = LorePlay or {}
+-- --- definitions : LPCategoryStrings.lua
+local Appearance = LorePlay.Appearance
+local Hats = LorePlay.Hats
+local Costumes = LorePlay.Costumes
+local Skins = LorePlay.Skins
+local Polymorphs = LorePlay.Polymorphs
+local Hair = LorePlay.Hair
+local FacialAcc = LorePlay.FacialAcc
+local FacialHair = LorePlay.FacialHair
+local BodyMarkings = LorePlay.BodyMarkings
+local HeadMarkings = LorePlay.HeadMarkings
+local Jewelry = LorePlay.Jewelry
+local Personalities = LorePlay.Personalities
+local VanityPets = LorePlay.VanityPets
+local City = LorePlay.City
+local Housing = LorePlay.Housing
+local Dungeon = LorePlay.Dungeon
+local Adventure = LorePlay.Adventure
+local Total = LorePlay.Total
+local player = LorePlay.player
+local stringToColTypeTable = LorePlay.stringToColTypeTable
+-- ---
+-- --- definitions : LPUtilities.lua
+local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
+local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
+local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
+local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = LorePlay.EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE
+local EVENT_INDICATOR_MOVED = LorePlay.EVENT_INDICATOR_MOVED
+local LPUtilities = LorePlay.LPUtilities
+-- ---
+-- --- definitions : locates/$(language).lua
+local languageTable = LorePlay.languageTable
+
+-- ------------------------------------------------------------
+
+-- === LoreWear.lua ===
+
 local LoreWear = LorePlay
 
 local isMounted

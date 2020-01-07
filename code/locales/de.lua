@@ -6,7 +6,9 @@
 ]]--
 
 
-languageTable = {}
+LorePlay = LorePlay or {}
+
+local languageTable = {}
 
 function languageTable.CreateZoneToRegionEmotesTable()
 	languageTable.zoneToRegionEmotes = {
@@ -402,3 +404,6 @@ function languageTable.CreateEmotesByCityTable()
 		languageTable.defaultEmotesByCity[cityWayshrine] = languageTable.defaultEmotesByCity[i]
 	end
 end
+
+-- ---
+LorePlay.languageTable = languageTable

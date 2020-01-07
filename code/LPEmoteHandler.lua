@@ -1,8 +1,17 @@
-LPEmoteHandler = {}
+LorePlay = LorePlay or {}
+-- --- definitions : LPUtilities.lua
+local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
+local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
+local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
+local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = LorePlay.EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE
+local EVENT_INDICATOR_MOVED = LorePlay.EVENT_INDICATOR_MOVED
+local LPUtilities = LorePlay.LPUtilities
+-- ---
+-- ------------------------------------------------------------
 
-EVENT_ACTIVE_EMOTE = "EVENT_ACTIVE_EMOTE"
-EVENT_ON_SMART_EMOTE = "EVENT_ON_SMART_EMOTE"
-EVENT_ON_IDLE_EMOTE = "EVENT_ON_IDLE_EMOTE"
+-- === LPEmoteHandler.lua ===
+
+LPEmoteHandler = {}
 
 local performedSmartEmote
 local performedIdleEmote

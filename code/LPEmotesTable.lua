@@ -1,10 +1,12 @@
-LPEmotesTable = {}
+LorePlay = LorePlay or {}
 
+LPEmotesTable = {}
 LPEmotesTable.allEmotesTable = {}
 
+local allEmotesTable = {}
 
 local function AddLoopingStatusToEmotes()
-	local allEmotesTable = LPEmotesTable.allEmotesTable
+--	local allEmotesTable = LPEmotesTable.allEmotesTable
 	allEmotesTable["/attention"]["doesLoop"] = true
 	allEmotesTable["/blessing"]["doesLoop"] = true
 	allEmotesTable["/kneel"]["doesLoop"] = true
@@ -103,7 +105,7 @@ end
 
 function LPEmotesTable.CreateAllEmotesTable()
 	local slashName
-	local allEmotesTable = LPEmotesTable.allEmotesTable
+--	local allEmotesTable = LPEmotesTable.allEmotesTable
 	for i = 1, GetNumEmotes(), 1 do
 		slashName = GetEmoteSlashNameByIndex(i)
 		allEmotesTable[slashName] = {
@@ -111,4 +113,5 @@ function LPEmotesTable.CreateAllEmotesTable()
 		}
 	end
 	AddLoopingStatusToEmotes()
+	LPEmotesTable.allEmotesTable = allEmotesTable
 end

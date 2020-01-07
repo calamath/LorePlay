@@ -4,7 +4,6 @@ LorePlay.minorVersion = 5
 LorePlay.bugVersion = 90
 LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LorePlay.bugVersion
 LorePlay.name = "LorePlay"
-LorePlay.player = "player"
 
 function LorePlay.OnAddOnLoaded(event, addonName)
 	if addonName ~= LorePlay.name then return end
