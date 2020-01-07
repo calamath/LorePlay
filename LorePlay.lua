@@ -1,14 +1,14 @@
 LorePlay = LorePlay or {}
 LorePlay.majorVersion = 1
 LorePlay.minorVersion = 5
-LorePlay.bugVersion = 1
+LorePlay.bugVersion = 90
 LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LorePlay.bugVersion
 LorePlay.name = "LorePlay"
 LorePlay.player = "player"
 
 function LorePlay.OnAddOnLoaded(event, addonName)
 	if addonName ~= LorePlay.name then return end
-	LPEventHandler = LibStub:GetLibrary("LibEventHandler-1.2")
+	LPEventHandler = LibEventHandler
 	LPEmotesTable.CreateAllEmotesTable()
 	LPEmoteHandler.InitializeEmoteHandler()
 	LorePlay.InitializeSettings()

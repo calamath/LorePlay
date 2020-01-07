@@ -1,0 +1,298 @@
+===================================================================
+This is a modification version of LorePlay, originally by Justinon.
+===================================================================
+original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfitsandmore.html
+
+NOTE : this modified version is still under the Artistic License 2.0
+
+
+
+Version 1.5.90 beta1 : modified by Calamath
+- Forked LorePlay original Version 1.5.1 from GitHub, released under the Artistic License 2.0
+- Deleted the unfinished LoreWear indicator feature that the original author was once working in progress, it has only found in his GitHub repository source code.
+- Removed embedded LibStub and LibAddonMenu-2.0 libraries, you now need to have the following separately:
+     LibAddonMenu-2.0
+- embedded LibEventHandler library now has its own manifest file and a global variable LibEventHandler for direct access.
+- Updated API version to 100029 (ESO 5.2.5 : Dragonhold)
+
+
+
+------------------------------------------------------------------------------
+The following are changes to the original version by original author Justinon.
+------------------------------------------------------------------------------
+
+Version 1.5.1:
+
+Additions:
+--SmartEmotes--
+- Now adaptive to when the user engages in a Pledge of Mara offering and accepts
+- Now adaptive to Battlegrounds capture the flag
+
+-- LoreWear--
+- Throws on appropriate wedding attire when committing to a Pledge of Mara
+- Tracks vanity pets for switching or putting away your pet in dangerous situations!
+
+Improvements:
+--SmartEmotes--
+- Will no longer perform the same emote twice in a row
+
+
+
+
+Version 1.5.0:
+
+Additions:
+- '/loreplay' takes you straight to the settings menu
+- Open structure for localization translations
+
+--LoreWear--
+- City, housing, delving, and adventuring outfit sets
+- All 'Appearance' collectibles are now tracked for stylish, personalized outfits
+- All sets auto-equipped contextually as you venture Tamriel
+
+--SmartEmotes--
+- Adaptive to housing
+- Adaptive to banking
+
+--IdleEmotes--
+- Adaptive to housing
+
+Improvements:
+- Fixed camera spin disabler hiding the housing preview when browsing for furnishings
+- Fixed areas of certain cities not being properly detected across LorePlay features
+- Fixed bug with EVENT_ACTIVE_EMOTE not being registered when IdleEmotes disabled/toggled
+- 'Cant use collectible' message removed
+- Removed blacklist; it wasn't necessary
+- Removed random costumes
+- More efficient
+
+
+
+Version 1.4.4r3:
+
+Improvements:
+- Fixed a folder structure issue
+
+
+
+Version 1.4.4r2:
+
+Improvements:
+- Got rid of 'Cannot play emote at this time' message by adding optional camera disabler
+- Fixed an issue of having favorite items set as 0
+
+
+
+Version 1.4.4:
+
+Additions:
+- Outfit support:
+- Can now favorite costumes, hats, skins, and hairdos in LoreWear
+- Configurable options for the different collectibles categories in the settings
+
+
+Version 1.4.3:
+
+Improvements:
+- While although not entirely fixed, removed many instances of 'Cannot perform emote at this time' message
+
+Additions:
+- Configurable amount of time between IdleEmotes triggering
+- Allow for keybind to quickly toggle on/off IdleEmotes when appropriate
+
+
+
+Version 1.4.2:
+
+Improvements:
+- Updated for One Tamriel and Homestead!
+- Corrected the shifted emote indices
+- Allowed for others to improve the addon and upload to the optional section for when I'm too busy
+
+
+
+Version 1.4.1:
+
+Improvements:
+- Included the LibEventHandler latest update to 1.1
+- Correct LoreWear not working in Hollow City
+- Other misc. bug fixes
+
+
+
+
+Version 1.4.0:
+
+Additions:
+- SmartEmotes:
+- New UI indicator tells you when a new SmartEmote is available! (Non-location based)
+- UI indicator is optional
+- Now reacts to varying kinds of received loot, smartly activating when a 'good' item is received
+- Now smartly reacts to the different levels of lockpicking success and failure
+
+- LoreWear:
+- Entered a city with a costume on? Choose whether to have your favorite override it
+- Entered a city with a costume on? LoreWear can now re-equip that costume upon exiting
+- All optional
+
+Improvements:
+- SmartEmotes now will distinguish between fleeing combat without killing something, and the contrary
+
+- Added more emotes to different situations in SmartEmotes
+
+- Made emote loop detection more efficient
+
+- Fixed LoreWear blacklist not displaying properly
+
+- Restructured LoreWear for more efficiency and flexibility
+
+
+
+
+Version 1.3.11:
+
+Additions:
+- Celebrate your boss fight victory with a cheer with SmartEmotes!
+
+Improvements:
+- Fixed a bug with LoreWear when attempting to automatically switch costumes while in combat
+
+- Other minor bug fixes
+
+
+
+Version 1.3.10:
+
+Improvements:
+- Fixed a bug where if you purchased the new hair styles or head markings, LoreWear would no longer work. Now it works regardless of whether you have purchased them
+
+
+
+
+Version 1.3.9:
+
+Improvements:
+- Minor adjustments and bug fixes
+
+
+
+Version 1.3.8:
+
+Improvements:
+- Added compatibility with Shadows of the Hist update
+
+
+
+Version 1.3.7:
+
+Improvements:
+- Fixed a bug with LoreWear where recalling would incorrectly switch outfits
+
+- Minor bug fixes
+
+- API update for Shadows of the Hist
+
+
+
+Version 1.3.6:
+
+Improvements:
+- Fixed a bug with LoreWear where fast traveling would incorrectly switch outfits
+
+
+
+Version 1.3.5:
+
+Improvements:
+- Fixed LoreWear changing clothes too fast, resulting in a 'Collectible Not Ready Yet' message in upper right of screen
+
+- IdleEmotes no longer cancel out ANY active emote, even those entered from the user directly
+
+
+
+
+Version 1.3.4:
+
+Improvements:
+- Fixed a crucial bug which made the LoreWear clothing switching incorrect, especially if the user was using the 'Show/Hide LoreWear Clothes' keybind
+
+
+
+
+Version 1.3.3:
+
+Additions:
+- Blacklist your least favorite costumes so that LoreWear doesn't automatically equip something you don't like!
+
+Improvements:
+- IdleEmotes will no longer cancel out your active SmartEmotes!
+
+- SmartEmotes reticle targeting much more efficient, should lag less
+
+- 'Show/Hide LoreWear Clothes' keybind now recognizes 'Allow Equip While Mounted' setting
+
+- Added Silvenar Throne Room to be recognized as inside the city
+
+
+
+
+Version 1.3.2:
+
+Additions:
+- Configurable emotes in the settings menu allows for you to customize which emotes your character will perform when idling with IdleEmotes (Can pray, Can dance, Can exercise, and more)
+
+- More default emotes for IdleEmotes to compensate for configurability in the settings
+
+Improvements:
+- 'Allow Equip While Mounted' setting now works properly for LoreWear
+
+- Wayshrines in cities no longer take off your equipped costume with LoreWear (this one was annoying)
+
+
+
+
+Version 1.3.1:
+
+Improvements:
+- When setting or clearing your favorite costume, the 'Use Favorite Costume' setting appropriately responds
+
+- Fixed a bug causing an infinite loop
+
+
+
+Version 1.3.0:
+
+Additions:
+- New LoreWear feature now lets you wear clothing in all the appropriate locations!
+
+- LoreWear has a few tweakable settings in the addon settings menu
+
+- SmartEmotes now adaptive to dolmens and being IN combat as opposed to just out of combat
+
+Improvements:
+- Adjusted emotes a tad
+
+- Better overall addon organization
+
+
+
+Version 1.2.4 and Below:
+
+Additions:
+- Trading now changes which IdleEmotes are performed
+
+- Introduced new Significant Other setting in the menu for special emotes between loved ones
+
+- Introduced new IdleEmotes which are adaptive to location as well!
+
+- SmartEmotes now adaptive to locations such as zones and other regions!
+
+
+Improvements:
+- Adjusted emotes
+
+- Now correctly recognizes MANY more cities
+
+- ReloadUI no longer needed for changing settings in setting menu
+
+- Elden Root second story now recognized properly

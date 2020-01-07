@@ -1,7 +1,8 @@
-local MAJOR, MINOR = "LibEventHandler-1.2", "LibEventHandler-1.1"
-local LEH, LEHminor = LibStub:NewLibrary(MAJOR, MINOR)
-if not LEH then return end
-
+--local MAJOR, MINOR = "LibEventHandler-1.2", "LibEventHandler-1.1"
+--local LEH, LEHminor = LibStub:NewLibrary(MAJOR, MINOR)
+--if not LEH then return end
+if LibEventHandler then d("Warning : 'LibEventHandler' has always been loaded.") return end
+local LEH = {}
 
 LEH.eventToFunctionTable = {}
 local eventToFunctionTable = LEH.eventToFunctionTable
@@ -100,3 +101,6 @@ function LEH:RegisterForEvent(namespace, eventCode, functionName)
 		EVENT_MANAGER:RegisterForEvent(namespace, eventCode, CallEventFunctions)
 	end
 end
+
+
+LibEventHandler = LEH	-- global variable for accessing library API.

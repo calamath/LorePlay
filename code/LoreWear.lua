@@ -225,6 +225,7 @@ local function OnPlayerMaraPledge(eventCode, isGettingMarried)
 end
 
 
+--[[
 local function initializeIndicator()
 	if not LorePlay.savedSettingsTable.isLoreWearIndicatorOn then 
 		LoreWearIndicator:SetHidden(true)
@@ -244,6 +245,8 @@ local function initializeIndicator()
 	timelineFadeOut:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
 	indicator = false
 end
+]]
+
 
 function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
@@ -273,7 +276,9 @@ function LoreWear.InitializeLoreWear()
 	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
 	BuildToggleTable()
 	LoreWear.RegisterLoreWearEvents()
+--[[
 	initializeIndicator()
+]]
 end
 
 

@@ -1,5 +1,7 @@
 local Settings = {}
-local LAM2
+--local LAM2
+local LAM2 = LibAddonMenu2
+if not LAM2 then d("[LorePlay] Error : 'LibAddonMenu' not found.") return end
 
 EVENT_INDICATOR_MOVED = "EVENT_INDICATOR_MOVED"
 
@@ -819,7 +821,7 @@ end
 function Settings.InitializeSettings()
 	Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", LorePlay.majorVersion, nil, defaultSettingsTable)
 	Settings.LoadSavedSettings()
-	LAM2 = LibStub("LibAddonMenu-2.0")
+--	LAM2 = LibStub("LibAddonMenu-2.0")
 	Settings.LoadMenuSettings()
 	noCameraSpin()
 	RegisterSettingsEvents()
