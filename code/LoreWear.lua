@@ -192,7 +192,7 @@ local function ChangeLoreWearClothes(isCurrentlyInCity, POI, zone)
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Housing]
 	elseif LorePlay.IsPlayerInZone(zone) then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Adventure]
-	elseif LorePlay.IsPlayerInDungeon(POI, zone) or LorePlay.isPlayerInDolmen(POI) then
+	elseif LorePlay.IsPlayerInDungeon(POI, zone) or LorePlay.IsPlayerInDolmen(POI) then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Dungeon]
 	end
 	EquipLoreWearClothes(outfitToToggle)
