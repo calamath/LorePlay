@@ -131,7 +131,10 @@ local defaultSettingsTable = {
 	maraSpouseName = "",
 	indicatorLeft = nil,
 	indicatorTop = nil,
-	timeBetweenIdleEmotes = 30000
+	timeBetweenIdleEmotes = 30000, 
+
+	savedSubZoneName = "", 
+	savedSubZoneId = 0, 
 }
 
 

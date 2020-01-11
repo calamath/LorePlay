@@ -79,6 +79,8 @@ local isMounted
 local isInCombat
 local lockpickQuality
 local defaultEmotes
+local defaultEmotesByRegionKeys
+local defaultEmotesByCityKeys
 local defaultEmotesForDungeons
 local defaultEmotesForDolmens
 local defaultEmotesForHousing
@@ -107,6 +109,137 @@ local runeQualityToEvents = {
 	[ITEM_QUALITY_ARTIFACT] = EVENT_LOOT_RECEIVED_RUNE_REKUTA,
 	[ITEM_QUALITY_LEGENDARY] = EVENT_LOOT_RECEIVED_RUNE_KUTA
 }
+
+-- ---------
+local zoneIdToRegionKeys = {	---------------------- zoneId to RegionKeys table, converted from languageTable.zoneToRegionEmotes
+		-- NOTE : by Calamath
+        --   This table will need to be updated as new regions are implemented in future DLCs or Chapters.
+		--   The word 'zone' here means the parent zone id.
+		--
+	[381]	= "ad1",		-- Auridon
+	[383]	= "ad2",		-- Grahtwood
+	[108]	= "ad2",		-- Greenshade
+	[537]	= "ad1",		-- Khenarthi's Roost
+	[58]	= "ad2",		-- Malabal Tor
+	[382]	= "ad2",		-- Reaper's March
+	[104]	= "dc1",		-- Alik'r Desert
+	[92]	= "dc1",		-- Bangkorai
+	[535]	= "dc2",		-- Betnikh
+	[3]		= "dc2",		-- Glenumbra
+	[20]	= "dc2",		-- Rivenspire
+	[19]	= "dc2",		-- Stormhaven
+	[534]	= "dc1",		-- Stros M'Kai
+	[281]	= "ep2",		-- Bal Foyen
+	[280]	= "ep2",		-- Bleakrock Isle
+	[57]	= "ep2",		-- Deshaan
+	[101]	= "ep1",		-- Eastmarch
+	[103]	= "ep1",		-- The Rift
+	[117]	= "ep3",		-- Shadowfen
+	[41]	= "ep2",		-- Stonefalls
+	[347]	= "ch",			-- Coldharbour
+	[888]	= "other",		-- Craglorn
+	[181]	= "ip",			-- Cyrodiil
+	[823]	= "other",		-- Gold Coast
+	[816]	= "other",		-- Hew's Bane
+	[726]	= "ep3",		-- Murkmire
+	[684]	= "other",		-- Wrothgar
+	[849]	= "ep1",		-- Vvardenfell
+	[980]	= "other",		-- Clockwork City
+}
+-- ---------
+local mapIdToCityKeys = {	-------------------------- mapId to CityKeys table, converted from languageTable.defaultEmotesByCity
+		-- NOTE : by Calamath
+        --   This table will need to be updated as new regions are implemented in future DLCs or Chapters.
+		--   The word 'mapId' here means the mapId not mapIndex.
+		--
+	[445]	= "Elden Root", 	-- Elden Root
+	[446]	= "Elden Root", 	-- Elden Root
+	[447]	= "Elden Root", 	-- Elden Root
+	[448]	= "Elden Root", 	-- Elden Root
+	[449]	= "Elden Root", 	-- Elden Root
+	[450]	= "Elden Root", 	-- Elden Root
+	[451]	= "Elden Root", 	-- Elden Root
+	[571]	= "Elden Root", 	-- Elden Root
+	[243]	= "Vulkhel Guard", 	-- Vulkhel Guard
+	[205]	= "Mournhold", 		-- Mournhold
+	[160]	= "Windhelm", 		-- Windhelm
+	[198]	= "Riften", 		-- Riften
+	[33]	= "Wayrest", 		-- Wayrest
+
+	[993]	= "DC", 			-- Abah's Landing
+	[1038]	= "DC", 			-- Abah's Landing
+	[1039]	= "DC", 			-- Abah's Landing
+	[531]	= "DC", 			-- Aldcroft
+	[1074]	= "Other", 			-- Anvil
+	[1343]	= "Other", 			-- Anvil
+	[535]	= "AD", 			-- Arenthia
+	[282]	= "AD", 			-- Baandari Trading Post
+	[1131]	= "DC", 			-- Belkarth
+--			= "DC", 			-- Camlorn
+	[1313]	= "EP", 			-- Clockwork City
+	[63]	= "DC", 			-- Daggerfall
+	[24]	= "EP", 			-- Davon's Watch
+	[533]	= "AD", 			-- Dune
+	[342]	= "EP", 			-- Ebonheart
+	[511]	= "EP", 			-- Ebonheart
+--			= "DC", 			-- Elinhir
+	[84]	= "DC", 			-- Evermore
+	[540]	= "AD", 			-- Firsthold
+	[360]	= "DC", 			-- Hallin's Stand
+	[512]	= "AD", 			-- Haven
+--			= "Other", 			-- Hollow City
+	[422]	= "Other", 			-- The Hollow City
+	[660]	= "Other", 			-- Imperial City
+	[538]	= "DC", 			-- Kozanset
+	[510]	= "EP", 			-- Kragenmoor
+	[1064]	= "Other", 			-- Kvatch
+	[387]	= "AD", 			-- Marbruk
+	[567]	= "AD", 			-- Mistral
+	[513]	= "DC", 			-- Northpoint
+	[895]	= "DC", 			-- Orsinium
+	[530]	= "DC", 			-- Port Hunding
+	[312]	= "AD", 			-- Rawl'kha
+	[83]	= "DC", 			-- Sentinel
+	[85]	= "DC", 			-- Shornhelm
+--			= "AD", 			-- Silvenar
+--			= "AD", 			-- Silvenar's Audience Hall
+	[217]	= "EP", 			-- Stormhold
+--			= "DC", 			-- Tava's Blessing
+	[545]	= "AD", 			-- Skywatch
+	[529]	= "AD", 			-- Woodhearth
+	[1287]	= "EP", 			-- Vivec City
+--			= "EP", 			-- Seyda Neen
+	[1290]	= "EP", 			-- Balmora
+	[1288]	= "EP", 			-- Sadrith Mora
+}
+-- ---------
+local subZoneIdToCityKeys = {	-------------------------- subZoneId to CityKeys table, converted from languageTable.defaultEmotesByCity
+		-- NOTE : by Calamath
+		--	 Using subZoneId is a special case, such as a city without its sub-map, or an enclave, etc.
+        --   This table will need to be updated as new regions are implemented in future DLCs or Chapters.
+		--
+	[279]	= "DC", 			-- Camlorn
+	[7829]	= "DC", 			-- Elinhir
+	[10941]	= "DC", 			-- Elinhir
+--	[8006]	= "DC", 			-- Elinhir Wayshrine
+--	[11004]	= "DC", 			-- Elinhir Wayshrine
+	[4730]	= "Other", 			-- The Hollow City
+	[2955]	= "AD", 			-- Silvenar
+	[9348]	= "AD", 			-- Silvenar Treetops
+	[3370]	= "AD", 			-- Silvenar's Audience Hall
+	[933]	= "DC", 			-- Tava's Blessing
+	[11580]	= "EP", 			-- Seyda Neen
+	[11659]	= "EP", 			-- Seyda Neen
+	[11851]	= "EP", 			-- Seyda Neen
+	[12168]	= "EP", 			-- Seyda Neen
+--	[11549]	= "EP", 			-- Seyda Neen Wayshrine
+
+--	[2092]	= "Mournhold", 		-- Mournhold Plaza of the Gods	--> no longer needed
+--	[2094]	= "Mournhold", 		-- Mournhold Banking District	--> no longer needed
+--	[6637]	= "Elden Root", 	-- Elden Root Services			--> no longer needed
+--	[11807]	= "EP", 			-- Vivec Temple Wayshrine		--> no longer needed
+}
+-- ---------
 
 
 local function TurnIndicatorOff()
@@ -255,7 +388,8 @@ end
 
 
 function SmartEmotes.CreateEmotesByRegionTable()
-	SmartEmotes.defaultEmotesByRegion = {
+--	SmartEmotes.defaultEmotesByRegion = {
+	defaultEmotesByRegionKeys = {
 		["ad1"] = { --Summerset
 			["Emotes"] = {
 				[1] = 191,
@@ -401,7 +535,213 @@ function SmartEmotes.CreateEmotesByRegionTable()
 			}
 		}
 	}
-	LorePlay = SmartEmotes
+end
+
+
+function SmartEmotes.CreateEmotesByCityTable()
+	defaultEmotesByCityKeys = {
+		-- NOTE : by Calamath
+		-- these unique emote tables with special city name dentifiers were imported from table languageTable.defaultEmotesByCity.
+		["Elden Root"] = {
+			["Emotes"] = {
+				[1] = 203,
+				[2] = 203,
+				[3] = 203,
+				[4] = 203,
+				[5] = 177,
+				[6] = 174,
+				[7] = 202,
+				[8] = 99,
+				[9] = 8,
+				[10] = 52,
+				[11] = 184,
+				[12] = 5,
+				[13] = 6,
+				[14] = 7,
+				[15] = 79,
+				[16] = 8
+			}
+		},
+		["Vulkhel Guard"] = { 
+			["Emotes"] = {
+				[1] = 174,
+				[2] = 8,
+				[3] = 38,
+				[4] = 191,
+				[5] = 210,
+				[6] = 11,
+				[7] = 121,
+				[8] = 52,
+				[9] = 9,
+				[10] = 91,
+				[11] = 182,
+				[12] = 5,
+				[13] = 6,
+				[14] = 7,
+				[15] = 79,
+				[16] = 8
+			}
+		},
+		["Mournhold"] = {
+			["Emotes"] = {
+				[1] = 174,
+				[2] = 8,
+				[3] = 52,
+				[4] = 52,
+				[5] = 203,
+				[6] = 203,
+				[7] = 121,
+				[8] = 185,
+				[9] = 5,
+				[10] = 6,
+				[11] = 7,
+				[12] = 79,
+				[13] = 8
+			}
+		},
+		["Windhelm"] = { 
+			["Emotes"] = {
+				[1] = 8,
+				[2] = 139,
+				[3] = 163,
+				[4] = 169,
+				[5] = 5,
+				[6] = 79,
+				[7] = 209,
+				[8] = 64,
+				[9] = 174,
+				[10] = 52,
+				[11] = 188,
+				[12] = 6,
+				[13] = 7,
+				[14] = 8
+			}
+		},
+		["Riften"] = { 
+			["Emotes"] = {
+				[1] = 8,
+				[2] = 139,
+				[3] = 163,
+				[4] = 169,
+				[5] = 5,
+				[6] = 79,
+				[7] = 209,
+				[8] = 64,
+				[10] = 52,
+				[11] = 188,
+				[12] = 6,
+				[13] = 7,
+				[14] = 8
+			}
+		},
+		["Wayrest"] = {
+			["Emotes"] = {
+				[1] = 25,
+				[2] = 52,
+				[3] = 201,
+				[4] = 11,
+				[5] = 110,
+				[6] = 122,
+				[7] = 91,
+				[8] = 38,
+				[9] = 9,
+				[10] = 91,
+				[11] = 95,
+				[12] = 95,
+				[13] = 203,
+				[14] = 203,
+				[15] = 181,
+				[16] = 5,
+				[17] = 6,
+				[18] = 7,
+				[19] = 8,
+				[20] = 79
+			}
+		},
+		-- NOTE : by Calamath
+		-- these emote tables with region related identifiers are commonly used for cities not defined above.
+		-- they were imported from local table defaultCityToRegionEmotes defined in the function 'languageTable.CreateEmotesByCityTable()'
+		["AD"] = {
+			["Emotes"] = {
+			[1] = 177,
+			[2] = 174,
+			[3] = 202,
+			[4] = 99,
+			[5] = 8,
+			[6] = 52,
+			[7] = 184,
+			[8] = 5,
+			[9] = 6,
+			[10] = 7,
+			[11] = 72,
+			[12] = 72,
+			[13] = 182,
+			[14] = 187,
+			[15] = 52,
+			[16] = 8,
+			[17] = 79
+			}
+		},
+		["EP"] = {
+			["Emotes"] = {
+				[1] = 174,
+				[2] = 8,
+				[3] = 52,
+				[4] = 7,
+				[5] = 203,
+				[6] = 169,
+				[7] = 121,
+				[8] = 185,
+				[9] = 5,
+				[10] = 6,
+				[11] = 72,
+				[12] = 72,
+				[13] = 188,
+				[14] = 183,
+				[15] = 100,
+				[16] = 8,
+				[17] = 79
+			}
+		},
+		["DC"] = {
+			["Emotes"] = {
+				[1] = 25,
+				[2] = 52,
+				[3] = 201,
+				[4] = 11,
+				[5] = 6,
+				[6] = 122,
+				[7] = 91,
+				[8] = 38,
+				[9] = 9,
+				[10] = 72,
+				[11] = 95,
+				[12] = 7,
+				[13] = 181,
+				[14] = 5,
+				[15] = 189,
+				[16] = 190,
+				[17] = 8,
+				[18] = 79
+			},
+		},
+		["Other"] = {
+			["Emotes"] = {
+				[1] = 177,
+				[2] = 8,
+				[3] = 72,
+				[4] = 72,
+				[5] = 52,
+				[6] = 5,
+				[7] = 6,
+				[8] = 7,
+				[9] = 211,
+				[10] = 100,
+				[11] = 8,
+				[12] = 79
+			},
+		},
+	}
 end
 
 
@@ -459,8 +799,7 @@ end
 
 function SmartEmotes.CreateDefaultEmoteTables()
 	SmartEmotes.CreateEmotesByRegionTable()
-	languageTable.CreateZoneToRegionEmotesTable()
-	languageTable.CreateEmotesByCityTable()
+	SmartEmotes.CreateEmotesByCityTable()
 	SmartEmotes.CreateDungeonTable()
 	SmartEmotes.CreateDolmenTable()
 	SmartEmotes.CreateHousingTable()
@@ -890,22 +1229,68 @@ function SmartEmotes.IsPlayerInHouse()
 end
 
 
-function SmartEmotes.IsPlayerInZone(zoneName)
-	if languageTable.zoneToRegionEmotes[zoneName] ~= nil then
+--[[
+function SmartEmotes.ThisZoneIsParentZone(zoneId)
+	if GetParentZoneId(zoneId) == zoneId then
 		return true
 	end
 	return false
 end
 
 
-function SmartEmotes.IsPlayerInCity(POI)
-	if languageTable.defaultEmotesByCity[POI] ~= nil then
+function SmartEmotes.IsPlayerInAnySubZone()
+	local _, poiIndex = GetCurrentSubZonePOIIndices()
+	if poiIndex then
 		return true
+	end
+	return false
+end
+]]
+
+
+function SmartEmotes.IsPlayerInParentZone()
+	local key = zoneIdToRegionKeys[GetParentZoneId(GetUnitWorldPosition("player"))]
+	if key ~= nil then
+		return true, key
 	end
 	return false
 end
 
 
+function SmartEmotes.IsPlayerInZone()
+	local key = zoneIdToRegionKeys[GetUnitWorldPosition("player")]
+	if key ~= nil then
+		return true, key
+	end
+	return false
+end
+
+
+function SmartEmotes.IsPlayerInCity()
+	local location = GetPlayerLocationName()
+	local subZoneId = LorePlay.savedVariables.savedSubZoneId
+	local key
+	if subZoneId ~= 0 then
+		if location == LorePlay.savedVariables.savedSubZoneName then
+			key = subZoneIdToCityKeys[subZoneId]
+			if key then
+				return true, key
+			end
+		end
+	else
+		if location == GetPlayerActiveZoneName() then
+			return false
+		end
+	end
+	key = mapIdToCityKeys[GetCurrentMapId()]
+	if key ~= nil then
+		return true, key
+	end
+	return false
+end
+
+
+--[[
 function SmartEmotes.IsPlayerInDungeon(POI, zoneName)
 	if languageTable.defaultEmotesByCity[POI] == nil then
 		if languageTable.zoneToRegionEmotes[zoneName] == nil then 
@@ -914,10 +1299,15 @@ function SmartEmotes.IsPlayerInDungeon(POI, zoneName)
 	end
 	return false
 end
+]]
+function SmartEmotes.IsPlayerInDungeon()
+	return IsUnitInDungeon("player")
+end
 
 
-function SmartEmotes.IsPlayerInDolmen(POI)
-	if PlainStringFind(POI, "Dolmen") then
+function SmartEmotes.IsPlayerInDolmen()
+	local location = GetPlayerLocationName()
+	if PlainStringFind(location, "Dolmen") then
 		return true
 	end
 	return false
@@ -964,26 +1354,31 @@ end
 
 
 function SmartEmotes.UpdateDefaultEmotesTable()
-	local location = GetPlayerLocationName()
-	local zoneName = GetPlayerActiveZoneName()
-
-	-- Must remain in this order for proper detection
-	if SmartEmotes.IsPlayerInCity(location) then
-		defaultEmotes = languageTable.defaultEmotesByCity[location]
-		return
-	elseif SmartEmotes.IsPlayerInHouse() then
+	local result, key
+	if SmartEmotes.IsPlayerInHouse() then
 		defaultEmotes = defaultEmotesForHousing
 		return
-	elseif SmartEmotes.IsPlayerInDolmen(location) then
-		defaultEmotes = defaultEmotesForDolmens
-		return
-	elseif SmartEmotes.IsPlayerInZone(zoneName) then
-		defaultEmotes = languageTable.zoneToRegionEmotes[zoneName]
-		return
-	elseif SmartEmotes.IsPlayerInDungeon(location, zoneName) then
+	end
+	if SmartEmotes.IsPlayerInDungeon() then
 		defaultEmotes = defaultEmotesForDungeons
 		return
 	end
+	if SmartEmotes.IsPlayerInDolmen() then
+		defaultEmotes = defaultEmotesForDolmens
+		return
+	end
+	result, key = SmartEmotes.IsPlayerInCity()
+	if result then
+		defaultEmotes = defaultEmotesByCityKeys[key]
+		return
+	end
+	result, key = SmartEmotes.IsPlayerInParentZone()
+	if result then
+		defaultEmotes = defaultEmotesByRegionKeys[key]
+		return
+	end
+	defaultEmotes = defaultEmotesForDungeons	-- unregistered region case
+	return
 end
 
 

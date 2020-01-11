@@ -10,6 +10,7 @@ LorePlay = LorePlay or {}
 
 local languageTable = {}
 
+--[[
 function languageTable.CreateZoneToRegionEmotesTable()
 	languageTable.zoneToRegionEmotes = {
 		["Auridon"] = LorePlay.defaultEmotesByRegion["ad1"],
@@ -42,6 +43,7 @@ function languageTable.CreateZoneToRegionEmotesTable()
 		["Wrothgar"] = LorePlay.defaultEmotesByRegion["other"],
 	}
 end
+]]
 
 
 function languageTable.CreatePlayerTitles()
@@ -65,6 +67,8 @@ function languageTable.CreatePlayerTitles()
 	}
 end
 
+
+--[[
 -- STILL NEEDS TRANSLATION
 function languageTable.CreateEmotesByCityTable()
 	local defaultCityToRegionEmotes = {
@@ -404,6 +408,7 @@ function languageTable.CreateEmotesByCityTable()
 		languageTable.defaultEmotesByCity[cityWayshrine] = languageTable.defaultEmotesByCity[i]
 	end
 end
+]]
 
 -- ---
 LorePlay.languageTable = languageTable

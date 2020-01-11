@@ -260,17 +260,18 @@ end
 
 
 function IdleEmotes.GetLocation()
-	local location = GetPlayerLocationName()
-	local zoneName = GetPlayerActiveZoneName()
-
-	if LorePlay.IsPlayerInCity(location) then
-		return City
-	elseif LorePlay.IsPlayerInHouse() then
+	if LorePlay.IsPlayerInHouse() then
 		return Housing
-	elseif LorePlay.IsPlayerInZone(zoneName) then
-		return "Zone"
-	elseif LorePlay.IsPlayerInDungeon(location, zoneName) then
+	elseif LorePlay.IsPlayerInDungeon() then
 		return Dungeon
+	elseif LorePlay.IsPlayerInDolmen() then
+		return Dungeon		-- use dungeon table for dolmen
+	elseif LorePlay.IsPlayerInCity() then
+		return City
+	elseif LorePlay.IsPlayerInParentZone() then
+		return "Zone"
+	else
+		return Dungeon		-- unregistered region case
 	end
 end
 

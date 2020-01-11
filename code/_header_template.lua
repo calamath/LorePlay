@@ -1,6 +1,7 @@
 -- NOTE :
--- in this modification version, some global variables in the original version have been stored in the gloval LorePlay table.
--- To maintain compatibility with the original version, add the following header to each lua file as needed.
+-- This is a template file !!
+-- in this modified version, some global variables in the standard version have been stored in the gloval LorePlay table.
+-- To maintain compatibility with the standard version, add the following header part to each lua file as needed.
 -- Note that global variables defaultEmotesForDolmens and defaultEmotesForHousing have been converted to local variables.
 
 LorePlay = LorePlay or {}

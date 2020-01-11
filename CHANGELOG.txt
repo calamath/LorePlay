@@ -5,6 +5,19 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.5.90 beta4 : by Calamath
+[COMPATIBILITY-BREAKING CHANGE]
+- The various zone and city recognitions have been rewritten to a brand-new identifier based approach by Calamath, and are no longer language mode dependent. This especially contributes to support for non-English language modes.
+  As the result, the boundaries of whether the add-on recognizes cities may be slightly different from the standard version by Justinon, but the add-on maintainers won't have to register wayshrines within the cities anymore.
+
+More detailed description of code changes
+- The execution delay for position update event handlers has been removed. If something goes wrong, this change may be reconsidered.
+- The priority order of the location recognition process has been changed for proper detection of player houses in the city with the new algorithm. Player house detection is now top priority.
+- The processing of suppressing re-equipment when changing between subzones within a city has been removed.
+- The definition of the arguments of function UpdateLocation() was changed, and the eventID must be sent correctly without modification except for internal recursive calls.
+- Changed to use function IsUnitInDungeon() for dungeon recognition. so, IsPlayerInDungeon will no longer return true in unregistered areas. However, dungeon costumes will continue to be used when exploring unregistered regions.
+- Two event handlers related to position updates are now always active, even when the LoreWear feature was off. These two event handlers are registered at initialization and are no longer unregistered.
+
 Version 1.5.90 beta3 : by Calamath
 - Fixed a bug in the standard version 1.5.1
 

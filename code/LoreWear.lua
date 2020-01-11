@@ -166,6 +166,7 @@ end
 
 local function ShouldUpdateLocation(isInCity)
 	if not CheckToToggleLoreWearClothes() then return false end
+--[[
 	if wasLastLocationCity == nil then
 		return true
 	end
@@ -182,46 +183,82 @@ local function ShouldUpdateLocation(isInCity)
 			return true
 		end
 	end
+]]
+	return true
 end
 
 
-local function ChangeLoreWearClothes(isCurrentlyInCity, POI, zone)
+local function ChangeLoreWearClothes(isCurrentlyInCity)
+--[[
 	if isCurrentlyInCity then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[City]
 	elseif LorePlay.IsPlayerInHouse() then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Housing]
-	elseif LorePlay.IsPlayerInZone(zone) then
+	elseif LorePlay.IsPlayerInZone() then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Adventure]
-	elseif LorePlay.IsPlayerInDungeon(POI, zone) or LorePlay.IsPlayerInDolmen(POI) then
+	elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Dungeon]
+	end
+]]
+	if LorePlay.IsPlayerInHouse() then
+		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Housing]
+	elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() then
+		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Dungeon]
+	elseif isCurrentlyInCity then
+		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[City]
+	elseif LorePlay.IsPlayerInParentZone() then
+		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Adventure]
+	else
+		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Dungeon]	-- unregistered region case
 	end
 	EquipLoreWearClothes(outfitToToggle)
 end
 
 
-local function UpdateLocation(eventCode)
+local function UpdateLocation(eventCode, subZoneName, subZoneId)
 	local location = GetPlayerLocationName()
-	local zoneName = GetPlayerActiveZoneName()
-	local isInCity = LorePlay.IsPlayerInCity(location)
+	if eventCode == EVENT_ZONE_CHANGED then
+		LorePlay.savedVariables.savedSubZoneName = subZoneName
+		LorePlay.savedVariables.savedSubZoneId = subZoneId
+	end
+	if eventCode == EVENT_PLAYER_ACTIVATED then
+		LorePlay.savedVariables.savedSubZoneName = location
+		if location ~= LorePlay.savedVariables.savedSubZoneName then
+			wasLastLocationCity = nil
+		end
+	end
+
+	local isInCity = LorePlay.IsPlayerInCity()
 	if isFastTraveling or isInCombat then return end
 	if not ShouldUpdateLocation(isInCity) then return end
 	if not IsCooldownOver() then
-		zo_callLater(function() UpdateLocation(eventCode) end, 3000)
+		zo_callLater(function() UpdateLocation(nil) end, 3000)	-- nil nil :-)
 		return
 	end
-	ChangeLoreWearClothes(isInCity, location, zoneName)
-	wasLastLocationCity = isCurrentlyInCity
+
+	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
+
+	ChangeLoreWearClothes(isInCity)
+	wasLastLocationCity = isInCity
 end
 
 
+--[[
 local function UpdateLocationDelayed(eventCode)
 	zo_callLater(function() UpdateLocation(eventCode) end, 5000)
+end
+]]
+local function OnZoneChanged(eventCode, _, subZoneName, _, _, subZoneId)
+	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
+--	zo_callLater(function() UpdateLocation(eventCode, subZoneName, subZoneId) end, 5000)
+	UpdateLocation(eventCode, subZoneName, subZoneId)
 end
 
 
 local function OnPlayerIsActivated(eventCode)
 	isMounted = IsMounted()
-	UpdateLocation(EVENT_ZONE_CHANGED)
+	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
+	UpdateLocation(eventCode)
 end
 
 
@@ -231,7 +268,7 @@ local function OnMountedStateChanged(eventCode, mounted)
 	else 
 		isMounted = false
 		if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
-			zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1400)
+			zo_callLater(function() UpdateLocation(eventCode) end, 1400)
 		end	
 	end
 end
@@ -251,7 +288,7 @@ local function OnPlayerCombatState(eventCode, inCombat)
 		isInCombat = true
 	else
 		isInCombat = false
-		zo_callLater(function() UpdateLocation(EVENT_ZONE_CHANGED) end, 1000)
+		zo_callLater(function() UpdateLocation(eventCode) end, 1000)
 	end
 end
 
@@ -290,8 +327,6 @@ function LoreWear.UnregisterLoreWearEvents()
 	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
 		LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	end
-	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_ZONE_CHANGED, UpdateLocationDelayed)
-	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
@@ -301,8 +336,6 @@ end
 
 function LoreWear.RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
-	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_ZONE_CHANGED, UpdateLocationDelayed)
-	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
@@ -311,6 +344,9 @@ end
 
 
 function LoreWear.InitializeLoreWear()
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_ZONE_CHANGED, OnZoneChanged)				-- always active
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
+
 	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
 	BuildToggleTable()
 	LoreWear.RegisterLoreWearEvents()
@@ -321,8 +357,12 @@ end
 
 
 function LoreWear.ReenableLoreWear()
-	LoreWear.InitializeLoreWear()
-	UpdateLocation(EVENT_ZONE_CHANGED)
+	BuildToggleTable()
+	LoreWear.RegisterLoreWearEvents()
+--[[
+	initializeIndicator()
+]]
+	UpdateLocation(nil)
 end
 
 
