@@ -5,6 +5,14 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.5.90 beta6 : by Calamath
+[Restructured localization]
+- Localization updates including keywords used to recognize dolmens.
+- Added FR and JP localization files in addition to EN and DE.
+- SmartEmote feature now properly recognizes masculine and feminine nouns of player titles.
+- Remaining language-mode dependencies have been restructured into localization strings using ZO_CreateStringId().
+- The localization table 'languageTable' is pre-created in the localization file itself, not in the add-on initialization process.
+
 Version 1.5.90 beta5 : by Calamath
 [optional LibDebugLogger Support]
 - If you use LorePlay add-on normally, you don't need to install LibDebugLogger.

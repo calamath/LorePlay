@@ -29,9 +29,6 @@ local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
 local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = LorePlay.EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE
 local EVENT_INDICATOR_MOVED = LorePlay.EVENT_INDICATOR_MOVED
 local LPUtilities = LorePlay.LPUtilities
--- ---
--- --- definitions : locates/$(language).lua
-local languageTable = LorePlay.languageTable
 
 -- ------------------------------------------------------------
 

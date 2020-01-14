@@ -29,16 +29,13 @@ local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
 local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = LorePlay.EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE
 local EVENT_INDICATOR_MOVED = LorePlay.EVENT_INDICATOR_MOVED
 local LPUtilities = LorePlay.LPUtilities
--- ---
--- --- definitions : locates/$(language).lua
-local languageTable = LorePlay.languageTable
 
 -- ------------------------------------------------------------
 
 -- === SmartEmotes.lua ===
 
 local SmartEmotes = LorePlay
-
+local L = GetString
 
 local indicator
 local wasIndicatorTurnedOffForTTL
@@ -214,7 +211,7 @@ local mapIdToCityKeys = {	-------------------------- mapId to CityKeys table, co
 	[1288]	= "EP", 			-- Sadrith Mora
 }
 -- ---------
-local subZoneIdToCityKeys = {	-------------------------- subZoneId to CityKeys table, converted from languageTable.defaultEmotesByCity
+local subZoneIdToCityKeys = {	---------------------- subZoneId to CityKeys table, converted from languageTable.defaultEmotesByCity
 		-- NOTE : by Calamath
 		--	 Using subZoneId is a special case, such as a city without its sub-map, or an enclave, etc.
         --   This table will need to be updated as new regions are implemented in future DLCs or Chapters.
@@ -241,6 +238,30 @@ local subZoneIdToCityKeys = {	-------------------------- subZoneId to CityKeys t
 --	[11807]	= "EP", 			-- Vivec Temple Wayshrine		--> no longer needed
 }
 -- ---------
+local titleIdToMaleTitleName = {	------------------ titleId to male titleName table, converted from languageTable.playerTitles
+	[41]	= L(SI_LOREPLAY_PC_TITLE_NAME_M_41), -- "Emperor"
+	[42]	= L(SI_LOREPLAY_PC_TITLE_NAME_M_42), -- "Former Emperor"
+	[47]	= L(SI_LOREPLAY_PC_TITLE_NAME_M_47), -- "Daedric Lord Slayer"
+	[48]	= L(SI_LOREPLAY_PC_TITLE_NAME_M_48), -- "Savior of Nirn"
+	[51]	= L(SI_LOREPLAY_PC_TITLE_NAME_M_51), -- "Dragonstar Arena Champion"
+	[54]	= L(SI_LOREPLAY_PC_TITLE_NAME_M_54), -- "Maelstrom Arena Champion"
+	[55]	= L(SI_LOREPLAY_PC_TITLE_NAME_M_55), -- "Stormproof"
+	[56] 	= L(SI_LOREPLAY_PC_TITLE_NAME_M_56), -- "The Flawless Conqueror"
+	[63] 	= L(SI_LOREPLAY_PC_TITLE_NAME_M_63), -- "Ophidian Overlord"
+}
+local titleIdToFemaleTitleName = {	------------------ titleId to female titleName table, converted from languageTable.playerTitles
+	[41]	= L(SI_LOREPLAY_PC_TITLE_NAME_F_41), -- "Empress"
+	[42]	= L(SI_LOREPLAY_PC_TITLE_NAME_F_42), -- "Former Empress"
+	[47]	= L(SI_LOREPLAY_PC_TITLE_NAME_F_47), -- "Daedric Lord Slayer"
+	[48]	= L(SI_LOREPLAY_PC_TITLE_NAME_F_48), -- "Savior of Nirn"
+	[51]	= L(SI_LOREPLAY_PC_TITLE_NAME_F_51), -- "Dragonstar Arena Champion"
+	[54]	= L(SI_LOREPLAY_PC_TITLE_NAME_F_54), -- "Maelstrom Arena Champion"
+	[55]	= L(SI_LOREPLAY_PC_TITLE_NAME_F_55), -- "Stormproof"
+	[56] 	= L(SI_LOREPLAY_PC_TITLE_NAME_F_56), -- "The Flawless Conqueror"
+	[63] 	= L(SI_LOREPLAY_PC_TITLE_NAME_F_63), -- "Ophidian Overlord"
+}
+local TitleNameToTitleId = {}
+-- ---------
 
 
 local function TurnIndicatorOff()
@@ -266,14 +287,24 @@ end
 
 local function UpdateEmoteFromReticle()
 	local unitTitle = GetUnitTitle("reticleover")
+	local unitTitleId
+	if unitTitle then 
+		unitTitleId = TitleNameToTitleId[unitTitle]
+	end
+
 	if IsUnitFriend("reticleover") then
 		if SmartEmotes.IsTargetSpouse() then
 			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE]
 		else
 			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_FRIEND]
 		end
-	elseif languageTable.playerTitles[unitTitle] ~= nil then
-		if GetUnitTitle("player") == languageTable.playerTitles[unitTitle] then
+	elseif unitTitleId ~= nil then
+		local playerTitle = GetUnitTitle("player")
+		local playerTitleId
+		if playerTitle then
+			playerTitleId = TitleNameToTitleId[playerTitle]
+		end
+		if unitTitleId == playerTitleId then
 			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME]
 		else 
 			emoteFromReticle = reticleEmotesTable[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC]
@@ -1221,6 +1252,16 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 end
 
 
+function SmartEmotes.CreateTitleNameReverseTable()
+    for k, v in pairs(titleIdToMaleTitleName) do
+		TitleNameToTitleId[v] = k
+	end
+    for k, v in pairs(titleIdToFemaleTitleName) do
+		TitleNameToTitleId[v] = k
+	end
+end
+
+
 function SmartEmotes.IsPlayerInHouse()
 	local currHouseId = GetCurrentZoneHouseId()
 	if currHouseId ~= 0 then
@@ -1308,7 +1349,7 @@ end
 
 function SmartEmotes.IsPlayerInDolmen()
 	local location = GetPlayerLocationName()
-	if PlainStringFind(location, "Dolmen") then
+	if PlainStringFind(location, L(SI_LOREPLAY_LOCATION_KEYWORD_DOLMEN)) then
 		return true
 	end
 	return false
@@ -1674,9 +1715,9 @@ function SmartEmotes.InitializeEmotes()
 	SmartEmotes.CreateLatchedEmoteEventTable()
 	SmartEmotes.CreateReticleEmoteTable()
 	SmartEmotes.CreateDefaultEmoteTables()
+	SmartEmotes.CreateTitleNameReverseTable()
 	SmartEmotes.RegisterSmartEvents()
 	SmartEmotes.InitializeIndicator()
-	languageTable.CreatePlayerTitles()
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
 	isMounted = IsMounted()
 end

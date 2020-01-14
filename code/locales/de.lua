@@ -1,15 +1,37 @@
+-- LorePlay DE localization
+
+LorePlay = LorePlay or {}
+
+SafeAddString(SI_LOREPLAY_LOCATION_KEYWORD_DOLMEN,		"Dolmen", 1)								-- "Dolmen"
+
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_41, 			"Kaiser", 1)								-- "Emperor"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_42, 			"Ehemaliger Kaiser", 1)						-- "Former Emperor"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_47, 			"Schlächter der Daedraherren", 1)			-- "Daedric Lord Slayer"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_48, 			"Retter Nirns", 1)							-- "Savior of Nirn"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_51,			"Champion der Drachenstern-Arena", 1)		-- "Dragonstar Arena Champion"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_54, 			"Champion der Mahlstrom-Arena", 1)			-- "Maelstrom Arena Champion"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_55, 			"Sturmfester", 1)							-- "Stormproof"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_56,		 	"makelloser Eroberer", 1)					-- "The Flawless Conqueror"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_63,			"ophidischer Befehlshaber", 1)				-- "Ophidian Overlord"
+
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_41, 			"Kaiserin", 1)								-- "Empress"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_42, 			"Ehemalige Kaiserin", 1)					-- "Former Empress"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_47, 			"Schlächterin der Daedraherren", 1)			-- "Daedric Lord Slayer"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_48, 			"Retterin Nirns", 1)						-- "Savior of Nirn"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_51,			"Champion der Drachenstern-Arena", 1)		-- "Dragonstar Arena Champion"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_54, 			"Champion der Mahlstrom-Arena", 1)			-- "Maelstrom Arena Champion"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_55,			"Sturmfeste", 1)							-- "Stormproof"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_56,	 		"makellose Eroberin", 1)					-- "The Flawless Conqueror"
+SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_63,			"ophidische Befehlshaberin", 1)				-- "Ophidian Overlord"
+
+
+
 --[[
 	###################################################################
 	A huge thank you to @iladrion for providing this de_ translation of
 	LorePlay!
 	###################################################################
 ]]--
-
-
-LorePlay = LorePlay or {}
-
-local languageTable = {}
-
 --[[
 function languageTable.CreateZoneToRegionEmotesTable()
 	languageTable.zoneToRegionEmotes = {
@@ -46,6 +68,7 @@ end
 ]]
 
 
+--[[
 function languageTable.CreatePlayerTitles()
 	languageTable.playerTitles = {
 		["Kaiser"] = "Emperor",
@@ -66,6 +89,7 @@ function languageTable.CreatePlayerTitles()
 		["makelose Eroberin"] = "The Flawless Conqueror"
 	}
 end
+]]
 
 
 --[[
@@ -411,4 +435,3 @@ end
 ]]
 
 -- ---
-LorePlay.languageTable = languageTable

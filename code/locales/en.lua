@@ -1,6 +1,33 @@
 LorePlay = LorePlay or {}
 
-local languageTable = {}
+local strings = {
+	SI_LOREPLAY_LOCATION_KEYWORD_DOLMEN			= "Dolmen", 
+
+	SI_LOREPLAY_PC_TITLE_NAME_M_41				= "Emperor", 					-- "Emperor"
+	SI_LOREPLAY_PC_TITLE_NAME_M_42				= "Former Emperor", 			-- "Former Emperor"
+	SI_LOREPLAY_PC_TITLE_NAME_M_47				= "Daedric Lord Slayer", 		-- "Daedric Lord Slayer"
+	SI_LOREPLAY_PC_TITLE_NAME_M_48				= "Savior of Nirn", 			-- "Savior of Nirn"
+	SI_LOREPLAY_PC_TITLE_NAME_M_51				= "Dragonstar Arena Champion", 	-- "Dragonstar Arena Champion"
+	SI_LOREPLAY_PC_TITLE_NAME_M_54				= "Maelstrom Arena Champion", 	-- "Maelstrom Arena Champion"
+	SI_LOREPLAY_PC_TITLE_NAME_M_55				= "Stormproof",                 -- "Stormproof"
+	SI_LOREPLAY_PC_TITLE_NAME_M_56				= "The Flawless Conqueror", 	-- "The Flawless Conqueror"
+	SI_LOREPLAY_PC_TITLE_NAME_M_63				= "Ophidian Overlord", 			-- "Ophidian Overlord"
+
+	SI_LOREPLAY_PC_TITLE_NAME_F_41				= "Empress", 					-- "Empress"
+	SI_LOREPLAY_PC_TITLE_NAME_F_42				= "Former Empress", 			-- "Former Empress"
+	SI_LOREPLAY_PC_TITLE_NAME_F_47				= "Daedric Lord Slayer", 		-- "Daedric Lord Slayer"
+	SI_LOREPLAY_PC_TITLE_NAME_F_48				= "Savior of Nirn", 			-- "Savior of Nirn"
+	SI_LOREPLAY_PC_TITLE_NAME_F_51				= "Dragonstar Arena Champion", 	-- "Dragonstar Arena Champion"
+	SI_LOREPLAY_PC_TITLE_NAME_F_54				= "Maelstrom Arena Champion", 	-- "Maelstrom Arena Champion"
+	SI_LOREPLAY_PC_TITLE_NAME_F_55				= "Stormproof",                 -- "Stormproof"
+	SI_LOREPLAY_PC_TITLE_NAME_F_56				= "The Flawless Conqueror", 	-- "The Flawless Conqueror"
+	SI_LOREPLAY_PC_TITLE_NAME_F_63				= "Ophidian Overlord", 			-- "Ophidian Overlord"
+}
+for stringId, stringToAdd in pairs(strings) do
+   ZO_CreateStringId(stringId, stringToAdd)
+   SafeAddVersion(stringId, 1)
+end
+
 
 --[[
 function languageTable.CreateZoneToRegionEmotesTable()
@@ -38,7 +65,7 @@ function languageTable.CreateZoneToRegionEmotesTable()
 end
 ]]
 
-
+--[[
 function languageTable.CreatePlayerTitles()
 	languageTable.playerTitles = {
 		["Emperor"] = "Emperor",
@@ -55,6 +82,7 @@ function languageTable.CreatePlayerTitles()
 		["Stormproof"] = "Stormproof",
 	}
 end
+]]
 
 
 --[[
@@ -421,4 +449,3 @@ end
 ]]
 
 -- ---
-LorePlay.languageTable = languageTable
