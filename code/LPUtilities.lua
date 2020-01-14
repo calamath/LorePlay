@@ -1,6 +1,7 @@
 LorePlay = LorePlay or {}
 
 -- === LPUtilities.lua ===
+if LibDebugLogger then LorePlay.LDL = LibDebugLogger("LorePlay") end
 
 LorePlay.EVENT_ACTIVE_EMOTE = "EVENT_ACTIVE_EMOTE"
 LorePlay.EVENT_ON_SMART_EMOTE = "EVENT_ON_SMART_EMOTE"

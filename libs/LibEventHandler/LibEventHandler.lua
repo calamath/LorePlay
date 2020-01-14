@@ -3,6 +3,8 @@
 --if not LEH then return end
 if LibEventHandler then d("Warning : 'LibEventHandler' has always been loaded.") return end
 local LEH = {}
+if LibDebugLogger then LEH.LDL = LibDebugLogger("LibEventHandler") end
+local LDL = LEH.LDL
 
 LEH.eventToFunctionTable = {}
 local eventToFunctionTable = LEH.eventToFunctionTable
@@ -28,7 +30,7 @@ function LEH:FireEvent(eventCode, async, ...)
 		return
 	elseif type(async) == number then
 		if async < 0 then
-			d("Can't delay by a negative time!")
+			if LDL then LDL:Warn("Can't delay by a negative time!") end
 			return
 		end
 		zo_callLater(function() CallEventFunctions(eventCode, unpack(arg)) end, async)
@@ -56,10 +58,10 @@ function LEH:UnregisterForLocalEvent(eventCode, functionName)
 				return false
 			end
 		end
-		if not didUnregister then d("Function trying to be removed isn't registered with event "..eventCode) end
+		if not didUnregister then if LDL then LDL:Warn("Function trying to be removed isn't registered with event", eventCode) end end
 		return false
 	else
-		d("No function registered yet for "..eventCode)
+		if LDL then LDL:Warn("No function registered yet for", eventCode) end
 		return false
 	end
 end
@@ -82,7 +84,7 @@ function LEH:RegisterForLocalEvent(eventCode, functionName)
 		local numOfFuncs = #eventToFunctionTable[eventCode]
 		for i = 1, numOfFuncs, 1 do
 			if eventToFunctionTable[eventCode][i] == functionName then
-				d("Function already registered for event "..eventCode)
+				if LDL then LDL:Warn("Function already registered for event ", eventCode) end
 				return false
 			end
 		end

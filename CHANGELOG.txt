@@ -5,6 +5,14 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.5.90 beta5 : by Calamath
+[optional LibDebugLogger Support]
+- If you use LorePlay add-on normally, you don't need to install LibDebugLogger.
+- LibDebugLogger created by sirinsidiator has been newly added to OptionalDependsOn in the add-on manifest files, both LorePlay and LibEventHandler.
+- Moved debug message output from UI chat to LibDebugLogger. From now on, we add-on authors and contributers will look at the debug log with the DebugLogViewer add-on created by sirinsidiator.
+- Updated LibEventHandler version to 1.2.90 (AddOnVersion: 1290).
+Special thanks to sirinsidiator for his contribution to the add-on community.
+
 Version 1.5.90 beta4 : by Calamath
 [COMPATIBILITY-BREAKING CHANGE]
 - The various zone and city recognitions have been rewritten to a brand-new identifier based approach by Calamath, and are no longer language mode dependent. This especially contributes to support for non-English language modes.

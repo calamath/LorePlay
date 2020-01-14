@@ -22,6 +22,7 @@ local player = LorePlay.player
 local stringToColTypeTable = LorePlay.stringToColTypeTable
 -- ---
 -- --- definitions : LPUtilities.lua
+local LDL = LorePlay.LDL
 local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
 local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
 local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
@@ -227,6 +228,8 @@ local function UpdateLocation(eventCode, subZoneName, subZoneId)
 			wasLastLocationCity = nil
 		end
 	end
+	if LDL then LDL:Debug("Location = %s, MapName = %s, ZoneName = %s", GetPlayerLocationName(), GetMapName(), GetPlayerActiveZoneName()) end
+	if LDL then LDL:Debug("mapId = %d, zoneId = %d, parentZoneId = %d", GetCurrentMapId(), GetUnitWorldPosition("player"), GetParentZoneId(GetUnitWorldPosition("player"))) end
 
 	local isInCity = LorePlay.IsPlayerInCity()
 	if isFastTraveling or isInCombat then return end
@@ -249,6 +252,7 @@ local function UpdateLocationDelayed(eventCode)
 end
 ]]
 local function OnZoneChanged(eventCode, _, subZoneName, _, _, subZoneId)
+	if LDL then LDL:Debug("EVENT_ZONE_CHANGED : subzoneName = %s , subZoneId = %d", subZoneName, subZoneId) end
 	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
 --	zo_callLater(function() UpdateLocation(eventCode, subZoneName, subZoneId) end, 5000)
 	UpdateLocation(eventCode, subZoneName, subZoneId)
@@ -256,6 +260,7 @@ end
 
 
 local function OnPlayerIsActivated(eventCode)
+	if LDL then LDL:Debug("EVENT_PLAYER_ACTIVATED") end
 	isMounted = IsMounted()
 	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
 	UpdateLocation(eventCode)

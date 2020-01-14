@@ -1,5 +1,6 @@
 LorePlay = LorePlay or {}
 -- --- definitions : LPUtilities.lua
+local LDL = LorePlay.LDL
 local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
 local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
 local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE

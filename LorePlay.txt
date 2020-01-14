@@ -5,6 +5,7 @@
 ## Author: Justinon, modified by Calamath
 ## SavedVariables: LorePlaySavedVars
 ## DependsOn: LibAddonMenu-2.0 LibEventHandler
+## OptionalDependsOn: LibDebugLogger
 
 code\locales\en.lua
 code\locales\$(language).lua
