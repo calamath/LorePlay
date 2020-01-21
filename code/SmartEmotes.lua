@@ -22,7 +22,6 @@ local player = LorePlay.player
 local stringToColTypeTable = LorePlay.stringToColTypeTable
 -- ---
 -- --- definitions : LPUtilities.lua
-local LDL = LorePlay.LDL
 local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
 local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
 local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
@@ -111,8 +110,8 @@ local runeQualityToEvents = {
 -- ---------
 local zoneIdToRegionKeys = {	---------------------- zoneId to RegionKeys table, converted from languageTable.zoneToRegionEmotes
 		-- NOTE : by Calamath
-        --   This table will need to be updated as new regions are implemented in future DLCs or Chapters.
-		--   The word 'zone' here means the parent zone id.
+		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
+		--	 The word 'zone' here means the parent zone id.
 		--
 	[381]	= "ad1",		-- Auridon
 	[383]	= "ad2",		-- Grahtwood
@@ -147,8 +146,8 @@ local zoneIdToRegionKeys = {	---------------------- zoneId to RegionKeys table, 
 -- ---------
 local mapIdToCityKeys = {	-------------------------- mapId to CityKeys table, converted from languageTable.defaultEmotesByCity
 		-- NOTE : by Calamath
-        --   This table will need to be updated as new regions are implemented in future DLCs or Chapters.
-		--   The word 'mapId' here means the mapId not mapIndex.
+		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
+		--	 The word 'mapId' here means the mapId not mapIndex.
 		--
 	[445]	= "Elden Root", 	-- Elden Root
 	[446]	= "Elden Root", 	-- Elden Root
@@ -214,7 +213,7 @@ local mapIdToCityKeys = {	-------------------------- mapId to CityKeys table, co
 local subZoneIdToCityKeys = {	---------------------- subZoneId to CityKeys table, converted from languageTable.defaultEmotesByCity
 		-- NOTE : by Calamath
 		--	 Using subZoneId is a special case, such as a city without its sub-map, or an enclave, etc.
-        --   This table will need to be updated as new regions are implemented in future DLCs or Chapters.
+		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
 		--
 	[279]	= "DC", 			-- Camlorn
 	[7829]	= "DC", 			-- Elinhir
@@ -1253,10 +1252,10 @@ end
 
 
 function SmartEmotes.CreateTitleNameReverseTable()
-    for k, v in pairs(titleIdToMaleTitleName) do
+	for k, v in pairs(titleIdToMaleTitleName) do
 		TitleNameToTitleId[v] = k
 	end
-    for k, v in pairs(titleIdToFemaleTitleName) do
+	for k, v in pairs(titleIdToFemaleTitleName) do
 		TitleNameToTitleId[v] = k
 	end
 end

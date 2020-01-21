@@ -5,6 +5,9 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.5.90 beta7 : by Calamath
+- Updated the debug logging feature for future development.
+
 Version 1.5.90 beta6 : by Calamath
 [Restructured localization]
 - Localization updates including keywords used to recognize dolmens.

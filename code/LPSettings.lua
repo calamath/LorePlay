@@ -22,7 +22,6 @@ local player = LorePlay.player
 local stringToColTypeTable = LorePlay.stringToColTypeTable
 -- ---
 -- --- definitions : LPUtilities.lua
-local LDL = LorePlay.LDL
 local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
 local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
 local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
@@ -302,17 +301,17 @@ end
 local scenes = {}
 local function noCameraSpin()
 	if Settings.savedSettingsTable.isCameraSpinDisabled then
-	    for name, scene in pairs(SCENE_MANAGER.scenes) do
-	      if not name:find("market") and not name:find("store") and not name:find("crownCrate") and not name:find("housing") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
-	        scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
-	        scenes[name] = scene
-	      end
-	    end
+		for name, scene in pairs(SCENE_MANAGER.scenes) do
+		  if not name:find("market") and not name:find("store") and not name:find("crownCrate") and not name:find("housing") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
+			scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
+			scenes[name] = scene
+		  end
+		end
 	else
 		for name, scene in pairs(scenes) do
-    		scene:AddFragment(FRAME_PLAYER_FRAGMENT)
-    	end
-    end
+			scene:AddFragment(FRAME_PLAYER_FRAGMENT)
+		end
+	end
 end
 
 local function OnPlayerMaraResult(eventCode, isGettingMarried, playerMarriedTo)
