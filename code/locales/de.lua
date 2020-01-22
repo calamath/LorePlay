@@ -24,6 +24,14 @@ SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_55,			"Sturmfeste", 1)							-- "Storm
 SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_56,	 		"makellose Eroberin", 1)					-- "The Flawless Conqueror"
 SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_63,			"ophidische Befehlshaberin", 1)				-- "Ophidian Overlord"
 
+SafeAddString(SI_BINDING_NAME_LP_PERFORM_SMART_EMOTE, 			"Perform Smart Emote", 1)
+SafeAddString(SI_BINDING_NAME_LP_SHOW_HIDE_LOREWEAR_CLOTHES, 	"Show/Hide LoreWear Clothes", 1)
+SafeAddString(SI_BINDING_NAME_LP_TOGGLE_IDLEEMOTES, 			"Toggle IdleEmotes On/Off", 1)
+SafeAddString(SI_BINDING_NAME_LP_FORCE_EQUIP_CITY_OUTFIT, 		"Force Equip City Outfit", 1)
+SafeAddString(SI_BINDING_NAME_LP_FORCE_EQUIP_HOUSING_OUTFIT, 	"Force Equip Housing Outfit", 1)
+SafeAddString(SI_BINDING_NAME_LP_FORCE_EQUIP_DUNGEON_OUTFIT, 	"Force Equip Dungeon Outfit", 1)
+SafeAddString(SI_BINDING_NAME_LP_FORCE_EQUIP_ADVENTURE_OUTFIT, 	"Force Equip Adventure Outfit", 1)
+
 SafeAddString(SI_LOREPLAY_UI_WELCOME, 							"[LorePlay] Welcome to LorePlay, Soulless One!", 1)
 SafeAddString(SI_LOREPLAY_PANEL_SE_HEADER, 						"Smart Emotes", 1)
 SafeAddString(SI_LOREPLAY_PANEL_SE_DESCRIPTION, 				"Contextual, appropriate emotes to perform at the touch of a button.\nBy default, pressing performs an emote based on location. However, it adapts and conforms to many different special environmental situations along your travels as well.\n|cFF0000Don't forget to bind your SmartEmotes button!|r", 1)

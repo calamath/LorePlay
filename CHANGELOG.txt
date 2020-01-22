@@ -5,6 +5,10 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.5.90 beta9 : by Calamath
+- Separated key-binding configuration strings into localized files for future development.
+- Renamed key-binding configuration strings.
+
 Version 1.5.90 beta8 : by Calamath
 - Separated add-on configuration panel strings into localized files for future development.
 - Some system messages have been changed to clearly indicate that they were output by the LorePlay add-on.
