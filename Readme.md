@@ -14,13 +14,12 @@ YOU NEED TO INSTALL THE FOLLOWING LIBRARY SEPARATELY.
 ### Modification details:
 - Forked from Justinon's standard version 1.5.1
 - Removed embedded LibStub and LibAddonMenu-2.0 libraries, you now need to have LibAddonMenu-2.0 separately.
-- LoreWare now support for three non-English language modes: DE, FR, and JP
+- LoreWear now support for three non-English language modes: DE, FR, and JP
 - **[COMPATIBILITY-BREAKING CHANGE]**  
   The various zone and city recognitions have been rewritten to a brand-new identifier based approach by Calamath, and are no longer language mode dependent.
   As the result, the boundaries of whether the add-on recognizes cities may be slightly different from the standard version.
 
-### Instruction for beta tester
-- Thank you for your cooperation.
+### Instruction:
 - If you want to run this modified version, you'll need to replace the standard version of LorePlay by Justinon. 
   Therefore, it is strongly recommended that you use minion to create a backup with save data, or save the backup manually. 
 

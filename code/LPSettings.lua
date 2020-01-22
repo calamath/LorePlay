@@ -329,7 +329,7 @@ function Settings.LoadMenuSettings()
 		type = "panel",
 		name = LorePlay.name,
 		displayName = "|c8c7037LorePlay",
-		author = "Justinon",
+		author = "Justinon, modified by Calamath",
 		version = LorePlay.version,
 		slashCommand = "/loreplay",
 		registerForRefresh = true,
@@ -337,512 +337,512 @@ function Settings.LoadMenuSettings()
 
 	local optionsTable = {}
 	optionsTable[#optionsTable + 1] = {
-			type = "header",
-			name = L(SI_LOREPLAY_PANEL_SE_HEADER),
-			width = "full",
+		type = "header",
+		name = L(SI_LOREPLAY_PANEL_SE_HEADER),
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "description",
-			title = nil,
-			text = L(SI_LOREPLAY_PANEL_SE_DESCRIPTION),
-			width = "full",
+		type = "description",
+		title = nil,
+		text = L(SI_LOREPLAY_PANEL_SE_DESCRIPTION),
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "editbox",
-			name = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_TIPS),
-			getFunc = function() return Settings.savedSettingsTable.maraSpouseName end,
-			setFunc = function(input)
-				Settings.savedSettingsTable.maraSpouseName = input
-				Settings.savedVariables.maraSpouseName = Settings.savedSettingsTable.maraSpouseName
-			end,
-			isMultiline = false,
-			width = "full",
-			default = "",
+		type = "editbox",
+		name = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_TIPS),
+		getFunc = function() return Settings.savedSettingsTable.maraSpouseName end,
+		setFunc = function(input)
+			Settings.savedSettingsTable.maraSpouseName = input
+			Settings.savedVariables.maraSpouseName = Settings.savedSettingsTable.maraSpouseName
+		end,
+		isMultiline = false,
+		width = "full",
+		default = "",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_TIPS),
-			getFunc = function() return Settings.savedSettingsTable.isSmartEmotesIndicatorOn end,
-			setFunc = function(setting) 
-				Settings.savedSettingsTable.isSmartEmotesIndicatorOn = setting
-				Settings.savedVariables.isSmartEmotesIndicatorOn = Settings.savedSettingsTable.isSmartEmotesIndicatorOn
-				if not Settings.savedSettingsTable.isSmartEmotesIndicatorOn then
-					SmartEmotesIndicator:SetHidden(true)
-				end
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_TIPS),
+		getFunc = function() return Settings.savedSettingsTable.isSmartEmotesIndicatorOn end,
+		setFunc = function(setting) 
+			Settings.savedSettingsTable.isSmartEmotesIndicatorOn = setting
+			Settings.savedVariables.isSmartEmotesIndicatorOn = Settings.savedSettingsTable.isSmartEmotesIndicatorOn
+			if not Settings.savedSettingsTable.isSmartEmotesIndicatorOn then
+				SmartEmotesIndicator:SetHidden(true)
+			end
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "button",
-			name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_POS_RESET_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_POS_RESET_TIPS),
-			func = function() ResetIndicator() end,
-			width = "full",
+		type = "button",
+		name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_POS_RESET_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_POS_RESET_TIPS),
+		func = function() ResetIndicator() end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "header",
-			name =  L(SI_LOREPLAY_PANEL_IE_HEADER),
-			width = "full",
+		type = "header",
+		name =  L(SI_LOREPLAY_PANEL_IE_HEADER),
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "description",
-			title = nil,
-			text =  L(SI_LOREPLAY_PANEL_IE_DESCRIPTION),
-			width = "full",
+		type = "description",
+		title = nil,
+		text =  L(SI_LOREPLAY_PANEL_IE_DESCRIPTION),
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name =  L(SI_LOREPLAY_PANEL_IE_SW_NAME),
-			tooltip =  L(SI_LOREPLAY_PANEL_IE_SW_TIPS),
-			getFunc = function() return Settings.savedSettingsTable.isIdleEmotesOn end,
-			setFunc = function(setting) 
-				Settings.ToggleIdleEmotes(setting)
-			end,
-			width = "full",
-			reference = "IdleEmotesToggleCheckbox",
+		type = "checkbox",
+		name =  L(SI_LOREPLAY_PANEL_IE_SW_NAME),
+		tooltip =  L(SI_LOREPLAY_PANEL_IE_SW_TIPS),
+		getFunc = function() return Settings.savedSettingsTable.isIdleEmotesOn end,
+		setFunc = function(setting) 
+			Settings.ToggleIdleEmotes(setting)
+		end,
+		width = "full",
+		reference = "IdleEmotesToggleCheckbox",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "slider",
-			name = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_TIPS),
-			min = 10,
-			max = 120,
-			step = 2,
-			getFunc = function() 
-				return Settings.savedSettingsTable.timeBetweenIdleEmotes/1000 -- Converting ms to s
-			end,
-			setFunc = function(value)
-				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-				Settings.savedSettingsTable.timeBetweenIdleEmotes = (value*1000) -- Converting seconds to ms
-				Settings.savedVariables.timeBetweenIdleEmotes = Settings.savedSettingsTable.timeBetweenIdleEmotes
-			end,
-			width = "full",
-			default = 30,
+		type = "slider",
+		name = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_TIPS),
+		min = 10,
+		max = 120,
+		step = 2,
+		getFunc = function() 
+			return Settings.savedSettingsTable.timeBetweenIdleEmotes/1000 -- Converting ms to s
+		end,
+		setFunc = function(value)
+			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+			Settings.savedSettingsTable.timeBetweenIdleEmotes = (value*1000) -- Converting seconds to ms
+			Settings.savedVariables.timeBetweenIdleEmotes = Settings.savedSettingsTable.timeBetweenIdleEmotes
+		end,
+		width = "full",
+		default = 30,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isIdleEmotesOn then
-					return Settings.savedSettingsTable.canPlayInstrumentsInCities
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-				Settings.savedSettingsTable.canPlayInstrumentsInCities = setting
-				Settings.savedVariables.canPlayInstrumentsInCities = Settings.savedSettingsTable.canPlayInstrumentsInCities
-				LorePlay.CreateDefaultIdleEmotesTable()
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isIdleEmotesOn then
+				return Settings.savedSettingsTable.canPlayInstrumentsInCities
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+			Settings.savedSettingsTable.canPlayInstrumentsInCities = setting
+			Settings.savedVariables.canPlayInstrumentsInCities = Settings.savedSettingsTable.canPlayInstrumentsInCities
+			LorePlay.CreateDefaultIdleEmotesTable()
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isIdleEmotesOn then
-					return Settings.savedSettingsTable.canDanceInCities
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-				Settings.savedSettingsTable.canDanceInCities = setting
-				Settings.savedVariables.canDanceInCities = Settings.savedSettingsTable.canDanceInCities
-				LorePlay.CreateDefaultIdleEmotesTable()
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isIdleEmotesOn then
+				return Settings.savedSettingsTable.canDanceInCities
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+			Settings.savedSettingsTable.canDanceInCities = setting
+			Settings.savedVariables.canDanceInCities = Settings.savedSettingsTable.canDanceInCities
+			LorePlay.CreateDefaultIdleEmotesTable()
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isIdleEmotesOn then
-					return Settings.savedSettingsTable.canBeDrunkInCities
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-				Settings.savedSettingsTable.canBeDrunkInCities = setting
-				Settings.savedVariables.canBeDrunkInCities = Settings.savedSettingsTable.canBeDrunkInCities
-				LorePlay.CreateDefaultIdleEmotesTable()
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isIdleEmotesOn then
+				return Settings.savedSettingsTable.canBeDrunkInCities
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+			Settings.savedSettingsTable.canBeDrunkInCities = setting
+			Settings.savedVariables.canBeDrunkInCities = Settings.savedSettingsTable.canBeDrunkInCities
+			LorePlay.CreateDefaultIdleEmotesTable()
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isIdleEmotesOn then
-					return Settings.savedSettingsTable.canExerciseInZone
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-				Settings.savedSettingsTable.canExerciseInZone = setting
-				Settings.savedVariables.canExerciseInZone = Settings.savedSettingsTable.canExerciseInZone
-				LorePlay.CreateDefaultIdleEmotesTable()
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isIdleEmotesOn then
+				return Settings.savedSettingsTable.canExerciseInZone
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+			Settings.savedSettingsTable.canExerciseInZone = setting
+			Settings.savedVariables.canExerciseInZone = Settings.savedSettingsTable.canExerciseInZone
+			LorePlay.CreateDefaultIdleEmotesTable()
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isIdleEmotesOn then
-					return Settings.savedSettingsTable.canWorship
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-				Settings.savedSettingsTable.canWorship = setting
-				Settings.savedVariables.canWorship = Settings.savedSettingsTable.canWorship
-				LorePlay.CreateDefaultIdleEmotesTable()
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isIdleEmotesOn then
+				return Settings.savedSettingsTable.canWorship
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+			Settings.savedSettingsTable.canWorship = setting
+			Settings.savedVariables.canWorship = Settings.savedSettingsTable.canWorship
+			LorePlay.CreateDefaultIdleEmotesTable()
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isCameraSpinDisabled then
-					return true
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-				Settings.savedSettingsTable.isCameraSpinDisabled = setting
-				Settings.savedVariables.isCameraSpinDisabled = Settings.savedSettingsTable.isCameraSpinDisabled
-				noCameraSpin()
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isCameraSpinDisabled then
+				return true
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
+			Settings.savedSettingsTable.isCameraSpinDisabled = setting
+			Settings.savedVariables.isCameraSpinDisabled = Settings.savedSettingsTable.isCameraSpinDisabled
+			noCameraSpin()
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "header",
-			name = L(SI_LOREPLAY_PANEL_LE_HEADER),
-			width = "full",
+		type = "header",
+		name = L(SI_LOREPLAY_PANEL_LE_HEADER),
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "description",
-			title = nil,
-			text = L(SI_LOREPLAY_PANEL_LE_DESCRIPTION),
-			width = "full",
+		type = "description",
+		title = nil,
+		text = L(SI_LOREPLAY_PANEL_LE_DESCRIPTION),
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_SW_TIPS),
-			getFunc = function() return Settings.savedSettingsTable.isLoreWearOn end,
-			setFunc = function(setting) 
-				Settings.savedSettingsTable.isLoreWearOn = setting
-				Settings.savedVariables.isLoreWearOn = Settings.savedSettingsTable.isLoreWearOn
-				if not Settings.savedSettingsTable.isLoreWearOn then 
-					LorePlay.UnregisterLoreWearEvents()
-				else
-					LorePlay.ReenableLoreWear()
-				end
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_SW_TIPS),
+		getFunc = function() return Settings.savedSettingsTable.isLoreWearOn end,
+		setFunc = function(setting) 
+			Settings.savedSettingsTable.isLoreWearOn = setting
+			Settings.savedVariables.isLoreWearOn = Settings.savedSettingsTable.isLoreWearOn
+			if not Settings.savedSettingsTable.isLoreWearOn then 
+				LorePlay.UnregisterLoreWearEvents()
+			else
+				LorePlay.ReenableLoreWear()
+			end
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.canActivateLWClothesWhileMounted
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting) 
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.canActivateLWClothesWhileMounted = setting
-				Settings.savedVariables.canActivateLWClothesWhileMounted = Settings.savedSettingsTable.canActivateLWClothesWhileMounted 
-			end,
-			width = "full",
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.canActivateLWClothesWhileMounted
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting) 
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.canActivateLWClothesWhileMounted = setting
+			Settings.savedVariables.canActivateLWClothesWhileMounted = Settings.savedSettingsTable.canActivateLWClothesWhileMounted 
+		end,
+		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[Costumes] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[Costumes] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite 
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[Costumes] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[Costumes] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite 
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_HAT_SW_NAME),
-			tooltip =L(SI_LOREPLAY_PANEL_LE_USE_HAT_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[Hats]
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[Hats] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_HAT_SW_NAME),
+		tooltip =L(SI_LOREPLAY_PANEL_LE_USE_HAT_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[Hats]
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[Hats] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_HAIR_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_HAIR_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[Hair]
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[Hair] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_HAIR_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_HAIR_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[Hair]
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[Hair] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_SKIN_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_SKIN_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[Skins] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[Skins] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_SKIN_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_SKIN_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[Skins] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[Skins] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_POLYMORPH_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_POLYMORPH_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[Polymorphs] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[Polymorphs] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_POLYMORPH_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_POLYMORPH_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[Polymorphs] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[Polymorphs] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_ACC_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_ACC_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[FacialAcc] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[FacialAcc] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_ACC_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_ACC_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[FacialAcc] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[FacialAcc] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_HAIR_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_HAIR_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[FacialHair] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[FacialHair] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_HAIR_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_HAIR_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[FacialHair] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[FacialHair] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_BODY_MARKING_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_BODY_MARKING_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[BodyMarkings] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[BodyMarkings] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_BODY_MARKING_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_BODY_MARKING_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[BodyMarkings] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[BodyMarkings] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_HEAD_MARKING_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_HEAD_MARKING_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[HeadMarkings] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[HeadMarkings] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_HEAD_MARKING_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_HEAD_MARKING_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[HeadMarkings] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[HeadMarkings] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_JEWELRY_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_JEWELRY_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[Jewelry] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[Jewelry] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_JEWELRY_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_JEWELRY_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[Jewelry] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[Jewelry] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_PERSONALITY_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_PERSONALITY_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[Personalities] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[Personalities] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_PERSONALITY_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_PERSONALITY_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[Personalities] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[Personalities] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "checkbox",
-			name = L(SI_LOREPLAY_PANEL_LE_USE_PET_SW_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_PET_SW_TIPS),
-			getFunc = function() 
-				if Settings.savedSettingsTable.isLoreWearOn then
-					return Settings.savedSettingsTable.isUsingFavorite[VanityPets] 
-				else
-					return false
-				end
-			end,
-			setFunc = function(setting)
-				if not Settings.savedSettingsTable.isLoreWearOn then return end
-				Settings.savedSettingsTable.isUsingFavorite[VanityPets] = setting
-				Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-			end,
-			width = "full",
-			default = false,
+		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_LE_USE_PET_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_PET_SW_TIPS),
+		getFunc = function() 
+			if Settings.savedSettingsTable.isLoreWearOn then
+				return Settings.savedSettingsTable.isUsingFavorite[VanityPets] 
+			else
+				return false
+			end
+		end,
+		setFunc = function(setting)
+			if not Settings.savedSettingsTable.isLoreWearOn then return end
+			Settings.savedSettingsTable.isUsingFavorite[VanityPets] = setting
+			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
+		end,
+		width = "full",
+		default = false,
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "button",
-			name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_TIPS),
-			func = function()
-				SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, City)
-			end,
-			width = "half",
+		type = "button",
+		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_TIPS),
+		func = function()
+			SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, City)
+		end,
+		width = "half",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "button",
-			name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_TIPS),
-			func = function()
-				SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Housing)
-			end,
-			width = "half",
+		type = "button",
+		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_TIPS),
+		func = function()
+			SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Housing)
+		end,
+		width = "half",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "button",
-			name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_TIPS),
-			func = function()
-				SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Dungeon)
-			end,
-			width = "half",
+		type = "button",
+		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_TIPS),
+		func = function()
+			SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Dungeon)
+		end,
+		width = "half",
 	}
 	optionsTable[#optionsTable + 1] = {
-			type = "button",
-			name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_NAME),
-			tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_TIPS),
-			func = function()
-				SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Adventure)
-			end,
-			width = "half",
+		type = "button",
+		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_TIPS),
+		func = function()
+			SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Adventure)
+		end,
+		width = "half",
 	}
 
 	LAM2:RegisterAddonPanel("LorePlayOptions", panelData)
