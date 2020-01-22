@@ -37,6 +37,8 @@ local LPUtilities = LorePlay.LPUtilities
 local LAM2 = LibAddonMenu2
 if not LAM2 then d("[LorePlay] Error : 'LibAddonMenu' not found.") return end
 
+local L = GetString
+
 local Settings = LorePlay
 
 local defaultSettingsTable = {
@@ -272,7 +274,7 @@ end
 
 
 local function SetFavoriteOutfit(outfitsTable, whichOutfitString)
-	CHAT_SYSTEM:AddMessage(whichOutfitString.." Outfit:")
+	CHAT_SYSTEM:AddMessage("[LorePlay] "..whichOutfitString.." Outfit:")
 
 	for i,_ in pairs(stringToColTypeTable) do
 		if Settings.savedSettingsTable.isUsingFavorite[i] then
@@ -290,9 +292,9 @@ function Settings.ToggleIdleEmotes(settings)
 	if not Settings.savedSettingsTable.isIdleEmotesOn then LorePlay.UnregisterIdleEvents() end
 	LorePlay.InitializeIdle()
 	if settings then 
-		CHAT_SYSTEM:AddMessage("Toggled IdleEmotes on")
+		CHAT_SYSTEM:AddMessage("[LorePlay] Toggled IdleEmotes on")
 	else
-		CHAT_SYSTEM:AddMessage("Toggled IdleEmotes off")
+		CHAT_SYSTEM:AddMessage("[LorePlay] Toggled IdleEmotes off")
 	end
 end
 
@@ -333,22 +335,22 @@ function Settings.LoadMenuSettings()
 		registerForRefresh = true,
 	}
 
-	local optionsTable = {
-		[1] = {
+	local optionsTable = {}
+	optionsTable[#optionsTable + 1] = {
 			type = "header",
-			name = "Smart Emotes",
+			name = L(SI_LOREPLAY_PANEL_SE_HEADER),
 			width = "full",
-		},
-		[2] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "description",
 			title = nil,
-			text = "Contextual, appropriate emotes to perform at the touch of a button.\nBy default, pressing performs an emote based on location. However, it adapts and conforms to many different special environmental situations along your travels as well.\n|cFF0000Don't forget to bind your SmartEmotes button!|r",
+			text = L(SI_LOREPLAY_PANEL_SE_DESCRIPTION),
 			width = "full",
-		},
-		[3] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "editbox",
-			name = "Significant Other's Character Name",
-			tooltip = "For those who have wed with the Ring of Mara, entering the exact character name of your loved one allows for special emotes between you two!\n(Note: Must be friends!)",
+			name = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_TIPS),
 			getFunc = function() return Settings.savedSettingsTable.maraSpouseName end,
 			setFunc = function(input)
 				Settings.savedSettingsTable.maraSpouseName = input
@@ -357,11 +359,11 @@ function Settings.LoadMenuSettings()
 			isMultiline = false,
 			width = "full",
 			default = "",
-		},
-		[4] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Toggle Indicator On/Off",
-			tooltip = "Turns on/off the small, moveable indicator (drama masks) that appears on your screen whenever new special adaptive SmartEmotes are available to be performed.",
+			name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_TIPS),
 			getFunc = function() return Settings.savedSettingsTable.isSmartEmotesIndicatorOn end,
 			setFunc = function(setting) 
 				Settings.savedSettingsTable.isSmartEmotesIndicatorOn = setting
@@ -371,40 +373,40 @@ function Settings.LoadMenuSettings()
 				end
 			end,
 			width = "full",
-		},
-		[5] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "button",
-			name = "Reset Indicator Position",
-			tooltip = "Resets the indicator to be positioned in the top left of the screen.",
+			name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_POS_RESET_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_POS_RESET_TIPS),
 			func = function() ResetIndicator() end,
 			width = "full",
-		},
-		[6] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "header",
-			name = "Idle Emotes",
+			name =  L(SI_LOREPLAY_PANEL_IE_HEADER),
 			width = "full",
-		},
-		[7] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "description",
 			title = nil,
-			text = "Contextual, automatic emotes that occur when you go idle or AFK (Not moving, not fighting, not stealthing).\n|cFF0000Don't forget to bind your IdleEmotes keypress for quick toggling!|r",
+			text =  L(SI_LOREPLAY_PANEL_IE_DESCRIPTION),
 			width = "full",
-		},
-		[8] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Toggle IdleEmotes On/Off",
-			tooltip = "Turns on/off the automatic, contextual emotes that occur when you go idle or AFK.\n(Note: Disabling IdleEmotes displays all its settings as off, but will persist after re-enabling.)",
+			name =  L(SI_LOREPLAY_PANEL_IE_SW_NAME),
+			tooltip =  L(SI_LOREPLAY_PANEL_IE_SW_TIPS),
 			getFunc = function() return Settings.savedSettingsTable.isIdleEmotesOn end,
 			setFunc = function(setting) 
 				Settings.ToggleIdleEmotes(setting)
 			end,
 			width = "full",
 			reference = "IdleEmotesToggleCheckbox",
-		},
-		[9] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "slider",
-			name = "Emote Duration",
-			tooltip = "Determines how long in seconds a given idle emote will be performed before switching to a new one.\nDefault is 30 seconds.",
+			name = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_TIPS),
 			min = 10,
 			max = 120,
 			step = 2,
@@ -418,11 +420,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = 30,
-		},
-		[10] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Can Play Instruments In Cities",
-			tooltip = "Determines whether or not your character can perform instrument emotes when idle in cities.",
+			name = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isIdleEmotesOn then
 					return Settings.savedSettingsTable.canPlayInstrumentsInCities
@@ -437,11 +439,11 @@ function Settings.LoadMenuSettings()
 				LorePlay.CreateDefaultIdleEmotesTable()
 			end,
 			width = "full",
-		},
-		[11] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Can Dance In Cities",
-			tooltip = "Determines whether or not your character can perform dance emotes when idle in cities.",
+			name = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isIdleEmotesOn then
 					return Settings.savedSettingsTable.canDanceInCities
@@ -456,11 +458,11 @@ function Settings.LoadMenuSettings()
 				LorePlay.CreateDefaultIdleEmotesTable()
 			end,
 			width = "full",
-		},
-		[12] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Can Be Drunk In Cities",
-			tooltip = "Determines whether or not your character can perform drunken emotes when idle in cities.",
+			name = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isIdleEmotesOn then
 					return Settings.savedSettingsTable.canBeDrunkInCities
@@ -475,11 +477,11 @@ function Settings.LoadMenuSettings()
 				LorePlay.CreateDefaultIdleEmotesTable()
 			end,
 			width = "full",
-		},
-		[13] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Can Exercise Outside Cities",
-			tooltip = "Determines whether or not your character can perform exercise emotes when idle outside of cities.",
+			name = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isIdleEmotesOn then
 					return Settings.savedSettingsTable.canExerciseInZone
@@ -494,11 +496,11 @@ function Settings.LoadMenuSettings()
 				LorePlay.CreateDefaultIdleEmotesTable()
 			end,
 			width = "full",
-		},
-		[14] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Can Worship/Pray",
-			tooltip = "Determines whether or not your character can perform prayer and worship emotes when idle in general.",
+			name = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isIdleEmotesOn then
 					return Settings.savedSettingsTable.canWorship
@@ -513,11 +515,11 @@ function Settings.LoadMenuSettings()
 				LorePlay.CreateDefaultIdleEmotesTable()
 			end,
 			width = "full",
-		},
-		[15] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Camera Spin Disabler",
-			tooltip = "Allows for emotes to be performed while in menus. Disables camera spin in menus. Removes 'Cannot play emote at this time' message.",
+			name = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isCameraSpinDisabled then
 					return true
@@ -532,22 +534,22 @@ function Settings.LoadMenuSettings()
 				noCameraSpin()
 			end,
 			width = "full",
-		},
-		[16] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "header",
-			name = "Lore Wear",
+			name = L(SI_LOREPLAY_PANEL_LE_HEADER),
 			width = "full",
-		},
-		[17] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "description",
 			title = nil,
-			text = "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically and appropriately equip their favorite collectibles depending on where they are.\n|cFF0000Don't forget to bind your LoreWear show/hide clothes button!|r",
+			text = L(SI_LOREPLAY_PANEL_LE_DESCRIPTION),
 			width = "full",
-		},
-		[18] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Toggle LoreWear On/Off",
-			tooltip = "Turns on/off the automatic, contextual clothing that will be put on when entering the areas respective to your outfits.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)",
+			name = L(SI_LOREPLAY_PANEL_LE_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_SW_TIPS),
 			getFunc = function() return Settings.savedSettingsTable.isLoreWearOn end,
 			setFunc = function(setting) 
 				Settings.savedSettingsTable.isLoreWearOn = setting
@@ -559,11 +561,11 @@ function Settings.LoadMenuSettings()
 				end
 			end,
 			width = "full",
-		},
-		[19] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Allow Equip While Mounted",
-			tooltip = "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.",
+			name = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.canActivateLWClothesWhileMounted
@@ -577,11 +579,11 @@ function Settings.LoadMenuSettings()
 				Settings.savedVariables.canActivateLWClothesWhileMounted = Settings.savedSettingsTable.canActivateLWClothesWhileMounted 
 			end,
 			width = "full",
-		},
-		[20] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Costume",
-			tooltip = "If enabled, uses your favorite costume in outfits, along with your other favrotie collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[Costumes] 
@@ -596,11 +598,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[21] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Hat",
-			tooltip = "If enabled, uses your favorite hat in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_HAT_SW_NAME),
+			tooltip =L(SI_LOREPLAY_PANEL_LE_USE_HAT_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[Hats]
@@ -615,11 +617,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[22] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Hair",
-			tooltip = "If enabled, uses your favorite hair in outfits, along with your other favorite collecibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_HAIR_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_HAIR_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[Hair]
@@ -634,11 +636,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[23] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Skin",
-			tooltip = "If enabled, uses your favorite skin in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_SKIN_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_SKIN_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[Skins] 
@@ -653,11 +655,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[24] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Polymorphs",
-			tooltip = "If enabled, uses your favorite polymorph in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_POLYMORPH_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_POLYMORPH_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[Polymorphs] 
@@ -672,11 +674,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[25] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Facial Accessories",
-			tooltip = "If enabled, uses your favorite facial accessories in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_ACC_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_ACC_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[FacialAcc] 
@@ -691,11 +693,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[26] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Facial Hair",
-			tooltip = "If enabled, uses your favorite facial hairs/horns in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_HAIR_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_HAIR_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[FacialHair] 
@@ -710,11 +712,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[27] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Body Markings",
-			tooltip = "If enabled, uses your favorite body markings in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_BODY_MARKING_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_BODY_MARKING_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[BodyMarkings] 
@@ -729,11 +731,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[28] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Head Markings",
-			tooltip = "If enabled, uses your favorite head markings in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_HEAD_MARKING_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_HEAD_MARKING_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[HeadMarkings] 
@@ -748,11 +750,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[29] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Jewelry",
-			tooltip = "If enabled, uses your favorite jewelry in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_JEWELRY_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_JEWELRY_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[Jewelry] 
@@ -767,11 +769,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[30] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Personalities",
-			tooltip = "If enabled, uses your favorite personalities in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_PERSONALITY_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_PERSONALITY_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[Personalities] 
@@ -786,11 +788,11 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[31] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "checkbox",
-			name = "Use Favorite Pets",
-			tooltip = "If enabled, uses your favorite vanity pets in outfits, along with your other favorite collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.",
+			name = L(SI_LOREPLAY_PANEL_LE_USE_PET_SW_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_USE_PET_SW_TIPS),
 			getFunc = function() 
 				if Settings.savedSettingsTable.isLoreWearOn then
 					return Settings.savedSettingsTable.isUsingFavorite[VanityPets] 
@@ -805,43 +807,42 @@ function Settings.LoadMenuSettings()
 			end,
 			width = "full",
 			default = false,
-		},
-		[32] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "button",
-			name = "Set City Outfit",
-			tooltip = "Sets the current outfit (collectibles) your character is wearing as their city outfit, allowing for automatic collectible changing when entering a city.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!",
+			name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_TIPS),
 			func = function()
 				SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, City)
 			end,
 			width = "half",
-		},
-		[33] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "button",
-			name = "Set Housing Outfit",
-			tooltip = "Sets the current outfit (collectibles) your character is wearing as their housing outfit, allowing for automatic collectible changing when entering a house.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!",
+			name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_TIPS),
 			func = function()
 				SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Housing)
 			end,
 			width = "half",
-		},
-		[34] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "button",
-			name = "Set Dungeon Outfit",
-			tooltip = "Sets the current outfit (collectibles) your character is wearing as their dungeon outfit, allowing for automatic collectible changing when entering a dungeon.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!",
+			name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_TIPS),
 			func = function()
 				SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Dungeon)
 			end,
 			width = "half",
-		},
-		[35] = {
+	}
+	optionsTable[#optionsTable + 1] = {
 			type = "button",
-			name = "Set Adventure Outfit",
-			tooltip = "Sets the current outfit (collectibles) your character is wearing as their adventuring outfit, allowing for automatic collectible changing when running around the land of Tamriel.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!",
+			name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_NAME),
+			tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_TIPS),
 			func = function()
 				SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Adventure)
 			end,
 			width = "half",
-		},
 	}
 
 	LAM2:RegisterAddonPanel("LorePlayOptions", panelData)

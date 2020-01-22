@@ -6,6 +6,7 @@ LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LoreP
 LorePlay.name = "LorePlay"
 LorePlay.authority = {2973583419,210970542} 
 
+local L = GetString
 
 local function loreplayConfigDebug(arg)
 	local debugMode = false
@@ -39,7 +40,7 @@ end
 
 
 function LorePlay.OnPlayerActivated(event)
-	zo_callLater(function() CHAT_SYSTEM:AddMessage("Welcome to LorePlay, Soulless One!") end, 50)
+	zo_callLater(function() CHAT_SYSTEM:AddMessage(L(SI_LOREPLAY_UI_WELCOME)) end, 50)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, event, LorePlay.OnPlayerActivated)
 end
 
