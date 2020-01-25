@@ -108,133 +108,133 @@ local runeQualityToEvents = {
 }
 
 -- ---------
-local zoneIdToRegionKeys = {	---------------------- zoneId to RegionKeys table, converted from languageTable.zoneToRegionEmotes
+local zoneIdDatabase = {	---------------------- zoneId database table for RegionKeys, converted from languageTable.zoneToRegionEmotes
 		-- NOTE : by Calamath
 		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
 		--	 The word 'zone' here means the parent zone id.
 		--
-	[381]	= "ad1",		-- Auridon
-	[383]	= "ad2",		-- Grahtwood
-	[108]	= "ad2",		-- Greenshade
-	[537]	= "ad1",		-- Khenarthi's Roost
-	[58]	= "ad2",		-- Malabal Tor
-	[382]	= "ad2",		-- Reaper's March
-	[104]	= "dc1",		-- Alik'r Desert
-	[92]	= "dc1",		-- Bangkorai
-	[535]	= "dc2",		-- Betnikh
-	[3]		= "dc2",		-- Glenumbra
-	[20]	= "dc2",		-- Rivenspire
-	[19]	= "dc2",		-- Stormhaven
-	[534]	= "dc1",		-- Stros M'Kai
-	[281]	= "ep2",		-- Bal Foyen
-	[280]	= "ep2",		-- Bleakrock Isle
-	[57]	= "ep2",		-- Deshaan
-	[101]	= "ep1",		-- Eastmarch
-	[103]	= "ep1",		-- The Rift
-	[117]	= "ep3",		-- Shadowfen
-	[41]	= "ep2",		-- Stonefalls
-	[347]	= "ch",			-- Coldharbour
-	[888]	= "other",		-- Craglorn
-	[181]	= "ip",			-- Cyrodiil
-	[823]	= "other",		-- Gold Coast
-	[816]	= "other",		-- Hew's Bane
-	[726]	= "ep3",		-- Murkmire
-	[684]	= "other",		-- Wrothgar
-	[849]	= "ep1",		-- Vvardenfell
-	[980]	= "other",		-- Clockwork City
+	[381]	= { emoteKey = "ad1", 	}, 		-- Auridon
+	[383]	= { emoteKey = "ad2", 	}, 		-- Grahtwood
+	[108]	= { emoteKey = "ad2", 	}, 		-- Greenshade
+	[537]	= { emoteKey = "ad1", 	}, 		-- Khenarthi's Roost
+	[58]	= { emoteKey = "ad2", 	}, 		-- Malabal Tor
+	[382]	= { emoteKey = "ad2", 	}, 		-- Reaper's March
+	[104]	= { emoteKey = "dc1", 	}, 		-- Alik'r Desert
+	[92]	= { emoteKey = "dc1", 	}, 		-- Bangkorai
+	[535]	= { emoteKey = "dc2", 	}, 		-- Betnikh
+	[3]		= { emoteKey = "dc2", 	}, 		-- Glenumbra
+	[20]	= { emoteKey = "dc2", 	}, 		-- Rivenspire
+	[19]	= { emoteKey = "dc2", 	}, 		-- Stormhaven
+	[534]	= { emoteKey = "dc1", 	}, 		-- Stros M'Kai
+	[281]	= { emoteKey = "ep2", 	}, 		-- Bal Foyen
+	[280]	= { emoteKey = "ep2", 	}, 		-- Bleakrock Isle
+	[57]	= { emoteKey = "ep2", 	}, 		-- Deshaan
+	[101]	= { emoteKey = "ep1", 	}, 		-- Eastmarch
+	[103]	= { emoteKey = "ep1", 	}, 		-- The Rift
+	[117]	= { emoteKey = "ep3", 	}, 		-- Shadowfen
+	[41]	= { emoteKey = "ep2", 	}, 		-- Stonefalls
+	[347]	= { emoteKey = "ch", 	}, 		-- Coldharbour
+	[888]	= { emoteKey = "other", }, 		-- Craglorn
+	[181]	= { emoteKey = "ip", 	}, 		-- Cyrodiil
+	[823]	= { emoteKey = "other", }, 		-- Gold Coast
+	[816]	= { emoteKey = "other", }, 		-- Hew's Bane
+	[726]	= { emoteKey = "ep3", 	}, 		-- Murkmire
+	[684]	= { emoteKey = "other", }, 		-- Wrothgar
+	[849]	= { emoteKey = "ep1", 	}, 		-- Vvardenfell
+	[980]	= { emoteKey = "other", }, 		-- Clockwork City
 }
 -- ---------
-local mapIdToCityKeys = {	-------------------------- mapId to CityKeys table, converted from languageTable.defaultEmotesByCity
+local mapIdDatabase = {	-------------------------- mapId database table for CityKeys, converted from languageTable.defaultEmotesByCity
 		-- NOTE : by Calamath
 		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
 		--	 The word 'mapId' here means the mapId not mapIndex.
 		--
-	[445]	= "Elden Root", 	-- Elden Root
-	[446]	= "Elden Root", 	-- Elden Root
-	[447]	= "Elden Root", 	-- Elden Root
-	[448]	= "Elden Root", 	-- Elden Root
-	[449]	= "Elden Root", 	-- Elden Root
-	[450]	= "Elden Root", 	-- Elden Root
-	[451]	= "Elden Root", 	-- Elden Root
-	[571]	= "Elden Root", 	-- Elden Root
-	[243]	= "Vulkhel Guard", 	-- Vulkhel Guard
-	[205]	= "Mournhold", 		-- Mournhold
-	[160]	= "Windhelm", 		-- Windhelm
-	[198]	= "Riften", 		-- Riften
-	[33]	= "Wayrest", 		-- Wayrest
+	[445]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
+	[446]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
+	[447]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
+	[448]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
+	[449]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
+	[450]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
+	[451]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
+	[571]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
+	[243]	= { emoteKey = "Vulkhel Guard", }, 		-- Vulkhel Guard
+	[205]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold
+	[160]	= { emoteKey = "Windhelm", 		}, 		-- Windhelm
+	[198]	= { emoteKey = "Riften", 		}, 		-- Riften
+	[33]	= { emoteKey = "Wayrest", 		}, 		-- Wayrest
 
-	[993]	= "DC", 			-- Abah's Landing
-	[1038]	= "DC", 			-- Abah's Landing
-	[1039]	= "DC", 			-- Abah's Landing
-	[531]	= "DC", 			-- Aldcroft
-	[1074]	= "Other", 			-- Anvil
-	[1343]	= "Other", 			-- Anvil
-	[535]	= "AD", 			-- Arenthia
-	[282]	= "AD", 			-- Baandari Trading Post
-	[1131]	= "DC", 			-- Belkarth
---			= "DC", 			-- Camlorn
-	[1313]	= "EP", 			-- Clockwork City
-	[63]	= "DC", 			-- Daggerfall
-	[24]	= "EP", 			-- Davon's Watch
-	[533]	= "AD", 			-- Dune
-	[342]	= "EP", 			-- Ebonheart
-	[511]	= "EP", 			-- Ebonheart
---			= "DC", 			-- Elinhir
-	[84]	= "DC", 			-- Evermore
-	[540]	= "AD", 			-- Firsthold
-	[360]	= "DC", 			-- Hallin's Stand
-	[512]	= "AD", 			-- Haven
---			= "Other", 			-- Hollow City
-	[422]	= "Other", 			-- The Hollow City
-	[660]	= "Other", 			-- Imperial City
-	[538]	= "DC", 			-- Kozanset
-	[510]	= "EP", 			-- Kragenmoor
-	[1064]	= "Other", 			-- Kvatch
-	[387]	= "AD", 			-- Marbruk
-	[567]	= "AD", 			-- Mistral
-	[513]	= "DC", 			-- Northpoint
-	[895]	= "DC", 			-- Orsinium
-	[530]	= "DC", 			-- Port Hunding
-	[312]	= "AD", 			-- Rawl'kha
-	[83]	= "DC", 			-- Sentinel
-	[85]	= "DC", 			-- Shornhelm
---			= "AD", 			-- Silvenar
---			= "AD", 			-- Silvenar's Audience Hall
-	[217]	= "EP", 			-- Stormhold
---			= "DC", 			-- Tava's Blessing
-	[545]	= "AD", 			-- Skywatch
-	[529]	= "AD", 			-- Woodhearth
-	[1287]	= "EP", 			-- Vivec City
---			= "EP", 			-- Seyda Neen
-	[1290]	= "EP", 			-- Balmora
-	[1288]	= "EP", 			-- Sadrith Mora
+	[993]	= { emoteKey = "DC", 			}, 		-- Abah's Landing
+	[1038]	= { emoteKey = "DC", 			}, 		-- Abah's Landing
+	[1039]	= { emoteKey = "DC", 			}, 		-- Abah's Landing
+	[531]	= { emoteKey = "DC", 			}, 		-- Aldcroft
+	[1074]	= { emoteKey = "Other", 		}, 		-- Anvil
+	[1343]	= { emoteKey = "Other", 		}, 		-- Anvil
+	[535]	= { emoteKey = "AD", 			}, 		-- Arenthia
+	[282]	= { emoteKey = "AD", 			}, 		-- Baandari Trading Post
+	[1131]	= { emoteKey = "DC", 			}, 		-- Belkarth
+--			= { emoteKey = "DC", 			}, 		-- Camlorn
+	[1313]	= { emoteKey = "EP", 			}, 		-- Clockwork City
+	[63]	= { emoteKey = "DC", 			}, 		-- Daggerfall
+	[24]	= { emoteKey = "EP", 			}, 		-- Davon's Watch
+	[533]	= { emoteKey = "AD", 			}, 		-- Dune
+	[342]	= { emoteKey = "EP", 			}, 		-- Ebonheart
+	[511]	= { emoteKey = "EP", 			}, 		-- Ebonheart
+--			= { emoteKey = "DC", 			}, 		-- Elinhir
+	[84]	= { emoteKey = "DC", 			}, 		-- Evermore
+	[540]	= { emoteKey = "AD", 			}, 		-- Firsthold
+	[360]	= { emoteKey = "DC", 			}, 		-- Hallin's Stand
+	[512]	= { emoteKey = "AD", 			}, 		-- Haven
+--			= { emoteKey = "Other", 		}, 		-- Hollow City
+	[422]	= { emoteKey = "Other", 		}, 		-- The Hollow City
+	[660]	= { emoteKey = "Other", 		}, 		-- Imperial City
+	[538]	= { emoteKey = "DC", 			}, 		-- Kozanset
+	[510]	= { emoteKey = "EP", 			}, 		-- Kragenmoor
+	[1064]	= { emoteKey = "Other", 		}, 		-- Kvatch
+	[387]	= { emoteKey = "AD", 			}, 		-- Marbruk
+	[567]	= { emoteKey = "AD", 			}, 		-- Mistral
+	[513]	= { emoteKey = "DC", 			}, 		-- Northpoint
+	[895]	= { emoteKey = "DC", 			}, 		-- Orsinium
+	[530]	= { emoteKey = "DC", 			}, 		-- Port Hunding
+	[312]	= { emoteKey = "AD", 			}, 		-- Rawl'kha
+	[83]	= { emoteKey = "DC", 			}, 		-- Sentinel
+	[85]	= { emoteKey = "DC", 			}, 		-- Shornhelm
+--			= { emoteKey = "AD", 			}, 		-- Silvenar
+--			= { emoteKey = "AD", 			}, 		-- Silvenar's Audience Hall
+	[217]	= { emoteKey = "EP", 			}, 		-- Stormhold
+--			= { emoteKey = "DC", 			}, 		-- Tava's Blessing
+	[545]	= { emoteKey = "AD", 			}, 		-- Skywatch
+	[529]	= { emoteKey = "AD", 			}, 		-- Woodhearth
+	[1287]	= { emoteKey = "EP", 			}, 		-- Vivec City
+--			= { emoteKey = "EP", 			}, 		-- Seyda Neen
+	[1290]	= { emoteKey = "EP", 			}, 		-- Balmora
+	[1288]	= { emoteKey = "EP", 			}, 		-- Sadrith Mora
 }
 -- ---------
-local subZoneIdToCityKeys = {	---------------------- subZoneId to CityKeys table, converted from languageTable.defaultEmotesByCity
+local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
 		-- NOTE : by Calamath
 		--	 Using subZoneId is a special case, such as a city without its sub-map, or an enclave, etc.
 		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
 		--
-	[279]	= "DC", 			-- Camlorn
-	[7829]	= "DC", 			-- Elinhir
-	[10941]	= "DC", 			-- Elinhir
---	[8006]	= "DC", 			-- Elinhir Wayshrine
---	[11004]	= "DC", 			-- Elinhir Wayshrine
-	[4730]	= "Other", 			-- The Hollow City
-	[2955]	= "AD", 			-- Silvenar
-	[9348]	= "AD", 			-- Silvenar Treetops
-	[3370]	= "AD", 			-- Silvenar's Audience Hall
-	[933]	= "DC", 			-- Tava's Blessing
-	[11580]	= "EP", 			-- Seyda Neen
-	[11659]	= "EP", 			-- Seyda Neen
-	[11851]	= "EP", 			-- Seyda Neen
-	[12168]	= "EP", 			-- Seyda Neen
---	[11549]	= "EP", 			-- Seyda Neen Wayshrine
+	[279]	= { emoteKey = "DC", 			}, 		-- Camlorn
+	[7829]	= { emoteKey = "DC", 			}, 		-- Elinhir
+	[10941]	= { emoteKey = "DC", 			}, 		-- Elinhir
+--	[8006]	= { emoteKey = "DC", 			}, 		-- Elinhir Wayshrine
+--	[11004]	= { emoteKey = "DC", 			}, 		-- Elinhir Wayshrine
+	[4730]	= { emoteKey = "Other", 		}, 		-- The Hollow City
+	[2955]	= { emoteKey = "AD", 			}, 		-- Silvenar
+	[9348]	= { emoteKey = "AD", 			}, 		-- Silvenar Treetops
+	[3370]	= { emoteKey = "AD", 			}, 		-- Silvenar's Audience Hall
+	[933]	= { emoteKey = "DC", 			}, 		-- Tava's Blessing
+	[11580]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
+	[11659]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
+	[11851]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
+	[12168]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
+--	[11549]	= { emoteKey = "EP", 			}, 		-- Seyda Neen Wayshrine
 
---	[2092]	= "Mournhold", 		-- Mournhold Plaza of the Gods	--> no longer needed
---	[2094]	= "Mournhold", 		-- Mournhold Banking District	--> no longer needed
---	[6637]	= "Elden Root", 	-- Elden Root Services			--> no longer needed
---	[11807]	= "EP", 			-- Vivec Temple Wayshrine		--> no longer needed
+--	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
+--	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
+--	[6637]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root Services			--> no longer needed
+--	[11807]	= { emoteKey = "EP", 			}, 		-- Vivec Temple Wayshrine		--> no longer needed
 }
 -- ---------
 local titleIdToMaleTitleName = {	------------------ titleId to male titleName table, converted from languageTable.playerTitles
@@ -262,6 +262,17 @@ local titleIdToFemaleTitleName = {	------------------ titleId to female titleNam
 local TitleNameToTitleId = {}
 -- ---------
 
+local function GetRegionKeyByZoneId(zoneId)
+	if zoneIdDatabase[zoneId] then return zoneIdDatabase[zoneId].emoteKey end
+end
+
+local function GetCityKeyByMapId(mapId)
+	if mapIdDatabase[mapId] then return mapIdDatabase[mapId].emoteKey end
+end
+
+local function GetCityKeyBySubZoneId(subZoneId)
+	if subZoneIdDatabase[subZoneId] then return subZoneIdDatabase[subZoneId].emoteKey end
+end
 
 local function TurnIndicatorOff()
 	timelineFadeOut:PlayFromStart()
@@ -1290,7 +1301,7 @@ end
 
 
 function SmartEmotes.IsPlayerInParentZone()
-	local key = zoneIdToRegionKeys[GetParentZoneId(GetUnitWorldPosition("player"))]
+	local key = GetRegionKeyByZoneId(GetParentZoneId(GetUnitWorldPosition("player")))
 	if key ~= nil then
 		return true, key
 	end
@@ -1299,7 +1310,7 @@ end
 
 
 function SmartEmotes.IsPlayerInZone()
-	local key = zoneIdToRegionKeys[GetUnitWorldPosition("player")]
+	local key = GetRegionKeyByZoneId(GetUnitWorldPosition("player"))
 	if key ~= nil then
 		return true, key
 	end
@@ -1313,7 +1324,7 @@ function SmartEmotes.IsPlayerInCity()
 	local key
 	if subZoneId ~= 0 then
 		if location == LorePlay.savedVariables.savedSubZoneName then
-			key = subZoneIdToCityKeys[subZoneId]
+			key = GetCityKeyBySubZoneId(subZoneId)
 			if key then
 				return true, key
 			end
@@ -1323,7 +1334,7 @@ function SmartEmotes.IsPlayerInCity()
 			return false
 		end
 	end
-	key = mapIdToCityKeys[GetCurrentMapId()]
+	key = GetCityKeyByMapId(GetCurrentMapId())
 	if key ~= nil then
 		return true, key
 	end

@@ -5,6 +5,10 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+
+Version 1.5.91 : by Calamath
+- Expand internal location database tables for future development.
+
 Version 1.5.90 : by Calamath
 - Final tweaks and code clean-up.
 
