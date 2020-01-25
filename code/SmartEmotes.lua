@@ -142,6 +142,11 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[684]	= { emoteKey = "other", }, 		-- Wrothgar
 	[849]	= { emoteKey = "ep1", 	}, 		-- Vvardenfell
 	[980]	= { emoteKey = "other", }, 		-- Clockwork City
+	[267]	= { emoteKey = "ad1", 	}, 		-- Eyevea
+	[1011]	= { emoteKey = "ad1", 	},		-- Summerset
+	[1086]	= { emoteKey = "other", },		-- Northern Elsweyr
+	[1133]	= { emoteKey = "other", },		-- Southern Elsweyr
+
 }
 -- ---------
 local mapIdDatabase = {	-------------------------- mapId database table for CityKeys, converted from languageTable.defaultEmotesByCity
