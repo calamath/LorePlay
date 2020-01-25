@@ -212,6 +212,7 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1431]	= { emoteKey = "AD", 			}, 		-- Shimmerene
 	[1455]	= { emoteKey = "AD", 			}, 		-- Lillandril
 	[1560]	= { emoteKey = "EP", 			}, 		-- Lilmoth
+	[1576]	= { emoteKey = "Other", 		}, 		-- Rimmen
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -235,6 +236,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[12168]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
 --	[11549]	= { emoteKey = "EP", 			}, 		-- Seyda Neen Wayshrine
 	[12386]	= { emoteKey = "EP", 			}, 		-- Illumination Academy (in Summerset)
+	[14317]	= { emoteKey = "Other", 		}, 		-- Riverhold (in Northern Elsweyr)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
