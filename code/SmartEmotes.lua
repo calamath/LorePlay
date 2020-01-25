@@ -173,7 +173,7 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[282]	= { emoteKey = "AD", 			}, 		-- Baandari Trading Post
 	[1131]	= { emoteKey = "DC", 			}, 		-- Belkarth
 --			= { emoteKey = "DC", 			}, 		-- Camlorn
-	[1313]	= { emoteKey = "EP", 			}, 		-- Clockwork City
+	[1348]	= { emoteKey = "EP", 			}, 		-- Brass Fortress
 	[63]	= { emoteKey = "DC", 			}, 		-- Daggerfall
 	[24]	= { emoteKey = "EP", 			}, 		-- Davon's Watch
 	[533]	= { emoteKey = "AD", 			}, 		-- Dune
