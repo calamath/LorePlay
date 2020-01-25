@@ -211,6 +211,7 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1430]	= { emoteKey = "AD", 			}, 		-- Alinor
 	[1431]	= { emoteKey = "AD", 			}, 		-- Shimmerene
 	[1455]	= { emoteKey = "AD", 			}, 		-- Lillandril
+	[1560]	= { emoteKey = "EP", 			}, 		-- Lilmoth
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity

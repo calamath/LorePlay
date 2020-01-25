@@ -6,6 +6,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 NOTE : this modified version is still under the Artistic License 2.0
 
 
+- Updated database for Murkmire DLC. Lilmoth is now recognized as a city.
 - Updated database for Summerset Chapter. Alinor, Shimmerene, Lillandril and Illumination Academy are now recognized as cities.
 - Updated database for Clockwork City DLC. Brass Fortress is now correctly recognized as a city.
 
