@@ -5,6 +5,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.50 : by Calamath
 - Updated location database to support several zones. Eyevea, Summerset, Northern Elsweyr and Southern Elsweyr are now recongnized properly.
 - Updated database for Elsweyr Chapter. Rimmen and Riverhold are now recognized as cities.
 - Updated database for Murkmire DLC. Lilmoth is now recognized as a city.

@@ -328,7 +328,7 @@ function Settings.LoadMenuSettings()
 	local panelData = {
 		type = "panel",
 		name = LorePlay.name,
-		displayName = "|c8c7037LorePlay",
+		displayName = "|c8c7037LorePlay Forever",
 		author = "Justinon, modified by Calamath",
 		version = LorePlay.version,
 		slashCommand = "/loreplay",

@@ -230,7 +230,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[10941]	= { emoteKey = "DC", 			}, 		-- Elinhir
 --	[8006]	= { emoteKey = "DC", 			}, 		-- Elinhir Wayshrine
 --	[11004]	= { emoteKey = "DC", 			}, 		-- Elinhir Wayshrine
-	[4730]	= { emoteKey = "Other", 		}, 		-- The Hollow City
+--	[4730]	= { emoteKey = "Other", 		}, 		-- The Hollow City
 	[2955]	= { emoteKey = "AD", 			}, 		-- Silvenar
 	[9348]	= { emoteKey = "AD", 			}, 		-- Silvenar Treetops
 	[3370]	= { emoteKey = "AD", 			}, 		-- Silvenar's Audience Hall
