@@ -263,6 +263,8 @@ function IdleEmotes.GetLocation()
 		return Dungeon
 	elseif LorePlay.IsPlayerInDolmen() then
 		return Dungeon		-- use dungeon table for dolmen
+	elseif LorePlay.IsPlayerInAbyssalGeyser() then
+		return Dungeon		-- use dungeon table for AbyssalGeyser
 	elseif LorePlay.IsPlayerInCity() then
 		return City
 	elseif LorePlay.IsPlayerInParentZone() then

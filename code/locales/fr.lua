@@ -3,6 +3,7 @@
 LorePlay = LorePlay or {}
 
 SafeAddString(SI_LOREPLAY_LOCATION_KEYWORD_DOLMEN,  	"dolmen", 1)										-- "Dolmen"
+SafeAddString(SI_LOREPLAY_LOCATION_KEYWORD_ABYSSAL_GEYSER, 	"Geyser abyssal", 1)							-- "Abyssal Geyser"
 
 SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_41,			"Empereur", 1)										-- "Emperor"
 SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_M_42,			"Ancien empereur", 1)								-- "Former Emperor"

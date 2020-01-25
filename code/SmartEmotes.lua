@@ -1373,6 +1373,15 @@ function SmartEmotes.IsPlayerInDolmen()
 end
 
 
+function SmartEmotes.IsPlayerInAbyssalGeyser()
+	local location = GetPlayerLocationName()
+	if PlainStringFind(location, L(SI_LOREPLAY_LOCATION_KEYWORD_ABYSSAL_GEYSER)) then
+		return true
+	end
+	return false
+end
+
+
 -- Here we pass in event codes
 function SmartEmotes.DoesEmoteFromTTLEqualEvent(...)
 	if not eventTTLEmotes["isEnabled"] then return false end
@@ -1424,6 +1433,10 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 	end
 	if SmartEmotes.IsPlayerInDolmen() then
 		defaultEmotes = defaultEmotesForDolmens
+		return
+	end
+	if SmartEmotes.IsPlayerInAbyssalGeyser() then
+		defaultEmotes = defaultEmotesForDolmens		-- same as Dolens
 		return
 	end
 	result, key = SmartEmotes.IsPlayerInCity()

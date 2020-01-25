@@ -2,6 +2,7 @@ LorePlay = LorePlay or {}
 
 local strings = {
 	SI_LOREPLAY_LOCATION_KEYWORD_DOLMEN			= "Dolmen", 
+	SI_LOREPLAY_LOCATION_KEYWORD_ABYSSAL_GEYSER	= "Abyssal Geyser", 
 
 	SI_LOREPLAY_PC_TITLE_NAME_M_41				= "Emperor", 					-- "Emperor"
 	SI_LOREPLAY_PC_TITLE_NAME_M_42				= "Former Emperor", 			-- "Former Emperor"

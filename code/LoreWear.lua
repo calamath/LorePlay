@@ -199,7 +199,7 @@ local function ChangeLoreWearClothes(isCurrentlyInCity)
 ]]
 	if LorePlay.IsPlayerInHouse() then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Housing]
-	elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() then
+	elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() or LorePlay.IsPlayerInAbyssalGeyser() then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Dungeon]
 	elseif isCurrentlyInCity then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[City]

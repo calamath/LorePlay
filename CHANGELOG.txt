@@ -8,6 +8,7 @@ NOTE : this modified version is still under the Artistic License 2.0
 - Updated database for Elsweyr Chapter. Rimmen and Riverhold are now recognized as cities.
 - Updated database for Murkmire DLC. Lilmoth is now recognized as a city.
 - Updated database for Summerset Chapter. Alinor, Shimmerene, Lillandril and Illumination Academy are now recognized as cities.
+- Abyssal Geysers in Summerset are now recognized as same as Dolmens.
 - Updated database for Clockwork City DLC. Brass Fortress is now correctly recognized as a city.
 
 Version 1.5.91 : by Calamath
