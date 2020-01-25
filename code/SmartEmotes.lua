@@ -208,6 +208,9 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 --			= { emoteKey = "EP", 			}, 		-- Seyda Neen
 	[1290]	= { emoteKey = "EP", 			}, 		-- Balmora
 	[1288]	= { emoteKey = "EP", 			}, 		-- Sadrith Mora
+	[1430]	= { emoteKey = "AD", 			}, 		-- Alinor
+	[1431]	= { emoteKey = "AD", 			}, 		-- Shimmerene
+	[1455]	= { emoteKey = "AD", 			}, 		-- Lillandril
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -230,6 +233,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[11851]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
 	[12168]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
 --	[11549]	= { emoteKey = "EP", 			}, 		-- Seyda Neen Wayshrine
+	[12386]	= { emoteKey = "EP", 			}, 		-- Illumination Academy (in Summerset)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
