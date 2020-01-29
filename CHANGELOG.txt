@@ -5,6 +5,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.60 : by Calamath
 - Significant improvement of location recognition engine.
   Now support for Senchal type city, Senchal Palace type map and inside some large buildings in cities.
 - Updated database for Dragonhold DLC. Senchal is now correctly recognized as a city.
