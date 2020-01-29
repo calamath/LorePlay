@@ -132,8 +132,12 @@ local defaultSettingsTable = {
 	indicatorTop = nil,
 	timeBetweenIdleEmotes = 30000, 
 
+-- variables for location recognize engine -----
 	savedSubZoneName = "", 
 	savedSubZoneId = 0, 
+	specificPOINameNearby = nil
+-- ---------------------------------------------
+
 }
 
 

@@ -112,6 +112,7 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 		-- NOTE : by Calamath
 		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
 		--	 The word 'zone' here means the parent zone id.
+		--	 emoteKey indicates which region the zone belongs to. SmartEmote feature uses this data to select the emote table.
 		--
 	[381]	= { emoteKey = "ad1", 	}, 		-- Auridon
 	[383]	= { emoteKey = "ad2", 	}, 		-- Grahtwood
@@ -153,6 +154,7 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 		-- NOTE : by Calamath
 		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
 		--	 The word 'mapId' here means the mapId not mapIndex.
+		--	 emoteKey indicates which region the map belongs to. SmartEmote feature uses this data to select the emote table.
 		--
 	[445]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
 	[446]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
@@ -224,6 +226,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 		-- NOTE : by Calamath
 		--	 Using subZoneId is a special case, such as a city without its sub-map, or an enclave, etc.
 		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
+		--	 emoteKey indicates which region the subzone belongs to. SmartEmote feature uses this data to select the emote table.
 		--
 	[279]	= { emoteKey = "DC", 			}, 		-- Camlorn
 	[7829]	= { emoteKey = "DC", 			}, 		-- Elinhir
@@ -247,6 +250,11 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
 --	[6637]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root Services			--> no longer needed
 --	[11807]	= { emoteKey = "EP", 			}, 		-- Vivec Temple Wayshrine		--> no longer needed
+}
+-- ---------
+local poiDatabase = {
+		-- NOTE : by Calamath
+		--	 Basically, this table should not be used, but for cities where subzones are not detectable.
 }
 -- ---------
 local titleIdToMaleTitleName = {	------------------ titleId to male titleName table, converted from languageTable.playerTitles
@@ -282,8 +290,24 @@ local function GetCityKeyByMapId(mapId)
 	if mapIdDatabase[mapId] then return mapIdDatabase[mapId].emoteKey end
 end
 
+local function DoesUseMapBorder(mapId)
+	if mapIdDatabase[mapId] then
+		if mapIdDatabase[mapId].useMapBorder == true then
+			return true
+		end
+	end
+	return false
+end
+
 local function GetCityKeyBySubZoneId(subZoneId)
 	if subZoneIdDatabase[subZoneId] then return subZoneIdDatabase[subZoneId].emoteKey end
+end
+
+local function GetCityKeyByPOIName(poiName)
+	if type(poiName) == "string" then
+		local v = poiDatabase[HashString(poiName)]
+		if v then return v.emoteKey, v.id end
+	end
 end
 
 local function TurnIndicatorOff()
@@ -1311,6 +1335,14 @@ function SmartEmotes.IsPlayerInAnySubZone()
 end
 ]]
 
+function SmartEmotes.IsPlayerInSpecificPOI(poiName)
+	local key, id = GetCityKeyByPOIName(poiName)
+	if key ~= nil then
+		return true, key, id
+	end
+	return false
+end
+
 
 function SmartEmotes.IsPlayerInParentZone()
 	local key = GetRegionKeyByZoneId(GetParentZoneId(GetUnitWorldPosition("player")))
@@ -1331,8 +1363,10 @@ end
 
 
 function SmartEmotes.IsPlayerInCity()
+--	local location = GetPlayerActiveSubzoneName()	-- NOTE : GetPlayerActiveSubzoneName() returns the empty string when not in a subzone, so it is NOT used here.
 	local location = GetPlayerLocationName()
 	local subZoneId = LorePlay.savedVariables.savedSubZoneId
+	local mapId = GetCurrentMapId()
 	local key
 	if subZoneId ~= 0 then
 		if location == LorePlay.savedVariables.savedSubZoneName then
@@ -1342,11 +1376,15 @@ function SmartEmotes.IsPlayerInCity()
 			end
 		end
 	else
-		if location == GetPlayerActiveZoneName() then
-			return false
+		if not DoesUseMapBorder(mapId) then
+			if location == GetPlayerActiveZoneName() then
+				if LorePlay.savedVariables.specificPOINameNearby == nil then
+					return false
+				end
+			end
 		end
 	end
-	key = GetCityKeyByMapId(GetCurrentMapId())
+	key = GetCityKeyByMapId(mapId)
 	if key ~= nil then
 		return true, key
 	end

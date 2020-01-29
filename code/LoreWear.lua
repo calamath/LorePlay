@@ -35,6 +35,21 @@ local LPUtilities = LorePlay.LPUtilities
 
 local LoreWear = LorePlay
 
+-- variables for location recognize engine -----
+local isFirstTimePlayerActivated = true
+local isLoadingProcess = true
+local isDelayProcess = false
+local zoneIndexBeforeLoading
+local mapNameBeforeLoading
+local specificPOINameNearbyBeforeLoading
+local zoneIndexAfterLoading
+local mapNameAfterLoading
+local countEventZoneChangedDuringLoading = 0
+local countEventPOIUpdateDuringLoading = 0
+local countEventLWPChangedDuringLoading = 0
+local countEventLWPChangedDuringDelayTime = 0
+-- ---------------------------------------------
+
 local isMounted
 local isFastTraveling
 local isInCombat
@@ -222,21 +237,7 @@ local function CorrectMapMismatch()
 end
 
 
-local function RequestChangeOutfits(eventCode, subZoneName, subZoneId)
-	local location = GetPlayerLocationName()
-	if eventCode == EVENT_ZONE_CHANGED then
-		LorePlay.savedVariables.savedSubZoneName = subZoneName
-		LorePlay.savedVariables.savedSubZoneId = subZoneId
-	end
-	if eventCode == EVENT_PLAYER_ACTIVATED then
-		LorePlay.savedVariables.savedSubZoneName = location
-		if location ~= LorePlay.savedVariables.savedSubZoneName then
-			wasLastLocationCity = nil
-		end
-	end
-	LorePlay.LDL:Debug("Location = %s, MapName = %s, ZoneName = %s", GetPlayerLocationName(), GetMapName(), GetPlayerActiveZoneName())
-	LorePlay.LDL:Debug("mapId = %d, zoneId = %d, parentZoneId = %d", GetCurrentMapId(), GetUnitWorldPosition("player"), GetParentZoneId(GetUnitWorldPosition("player")))
-
+local function RequestChangeOutfits(eventCode)
 	local isInCity = LorePlay.IsPlayerInCity()
 	if isFastTraveling or isInCombat then return end
 	if not ShouldUpdateLocation(isInCity) then return end
@@ -252,24 +253,145 @@ local function RequestChangeOutfits(eventCode, subZoneName, subZoneId)
 end
 
 
+
+
+local function OnPlayerIsDeactivated(eventCode)
+	LorePlay.LDL:Debug("EVENT_PLAYER_DEACTIVATED :")
+
+	isLoadingProcess = true
+	zoneIndexBeforeLoading = GetUnitZoneIndex("player")
+	mapNameBeforeLoading = GetMapName()
+	specificPOINameNearbyBeforeLoading = LorePlay.savedVariables.specificPOINameNearby
+	zoneIndexAfterLoading = 0
+	mapNameAfterLoading = ""
+	countEventZoneChangedDuringLoading = 0
+	countEventPOIUpdateDuringLoading = 0
+	countEventLWPChangedDuringLoading = 0
+end
+
+
 local function OnZoneChangedBehindSchedule(eventCode, subZoneName, subZoneId)
 	LorePlay.LDL:Debug("EVENT_ZONE_CHANGED [DELAYED] : subZoneName = %s , subZoneId = %d", subZoneName, subZoneId)
 	CorrectMapMismatch()
-	RequestChangeOutfits(eventCode, subZoneName, subZoneId)
+
+	isDelayProcess = false
+--	LorePlay.LDL:Info("Update Location by EVENT_ZONE_CHANGED")
+	LorePlay.savedVariables.savedSubZoneName = subZoneName
+	LorePlay.savedVariables.savedSubZoneId = subZoneId
+	if countEventLWPChangedDuringDelayTime == 0 then		-- stop changing outfits when detecting the player entering or exiting the building
+		RequestChangeOutfits(eventCode)
+	end
 end
+
 
 
 local function OnZoneChanged(eventCode, _, subZoneName, _, _, subZoneId)
 	LorePlay.LDL:Debug("EVENT_ZONE_CHANGED : subZoneName = %s , subZoneId = %d", subZoneName, subZoneId)
-	zo_callLater(function() OnZoneChangedBehindSchedule(eventCode, subZoneName, subZoneId) end, 500)		-- delay 500ms
+	countEventLWPChangedDuringDelayTime = 0
+	if isLoadingProcess then
+		countEventZoneChangedDuringLoading = countEventZoneChangedDuringLoading + 1
+	end
+	isDelayProcess = true
+	zo_callLater(function() OnZoneChangedBehindSchedule(eventCode, subZoneName, subZoneId) end, 500)		-- delay 500ms : this event handler must be executed after events EVENT_POI_UPDATED and EVENT_LINKED_WORLD_POSITION_CHANGED.
 end
 
 
-local function OnPlayerIsActivated(eventCode)
-	LorePlay.LDL:Debug("EVENT_PLAYER_ACTIVATED")
+local function OnPoiUpdated(eventCode, zoneIndex, poiIndex)
+	local poiName = GetPOIInfo(zoneIndex, poiIndex)
+	local poiType = GetPOIType(zoneIndex, poiIndex)
+   	local normalizedX, normalizedZ, poiPinType, iconPath, isShown, _, _, isNearby = GetPOIMapInfo(zoneIndex, poiIndex)
+--	LorePlay.LDL:Debug("EVENT_POI_UPDATED : zoneIndex=%d, poiIndex=%d, poiName=%s", zoneIndex, poiIndex, poiName)
+	if iconPath:find("poi_city") or iconPath:find("poi_town") then		-- my special thanks to circonian!
+		LorePlay.LDL:Debug("EVENT_POI_UPDATED: zoneIndex=%d, poiIndex=%d, ", zoneIndex, poiIndex)
+		LorePlay.LDL:Debug("[POI] %s : isNearby=%s, icon=%s", poiName, tostring(isNearby), iconPath)
+		CorrectMapMismatch()
+		if isLoadingProcess then
+			countEventPOIUpdateDuringLoading = countEventPOIUpdateDuringLoading + 1
+		end
+		local isInSpecificPOI, _, id = LorePlay.IsPlayerInSpecificPOI(poiName)
+		if isInSpecificPOI then
+--			LorePlay.LDL:Info("Update Location by EVENT_POI_UPDATED")
+			if isNearby then
+				LorePlay.savedVariables.specificPOINameNearby = poiName
+				LorePlay.savedVariables.savedSubZoneName = poiName
+				LorePlay.savedVariables.savedSubZoneId = id
+			else
+				LorePlay.savedVariables.specificPOINameNearby = nil
+				LorePlay.savedVariables.savedSubZoneName = ""
+				LorePlay.savedVariables.savedSubZoneId = 0
+			end
+		end
+		RequestChangeOutfits(eventCode)
+	end
+end
+
+
+local function OnLinkedWorldPositionChanged(eventCode)
+	LorePlay.LDL:Debug("EVENT_LINKED_WORLD_POSITION_CHANGED :")
+	if isLoadingProcess then
+		countEventLWPChangedDuringLoading = countEventLWPChangedDuringLoading + 1
+	end
+	if isDelayProcess then
+		countEventLWPChangedDuringDelayTime = countEventLWPChangedDuringDelayTime + 1
+	end
+end
+
+local function OnPlayerIsActivated(eventCode, initial)
+	LorePlay.LDL:Debug("EVENT_PLAYER_ACTIVATED : initial =", initial, ", isFirstTime =", isFirstTimePlayerActivated)
+	isLoadingProcess = false
+
 	isMounted = IsMounted()
 	CorrectMapMismatch()
-	RequestChangeOutfits(eventCode)
+	if initial then
+		if isFirstTimePlayerActivated then		-- --- after login
+--			LorePlay.LDL:Info("after login!")
+			isFirstTimePlayerActivated = false
+		else		-- ------------------------------- after fast travel
+			local zoneIndexAfterLoading = GetUnitZoneIndex("player")
+			local mapNameAfterLoading = GetMapName()
+			local isInSpecificPOI, _, id = LorePlay.IsPlayerInSpecificPOI(mapNameAfterLoading)
+			local specificPOIIndex = nil
+
+			if isInSpecificPOI then		-- search specificPOI by map name
+				for i=1, GetNumPOIs(zoneIndexAfterLoading) do
+					if GetPOIInfo(zoneIndexAfterLoading, i) == mapNameAfterLoading then
+						specificPOIIndex = i
+						break
+					end
+				end
+				if specificPOIIndex then
+					local isNearby = select(8, GetPOIMapInfo(zoneIndexAfterLoading, specificPOIIndex))
+					if isNearby then
+						LorePlay.savedVariables.specificPOINameNearby = mapNameAfterLoading
+--						RequestChangeOutfits(eventCode) -- mapNameAfterLoading, id
+--						return
+					else
+						LorePlay.savedVariables.specificPOINameNearby = nil
+--						RequestChangeOutfits(eventCode) -- "", 0
+--						return
+					end
+				end
+			else
+				LorePlay.savedVariables.specificPOINameNearby = nil
+--				RequestChangeOutfits(eventCode) -- "", 0
+--				return
+			end
+		end
+	else		-- ----------------------------------- after reloadui
+--		LorePlay.LDL:Info("after reloadui")
+		isFirstTimePlayerActivated = false
+	end
+
+	if countEventZoneChangedDuringLoading == 0 then
+		local location = GetPlayerLocationName()
+--		LorePlay.LDL:Info("Update Location by EVENT_PLAYER_ACTIVATED")
+		LorePlay.savedVariables.savedSubZoneName = location
+		if location ~= LorePlay.savedVariables.savedSubZoneName then
+			wasLastLocationCity = nil
+			LorePlay.savedVariables.savedSubZoneId = nil
+		end
+		RequestChangeOutfits(eventCode)
+	end
 end
 
 
@@ -355,9 +477,13 @@ end
 
 
 function LoreWear.InitializeLoreWear()
-	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_ZONE_CHANGED, OnZoneChanged)				-- always active
+	-- ------------------------------------ always active -------------------------------------------------------------
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_DEACTIVATED, OnPlayerIsDeactivated)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_ZONE_CHANGED, OnZoneChanged)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_POI_UPDATED, OnPoiUpdated)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_LINKED_WORLD_POSITION_CHANGED, OnLinkedWorldPositionChanged)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
-
+	-- ----------------------------------------------------------------------------------------------------------------
 	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
 	BuildToggleTable()
 	LoreWear.RegisterLoreWearEvents()
