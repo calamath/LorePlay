@@ -212,7 +212,7 @@ local function ChangeLoreWearClothes(isCurrentlyInCity)
 end
 
 
-local function UpdateLocation(eventCode, subZoneName, subZoneId)
+local function RequestChangeOutfits(eventCode, subZoneName, subZoneId)
 	local location = GetPlayerLocationName()
 	if eventCode == EVENT_ZONE_CHANGED then
 		LorePlay.savedVariables.savedSubZoneName = subZoneName
@@ -231,7 +231,7 @@ local function UpdateLocation(eventCode, subZoneName, subZoneId)
 	if isFastTraveling or isInCombat then return end
 	if not ShouldUpdateLocation(isInCity) then return end
 	if not IsCooldownOver() then
-		zo_callLater(function() UpdateLocation(nil) end, 3000)	-- nil nil :-)
+		zo_callLater(function() RequestChangeOutfits(nil) end, 3000)	-- nil nil :-)
 		return
 	end
 
@@ -250,8 +250,8 @@ end
 local function OnZoneChanged(eventCode, _, subZoneName, _, _, subZoneId)
 	LorePlay.LDL:Debug("EVENT_ZONE_CHANGED : subzoneName = %s , subZoneId = %d", subZoneName, subZoneId)
 	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
---	zo_callLater(function() UpdateLocation(eventCode, subZoneName, subZoneId) end, 5000)
-	UpdateLocation(eventCode, subZoneName, subZoneId)
+--	zo_callLater(function() RequestChangeOutfits(eventCode, subZoneName, subZoneId) end, 5000)
+	RequestChangeOutfits(eventCode, subZoneName, subZoneId)
 end
 
 
@@ -259,7 +259,7 @@ local function OnPlayerIsActivated(eventCode)
 	LorePlay.LDL:Debug("EVENT_PLAYER_ACTIVATED")
 	isMounted = IsMounted()
 	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
-	UpdateLocation(eventCode)
+	RequestChangeOutfits(eventCode)
 end
 
 
@@ -269,7 +269,7 @@ local function OnMountedStateChanged(eventCode, mounted)
 	else 
 		isMounted = false
 		if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
-			zo_callLater(function() UpdateLocation(eventCode) end, 1400)
+			zo_callLater(function() RequestChangeOutfits(eventCode) end, 1400)
 		end	
 	end
 end
@@ -289,7 +289,7 @@ local function OnPlayerCombatState(eventCode, inCombat)
 		isInCombat = true
 	else
 		isInCombat = false
-		zo_callLater(function() UpdateLocation(eventCode) end, 1000)
+		zo_callLater(function() RequestChangeOutfits(eventCode) end, 1000)
 	end
 end
 
@@ -363,7 +363,7 @@ function LoreWear.ReenableLoreWear()
 --[[
 	initializeIndicator()
 ]]
-	UpdateLocation(nil)
+	RequestChangeOutfits(nil)
 end
 
 
