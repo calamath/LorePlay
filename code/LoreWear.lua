@@ -212,6 +212,16 @@ local function ChangeLoreWearClothes(isCurrentlyInCity)
 end
 
 
+local function CorrectMapMismatch()
+	if not DoesCurrentMapMatchMapForPlayerLocation() then
+		local setMapResult = SetMapToPlayerLocation()		-- my special thanks to both votan and Garkin!
+		if setMapResult == SET_MAP_RESULT_MAP_CHANGED then
+			LorePlay.LDL:Debug("SET_MAP -> CHANGED")
+		end
+	end
+end
+
+
 local function RequestChangeOutfits(eventCode, subZoneName, subZoneId)
 	local location = GetPlayerLocationName()
 	if eventCode == EVENT_ZONE_CHANGED then
@@ -251,14 +261,14 @@ end
 local function OnPlayerIsActivated(eventCode)
 	LorePlay.LDL:Debug("EVENT_PLAYER_ACTIVATED")
 	isMounted = IsMounted()
-	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
+	CorrectMapMismatch()
 	RequestChangeOutfits(eventCode)
 end
 
 
 local function OnZoneChangedBehindSchedule(eventCode, subZoneName, subZoneId)
 	LorePlay.LDL:Debug("EVENT_ZONE_CHANGED [DELAYED] : subZoneName = %s , subZoneId = %d", subZoneName, subZoneId)
-	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
+	CorrectMapMismatch()
 	RequestChangeOutfits(eventCode, subZoneName, subZoneId)
 end
 
