@@ -7,6 +7,7 @@ NOTE : this modified version is still under the Artistic License 2.0
 
 - Significant improvement of location recognition engine.
   Now support for Senchal type city, Senchal Palace type map and inside some large buildings in cities.
+- Updated database for Dragonhold DLC. Senchal is now correctly recognized as a city.
 
 Version 1.6.51 : by Calamath
 - Fixed a bug that UI error occurs when LibDebugLogger is not installed.

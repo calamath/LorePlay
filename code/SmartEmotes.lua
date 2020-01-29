@@ -155,6 +155,7 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 		--	 This table will need to be updated as new regions are implemented in future DLCs or Chapters.
 		--	 The word 'mapId' here means the mapId not mapIndex.
 		--	 emoteKey indicates which region the map belongs to. SmartEmote feature uses this data to select the emote table.
+		--	 useMapBorder indicates a special map that uses map borders instead of subzone borders for city recognition.  Set this flag only on special indoor maps.
 		--
 	[445]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
 	[446]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
@@ -220,6 +221,9 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1455]	= { emoteKey = "AD", 			}, 		-- Lillandril
 	[1560]	= { emoteKey = "EP", 			}, 		-- Lilmoth
 	[1576]	= { emoteKey = "Other", 		}, 		-- Rimmen
+	[1675]	= { emoteKey = "Other",	 		}, 		-- Senchal
+	[1690]	= { emoteKey = "Other", useMapBorder = true, 	}, 		-- Senchal Palace
+	[1762]	= { emoteKey = "Other", 		}, 		-- Senchal
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -245,6 +249,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 --	[11549]	= { emoteKey = "EP", 			}, 		-- Seyda Neen Wayshrine
 	[12386]	= { emoteKey = "EP", 			}, 		-- Illumination Academy (in Summerset)
 	[14317]	= { emoteKey = "Other", 		}, 		-- Riverhold (in Northern Elsweyr)
+	[15336]	= { emoteKey = "Other", 		},		-- Senchal (in Southern Elsweyr)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
@@ -255,6 +260,10 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 local poiDatabase = {
 		-- NOTE : by Calamath
 		--	 Basically, this table should not be used, but for cities where subzones are not detectable.
+	[2428019372] = { id = 15336, emoteKey = "Other", 	}, 		-- EN:Senchal
+	[2224387413] = { id = 15336, emoteKey = "Other", 	}, 		-- DE:Senchal
+	[3482854427] = { id = 15336, emoteKey = "Other", 	}, 		-- FR:Senchal
+	[3754689769] = { id = 15336, emoteKey = "Other", 	}, 		-- JP:Senchal
 }
 -- ---------
 local titleIdToMaleTitleName = {	------------------ titleId to male titleName table, converted from languageTable.playerTitles
