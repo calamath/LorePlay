@@ -242,16 +242,9 @@ local function RequestChangeOutfits(eventCode, subZoneName, subZoneId)
 end
 
 
---[[
-local function UpdateLocationDelayed(eventCode)
-	zo_callLater(function() UpdateLocation(eventCode) end, 5000)
-end
-]]
 local function OnZoneChanged(eventCode, _, subZoneName, _, _, subZoneId)
-	LorePlay.LDL:Debug("EVENT_ZONE_CHANGED : subzoneName = %s , subZoneId = %d", subZoneName, subZoneId)
-	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
---	zo_callLater(function() RequestChangeOutfits(eventCode, subZoneName, subZoneId) end, 5000)
-	RequestChangeOutfits(eventCode, subZoneName, subZoneId)
+	LorePlay.LDL:Debug("EVENT_ZONE_CHANGED : subZoneName = %s , subZoneId = %d", subZoneName, subZoneId)
+	zo_callLater(function() OnZoneChangedBehindSchedule(eventCode, subZoneName, subZoneId) end, 500)		-- delay 500ms
 end
 
 
@@ -260,6 +253,13 @@ local function OnPlayerIsActivated(eventCode)
 	isMounted = IsMounted()
 	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
 	RequestChangeOutfits(eventCode)
+end
+
+
+local function OnZoneChangedBehindSchedule(eventCode, subZoneName, subZoneId)
+	LorePlay.LDL:Debug("EVENT_ZONE_CHANGED [DELAYED] : subZoneName = %s , subZoneId = %d", subZoneName, subZoneId)
+	SetMapToPlayerLocation()	-- my special thanks to both votan and Garkin!
+	RequestChangeOutfits(eventCode, subZoneName, subZoneId)
 end
 
 
