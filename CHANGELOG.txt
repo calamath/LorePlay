@@ -5,7 +5,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
-
+Version 1.6.61 : by Calamath
 - Enhanced pre-checks when using collectibles to reduce error message.
 - Fixed a rare misrecognition bug after fast traveling from some cities in Elsweyr.
 
