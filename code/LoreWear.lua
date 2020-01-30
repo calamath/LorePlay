@@ -231,6 +231,7 @@ local function CorrectMapMismatch()
 	if not DoesCurrentMapMatchMapForPlayerLocation() then
 		local setMapResult = SetMapToPlayerLocation()		-- my special thanks to both votan and Garkin!
 		if setMapResult == SET_MAP_RESULT_MAP_CHANGED then
+            CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
 			LorePlay.LDL:Debug("SET_MAP -> CHANGED")
 		end
 	end
