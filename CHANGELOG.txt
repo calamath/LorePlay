@@ -7,6 +7,7 @@ NOTE : this modified version is still under the Artistic License 2.0
 
 
 - Enhanced pre-checks when using collectibles to reduce error message.
+- Fixed a rare misrecognition bug after fast traveling from some cities in Elsweyr.
 
 Version 1.6.60 : by Calamath
 - Significant improvement of location recognition engine.

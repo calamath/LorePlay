@@ -385,11 +385,11 @@ local function OnPlayerIsActivated(eventCode, initial)
 	if countEventZoneChangedDuringLoading == 0 then
 		local location = GetPlayerLocationName()
 --		LorePlay.LDL:Info("Update Location by EVENT_PLAYER_ACTIVATED")
-		LorePlay.savedVariables.savedSubZoneName = location
 		if location ~= LorePlay.savedVariables.savedSubZoneName then
 			wasLastLocationCity = nil
 			LorePlay.savedVariables.savedSubZoneId = nil
 		end
+		LorePlay.savedVariables.savedSubZoneName = location
 		RequestChangeOutfits(eventCode)
 	end
 end
