@@ -75,10 +75,10 @@ local function EquipLoreWearClothes(tableToOutfit)
 		curCol = GetActiveCollectibleByType(collectibleType)
 		isUsing = LorePlay.savedSettingsTable.isUsingFavorite[i]
 		if isUsing then
-			if v ~= 0 and curCol ~= v then
+			if v ~= 0 and curCol ~= v and GetCollectibleBlockReason(v) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 				UseCollectible(v)
 			--Unequip current collectible if supposed to be off
-			elseif v == 0 and curCol ~= 0 then
+			elseif v == 0 and curCol ~= 0 and GetCollectibleBlockReason(curCol) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 				UseCollectible(curCol)
 			end
 		end
@@ -96,15 +96,15 @@ local function EquipWeddingClothes()
 	local gender = GetUnitGender(player)
 	if gender == GENDER_MALE then
 		-- Put on wedding suit
-		if currCostume ~= weddingSuit and IsCollectibleUnlocked(weddingSuit) then
+		if currCostume ~= weddingSuit and IsCollectibleUnlocked(weddingSuit) and GetCollectibleBlockReason(weddingSuit) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 			UseCollectible(weddingSuit)
 		end
 	elseif gender == GENDER_FEMALE then
 		-- Put on wedding gown or evening dress
-		if currCostume ~= weddingGown and IsCollectibleUnlocked(weddingGown) then
+		if currCostume ~= weddingGown and IsCollectibleUnlocked(weddingGown) and GetCollectibleBlockReason(weddingGown) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 			UseCollectible(weddingGown)
 			return
-		elseif currCostume ~= eveningDress and IsCollectibleUnlocked(eveningDress) then
+		elseif currCostume ~= eveningDress and IsCollectibleUnlocked(eveningDress) and GetCollectibleBlockReason(eveningDress) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 			UseCollectible(eveningDress)
 		end
 	end
@@ -135,10 +135,10 @@ local function ForceShowOrHideClothes()
 		if LorePlay.savedSettingsTable.isUsingFavorite[i] then
 			colType = stringToColTypeTable[i]
 			curCol = GetActiveCollectibleByType(colType)
-			if v ~= 0 then
+			if v ~= 0 and GetCollectibleBlockReason(v) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 				UseCollectible(v)
 			else
-				if curCol ~= 0 then
+				if curCol ~= 0 and GetCollectibleBlockReason(curCol) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 					UseCollectible(curCol)
 				end
 			end
@@ -166,9 +166,9 @@ function LoreWear.KeypressEquipOutfit(outfitSetString)
 		if LorePlay.savedSettingsTable.isUsingFavorite[i] then
 			colType = stringToColTypeTable[i]
 			curCol = GetActiveCollectibleByType(colType)
-			if v ~= 0 and curCol ~= v then
+			if v ~= 0 and curCol ~= v and GetCollectibleBlockReason(v) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 				UseCollectible(v)
-			elseif v == 0 and curCol ~= 0 then
+			elseif v == 0 and curCol ~= 0 and GetCollectibleBlockReason(curCol) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 				UseCollectible(curCol)
 			end
 		end

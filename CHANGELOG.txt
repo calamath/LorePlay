@@ -5,6 +5,9 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+
+- Enhanced pre-checks when using collectibles to reduce error message.
+
 Version 1.6.60 : by Calamath
 - Significant improvement of location recognition engine.
   Now support for Senchal type city, Senchal Palace type map and inside some large buildings in cities.
