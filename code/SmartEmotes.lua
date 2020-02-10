@@ -333,7 +333,7 @@ end
 
 
 function SmartEmotes.IsTargetSpouse()
-	if GetUnitNameHighlightedByReticle() == LorePlay.savedSettingsTable.maraSpouseName then
+	if GetUnitNameHighlightedByReticle() == LorePlay.db.maraSpouseName then
 		return true
 	end
 	return false
@@ -406,7 +406,7 @@ function SmartEmotes.PerformSmartEmote()
 	end
 	LPEventHandler:FireEvent(EVENT_ON_SMART_EMOTE, false, smartEmoteIndex)
 	PlayEmoteByIndex(smartEmoteIndex)
-	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if not LorePlay.db.isSmartEmotesIndicatorOn then return end
 	if indicator and not wasReticle then
 		TurnIndicatorOff()
 		if wasTTL then
@@ -419,7 +419,7 @@ end
 
 function SmartEmotes.DisableTTLEmotes()
 	eventTTLEmotes["isEnabled"] = false
-	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if not LorePlay.db.isSmartEmotesIndicatorOn then return end
 	if indicator and not eventLatchedEmotes["isEnabled"] then
 		TurnIndicatorOff()
 	end
@@ -428,7 +428,7 @@ end
 
 function SmartEmotes.DisableLatchedEmotes()
 	eventLatchedEmotes["isEnabled"] = false
-	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if not LorePlay.db.isSmartEmotesIndicatorOn then return end
 	if indicator and not eventTTLEmotes["isEnabled"] or wasIndicatorTurnedOffForTTL then
 		TurnIndicatorOff()
 	end
@@ -450,7 +450,7 @@ function SmartEmotes.UpdateLatchedEmoteTable(eventCode)
 	--if emoteFromLatched == eventLatchedEmotes[eventCode] and eventLatchedEmotes["isEnabled"] then return end
 	emoteFromLatched = eventLatchedEmotes[eventCode]
 	eventLatchedEmotes["isEnabled"] = true
-	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if not LorePlay.db.isSmartEmotesIndicatorOn then return end
 	if not indicator then
 		TurnIndicatorOn()
 	end
@@ -466,7 +466,7 @@ function SmartEmotes.UpdateTTLEmoteTable(eventCode)
 	end
 	emoteFromTTL = eventTTLEmotes[eventCode]
 	zo_callLater(SmartEmotes.CheckToDisableTTLEmotes, eventTTLEmotes[eventCode]["Duration"])
-	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then return end
+	if not LorePlay.db.isSmartEmotesIndicatorOn then return end
 	if not indicator then
 		TurnIndicatorOn()
 	end
@@ -1374,11 +1374,11 @@ end
 function SmartEmotes.IsPlayerInCity()
 --	local location = GetPlayerActiveSubzoneName()	-- NOTE : GetPlayerActiveSubzoneName() returns the empty string when not in a subzone, so it is NOT used here.
 	local location = GetPlayerLocationName()
-	local subZoneId = LorePlay.savedVariables.savedSubZoneId
+	local subZoneId = LorePlay.db.savedSubZoneId
 	local mapId = GetCurrentMapId()
 	local key
 	if subZoneId ~= 0 then
-		if location == LorePlay.savedVariables.savedSubZoneName then
+		if location == LorePlay.db.savedSubZoneName then
 			key = GetCityKeyBySubZoneId(subZoneId)
 			if key then
 				return true, key
@@ -1387,7 +1387,7 @@ function SmartEmotes.IsPlayerInCity()
 	else
 		if not DoesUseMapBorder(mapId) then
 			if location == GetPlayerActiveZoneName() then
-				if LorePlay.savedVariables.specificPOINameNearby == nil then
+				if LorePlay.db.specificPOINameNearby == nil then
 					return false
 				end
 			end
@@ -1772,12 +1772,12 @@ end
 
 
 function SmartEmotes.InitializeIndicator()
-	if not LorePlay.savedSettingsTable.isSmartEmotesIndicatorOn then 
+	if not LorePlay.db.isSmartEmotesIndicatorOn then 
 		SmartEmotesIndicator:SetHidden(true)
 	end
-	if LorePlay.savedSettingsTable.indicatorTop then
+	if LorePlay.db.indicatorTop then
 		SmartEmotesIndicator:ClearAnchors()
-		SmartEmotesIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, LorePlay.savedSettingsTable.indicatorLeft, LorePlay.savedSettingsTable.indicatorTop)
+		SmartEmotesIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, LorePlay.db.indicatorLeft, LorePlay.db.indicatorTop)
 	end
 	local fadeTime = 1500
 	indicatorFadeIn, timelineFadeIn = CreateSimpleAnimation(ANIMATION_ALPHA, SmartEmotesIndicator)

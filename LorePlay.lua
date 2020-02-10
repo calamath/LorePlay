@@ -1,9 +1,11 @@
 LorePlay = LorePlay or {}
 LorePlay.majorVersion = 1
 LorePlay.minorVersion = 6
-LorePlay.bugVersion = 62
+LorePlay.bugVersion = 70
 LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LorePlay.bugVersion
 LorePlay.name = "LorePlay"
+LorePlay.savedVars = "LorePlaySavedVars"
+LorePlay.savedVarsVersion = 1
 LorePlay.authority = {2973583419,210970542} 
 
 local L = GetString

@@ -5,7 +5,7 @@
         <Down>LorePlay.PerformSmartEmote()</Down>
       </Action>
       <Action name="LP_TOGGLE_IDLEEMOTES">
-        <Down>LorePlay.ToggleIdleEmotes(not LorePlay.savedSettingsTable.isIdleEmotesOn)</Down>
+        <Down>LorePlay.ToggleIdleEmotes(not LorePlay.db.isIdleEmotesOn)</Down>
       </Action>
       <Action name="LP_SHOW_HIDE_LOREWEAR_CLOTHES">
         <Down>LorePlay.KeypressToggleLoreWearClothes()</Down>

@@ -236,21 +236,21 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 		}
 	}
 
-	if LorePlay.savedSettingsTable.canPlayInstrumentsInCities then
+	if LorePlay.db.canPlayInstrumentsInCities then
 		AddInstrumentsToCities()
 	end
-	if LorePlay.savedSettingsTable.canDanceInCities then
+	if LorePlay.db.canDanceInCities then
 		AddDancesToCities()
 	end
-	if LorePlay.savedSettingsTable.canExerciseInZone then
+	if LorePlay.db.canExerciseInZone then
 		AddExercisesToZone()
 	end
-	if LorePlay.savedSettingsTable.canWorship then
+	if LorePlay.db.canWorship then
 		AddWorshipToZone()
 		AddWorshipToCities()
 		AddWorshipToDungeons()
 	end
-	if LorePlay.savedSettingsTable.canBeDrunkInCities then
+	if LorePlay.db.canBeDrunkInCities then
 		AddDrunkToCities()
 	end
 end
@@ -291,7 +291,7 @@ function IdleEmotes.PerformIdleEmote()
 	PlayEmoteByIndex(currIdleEmote)
 	didIdleEmote = true
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
-	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.savedSettingsTable.timeBetweenIdleEmotes, IdleEmotes.CheckToPerformIdleEmote)
+	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.db.timeBetweenIdleEmotes, IdleEmotes.CheckToPerformIdleEmote)
 end
 
 
@@ -371,11 +371,11 @@ end
 
 function IdleEmotes.OnPlayerCombatStateEvent(eventCode, inCombat)
 	if not inCombat then
-		if LorePlay.savedSettingsTable.isIdleEmotesOn then
+		if LorePlay.db.isIdleEmotesOn then
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
 	else
-		if LorePlay.savedSettingsTable.isIdleEmotesOn then
+		if LorePlay.db.isIdleEmotesOn then
 			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 		end
 	end
@@ -384,11 +384,11 @@ end
 
 function IdleEmotes.OnMountedEvent(eventCode, mounted)
 	if not mounted then
-		if LorePlay.savedSettingsTable.isIdleEmotesOn then
+		if LorePlay.db.isIdleEmotesOn then
 			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
 	else
-		if LorePlay.savedSettingsTable.isIdleEmotesOn then
+		if LorePlay.db.isIdleEmotesOn then
 			EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 		end
 	end
@@ -489,7 +489,7 @@ end
 
 
 function IdleEmotes.InitializeIdle()
-	if not LorePlay.savedSettingsTable.isIdleEmotesOn then return end
+	if not LorePlay.db.isIdleEmotesOn then return end
 	isDead = IsUnitDead(player)
 	IdleEmotes.CreateDefaultIdleEmotesTable()
 	IdleEmotes.CreateEventIdleEmotesTable()

@@ -62,12 +62,13 @@ local keypressWhileMountedString = "Your current settings indicate you cannot eq
 
 
 local function BuildToggleTable()
-	for i,_ in pairs(stringToColTypeTable) do
-		toggleTable[i] = 0
+	for _, v in pairs(LorePlay.collectibleType) do
+		toggleTable[v] = 0
 	end
 end
 
 
+--[[
 local function EquipLoreWearClothes(tableToOutfit)
 	for i,v in pairs(tableToOutfit) do
 		local collectibleType, curCol, isUsing
@@ -86,13 +87,33 @@ local function EquipLoreWearClothes(tableToOutfit)
 	--Reset the toggle table for correct keypress toggling
 	BuildToggleTable()
 end
+]]
+
+
+local function EquipStylePreset(presetIndex)
+	local currentCollectibleId
+	for k, v in pairs(LorePlay.collectibleType) do
+		if LorePlay.db.isUsingCollectible[v] then
+			currentCollectibleId = GetActiveCollectibleByType(v)
+			desiredCollectibleId = LorePlay.db.stylePreset[presetIndex].collectible[v]
+			if desiredCollectibleId ~= 0 and currentCollectibleId ~= desiredCollectibleId and GetCollectibleBlockReason(desiredCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
+				UseCollectible(desiredCollectibleId)
+			elseif desiredCollectibleId == 0 and currentCollectibleId ~= 0 and GetCollectibleBlockReason(currentCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
+				UseCollectible(currentCollectibleId)	-- Unequip current collectible
+			end
+		end
+	end
+	--Reset the toggle table for correct keypress toggling
+	BuildToggleTable()
+end
+LorePlay.EquipStylePreset = EquipStylePreset
 
 
 local function EquipWeddingClothes()
 	local weddingSuit = 95
 	local weddingGown = 79
 	local eveningDress = 76
-	local currCostume = GetActiveCollectibleByType(stringToColTypeTable[Costumes])
+	local currCostume = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	local gender = GetUnitGender(player)
 	if gender == GENDER_MALE then
 		-- Put on wedding suit
@@ -108,6 +129,7 @@ local function EquipWeddingClothes()
 			UseCollectible(eveningDress)
 		end
 	end
+	BuildToggleTable()
 end
 
 
@@ -122,7 +144,7 @@ end
 
 
 local function CheckToToggleLoreWearClothes()
-	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
+	if not LorePlay.db.canActivateLWClothesWhileMounted then 
 		if isMounted then return false end
 	end
 	return true
@@ -130,6 +152,7 @@ end
 
 
 local function ForceShowOrHideClothes()
+--[[
 	local colType, curCol
 	for i,v in pairs(toggleTable) do
 		if LorePlay.savedSettingsTable.isUsingFavorite[i] then
@@ -146,11 +169,25 @@ local function ForceShowOrHideClothes()
 			toggleTable[i] = curCol
 		end
 	end
+]]
+	local currentCollectibleId
+	for k, desiredCollectibleId in pairs(toggleTable) do
+		if LorePlay.db.isUsingCollectible[k] then
+			currentCollectibleId = GetActiveCollectibleByType(k)
+			if desiredCollectibleId ~= 0 and GetCollectibleBlockReason(desiredCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
+				UseCollectible(desiredCollectibleId)
+			elseif currentCollectibleId ~= 0 and GetCollectibleBlockReason(currentCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
+				UseCollectible(currentCollectibleId)
+			end
+			-- Store previous collectibleId into table to be used again
+			toggleTable[k] = currentCollectibleId
+		end
+	end
 end
 
 
 function LoreWear.KeypressToggleLoreWearClothes()
-	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
+	if not LorePlay.db.isLoreWearOn then return end
 	if not CheckToToggleLoreWearClothes() then
 		CHAT_SYSTEM:AddMessage(keypressWhileMountedString)
 		return 
@@ -158,9 +195,11 @@ function LoreWear.KeypressToggleLoreWearClothes()
 	if not IsCooldownOver() then return end
 	ForceShowOrHideClothes()
 end
+LorePlay.KeypressToggleLoreWearClothes = LoreWear.KeypressToggleLoreWearClothes
 
 
 function LoreWear.KeypressEquipOutfit(outfitSetString)
+--[[
 	local colType, curCol
 	for i,v in pairs(LorePlay.savedSettingsTable.outfitTable[outfitSetString]) do
 		if LorePlay.savedSettingsTable.isUsingFavorite[i] then
@@ -173,7 +212,16 @@ function LoreWear.KeypressEquipOutfit(outfitSetString)
 			end
 		end
 	end
+]]
+	local outfitSetStringToPresetIndex = {
+		["City"] = 1, 
+		["Housing"] = 2, 
+		["Dungeon"] = 3, 
+		["Adventure"] = 4, 
+	}
+	EquipStylePreset(outfitSetStringToPresetIndex[outfitSetString])
 end
+LorePlay.KeypressEquipOutfit = LoreWear.KeypressEquipOutfit
 
 
 local function ShouldUpdateLocation(isInCity)
@@ -212,6 +260,7 @@ local function ChangeLoreWearClothes(isCurrentlyInCity)
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Dungeon]
 	end
 ]]
+--[[
 	if LorePlay.IsPlayerInHouse() then
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Housing]
 	elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() or LorePlay.IsPlayerInAbyssalGeyser() then
@@ -224,6 +273,23 @@ local function ChangeLoreWearClothes(isCurrentlyInCity)
 		outfitToToggle = LorePlay.savedSettingsTable.outfitTable[Dungeon]	-- unregistered region case
 	end
 	EquipLoreWearClothes(outfitToToggle)
+]]
+
+
+--  city=1 house=2 dungeon=3 adventure=4
+	if LorePlay.IsPlayerInHouse() then
+		outfitToToggle = 2
+	elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() or LorePlay.IsPlayerInAbyssalGeyser() then
+		outfitToToggle = 3
+	elseif isCurrentlyInCity then
+		outfitToToggle = 1
+	elseif LorePlay.IsPlayerInParentZone() then
+		outfitToToggle = 4
+	else
+		outfitToToggle = 3	-- unregistered region case
+	end
+--	EquipStylePreset(outfitToToggle)
+	zo_callLater(function() EquipStylePreset(outfitToToggle) end, 500)
 end
 
 
@@ -247,7 +313,7 @@ local function RequestChangeOutfits(eventCode)
 		return
 	end
 
-	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
+	if not LorePlay.db.isLoreWearOn then return end
 
 	ChangeLoreWearClothes(isInCity)
 	wasLastLocationCity = isInCity
@@ -262,7 +328,7 @@ local function OnPlayerIsDeactivated(eventCode)
 	isLoadingProcess = true
 	zoneIndexBeforeLoading = GetUnitZoneIndex("player")
 	mapNameBeforeLoading = GetMapName()
-	specificPOINameNearbyBeforeLoading = LorePlay.savedVariables.specificPOINameNearby
+	specificPOINameNearbyBeforeLoading = LorePlay.db.specificPOINameNearby
 	zoneIndexAfterLoading = 0
 	mapNameAfterLoading = ""
 	countEventZoneChangedDuringLoading = 0
@@ -277,8 +343,8 @@ local function OnZoneChangedBehindSchedule(eventCode, subZoneName, subZoneId)
 
 	isDelayProcess = false
 --	LorePlay.LDL:Info("Update Location by EVENT_ZONE_CHANGED")
-	LorePlay.savedVariables.savedSubZoneName = subZoneName
-	LorePlay.savedVariables.savedSubZoneId = subZoneId
+	LorePlay.db.savedSubZoneName = subZoneName
+	LorePlay.db.savedSubZoneId = subZoneId
 	if countEventLWPChangedDuringDelayTime == 0 then		-- stop changing outfits when detecting the player entering or exiting the building
 		RequestChangeOutfits(eventCode)
 	end
@@ -313,13 +379,13 @@ local function OnPoiUpdated(eventCode, zoneIndex, poiIndex)
 		if isInSpecificPOI then
 --			LorePlay.LDL:Info("Update Location by EVENT_POI_UPDATED")
 			if isNearby then
-				LorePlay.savedVariables.specificPOINameNearby = poiName
-				LorePlay.savedVariables.savedSubZoneName = poiName
-				LorePlay.savedVariables.savedSubZoneId = id
+				LorePlay.db.specificPOINameNearby = poiName
+				LorePlay.db.savedSubZoneName = poiName
+				LorePlay.db.savedSubZoneId = id
 			else
-				LorePlay.savedVariables.specificPOINameNearby = nil
-				LorePlay.savedVariables.savedSubZoneName = ""
-				LorePlay.savedVariables.savedSubZoneId = 0
+				LorePlay.db.specificPOINameNearby = nil
+				LorePlay.db.savedSubZoneName = ""
+				LorePlay.db.savedSubZoneId = 0
 			end
 		end
 		RequestChangeOutfits(eventCode)
@@ -363,17 +429,17 @@ local function OnPlayerIsActivated(eventCode, initial)
 				if specificPOIIndex then
 					local isNearby = select(8, GetPOIMapInfo(zoneIndexAfterLoading, specificPOIIndex))
 					if isNearby then
-						LorePlay.savedVariables.specificPOINameNearby = mapNameAfterLoading
+						LorePlay.db.specificPOINameNearby = mapNameAfterLoading
 --						RequestChangeOutfits(eventCode) -- mapNameAfterLoading, id
 --						return
 					else
-						LorePlay.savedVariables.specificPOINameNearby = nil
+						LorePlay.db.specificPOINameNearby = nil
 --						RequestChangeOutfits(eventCode) -- "", 0
 --						return
 					end
 				end
 			else
-				LorePlay.savedVariables.specificPOINameNearby = nil
+				LorePlay.db.specificPOINameNearby = nil
 --				RequestChangeOutfits(eventCode) -- "", 0
 --				return
 			end
@@ -386,11 +452,11 @@ local function OnPlayerIsActivated(eventCode, initial)
 	if countEventZoneChangedDuringLoading == 0 then
 		local location = GetPlayerLocationName()
 --		LorePlay.LDL:Info("Update Location by EVENT_PLAYER_ACTIVATED")
-		if location ~= LorePlay.savedVariables.savedSubZoneName then
+		if location ~= LorePlay.db.savedSubZoneName then
 			wasLastLocationCity = nil
-			LorePlay.savedVariables.savedSubZoneId = nil
+			LorePlay.db.savedSubZoneId = nil
 		end
-		LorePlay.savedVariables.savedSubZoneName = location
+		LorePlay.db.savedSubZoneName = location
 		RequestChangeOutfits(eventCode)
 	end
 end
@@ -401,7 +467,7 @@ local function OnMountedStateChanged(eventCode, mounted)
 		isMounted = true
 	else 
 		isMounted = false
-		if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then 
+		if not LorePlay.db.canActivateLWClothesWhileMounted then 
 			zo_callLater(function() RequestChangeOutfits(eventCode) end, 1400)
 		end	
 	end
@@ -436,12 +502,12 @@ end
 
 --[[
 local function initializeIndicator()
-	if not LorePlay.savedSettingsTable.isLoreWearIndicatorOn then 
+	if not LorePlay.db.isLoreWearIndicatorOn then 
 		LoreWearIndicator:SetHidden(true)
 	end
-	if LorePlay.savedSettingsTable.indicatorTop then
+	if LorePlay.db.indicatorTop then
 		LoreWearIndicator:ClearAnchors()
-		LoreWearIndicator:SetAnchor(TOPRIGHT, GuiRoot, TOPRIGHT, LorePlay.savedSettingsTable.indicatorLeft, LorePlay.savedSettingsTable.indicatorTop)
+		LoreWearIndicator:SetAnchor(TOPRIGHT, GuiRoot, TOPRIGHT, LorePlay.db.indicatorLeft, LorePlay.db.indicatorTop)
 	end
 	local fadeTime = 1500
 	indicatorFadeIn, timelineFadeIn = CreateSimpleAnimation(ANIMATION_ALPHA, LoreWearIndicator)
@@ -458,7 +524,7 @@ end
 
 
 function LoreWear.UnregisterLoreWearEvents()
-	if not LorePlay.savedSettingsTable.canActivateLWClothesWhileMounted then
+	if not LorePlay.db.canActivateLWClothesWhileMounted then
 		LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	end
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
@@ -466,9 +532,10 @@ function LoreWear.UnregisterLoreWearEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraPledge)
 end
+LorePlay.UnregisterLoreWearEvents = LoreWear.UnregisterLoreWearEvents
 
 
-function LoreWear.RegisterLoreWearEvents()
+local function RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
@@ -485,23 +552,23 @@ function LoreWear.InitializeLoreWear()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_LINKED_WORLD_POSITION_CHANGED, OnLinkedWorldPositionChanged)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 	-- ----------------------------------------------------------------------------------------------------------------
-	if not LorePlay.savedSettingsTable.isLoreWearOn then return end
+	if not LorePlay.db.isLoreWearOn then return end
 	BuildToggleTable()
-	LoreWear.RegisterLoreWearEvents()
+	RegisterLoreWearEvents()
 --[[
 	initializeIndicator()
 ]]
 end
+LorePlay.InitializeLoreWear = LoreWear.InitializeLoreWear
 
 
 function LoreWear.ReenableLoreWear()
 	BuildToggleTable()
-	LoreWear.RegisterLoreWearEvents()
+	RegisterLoreWearEvents()
 --[[
 	initializeIndicator()
 ]]
 	RequestChangeOutfits(nil)
 end
+LorePlay.ReenableLoreWear = LoreWear.ReenableLoreWear
 
-
-LorePlay = LoreWear

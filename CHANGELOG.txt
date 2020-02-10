@@ -5,6 +5,11 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+
+- From this version, LorePlay Forever uses its own save data. This change will support both future enhancements and backward compatibility (mainly with the standard version). 
+  NOTE: Users don't need to worry about this change, but any configuration changes you make in this version or later will not take effect if you switch back to the standard version in the future.
+- Eliminated the double buffering of save data, and changed to direct access.
+
 Version 1.6.62 : by Calamath
 [HotFix] Fixed a rare bug that could cause in-game world map textures to be mismatched.
 

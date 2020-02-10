@@ -39,8 +39,136 @@ if not LAM2 then d("[LorePlay] Error : 'LibAddonMenu' not found.") return end
 
 local L = GetString
 
+LorePlay.collectibleType = {
+	COLLECTIBLE_CATEGORY_TYPE_COSTUME, 
+	COLLECTIBLE_CATEGORY_TYPE_HAT, 
+	COLLECTIBLE_CATEGORY_TYPE_HAIR, 
+	COLLECTIBLE_CATEGORY_TYPE_SKIN, 
+	COLLECTIBLE_CATEGORY_TYPE_POLYMORPH, 
+	COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY, 
+	COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS, 
+	COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING, 
+	COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING, 
+	COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY, 
+	COLLECTIBLE_CATEGORY_TYPE_PERSONALITY, 
+	COLLECTIBLE_CATEGORY_TYPE_VANITY_PET, 
+}
+
 local Settings = LorePlay
 
+-- default savedata table for [LorePlay Forever]
+local default_db = {
+	migrated = false, 
+	-- ------------------------------------------------------------
+	isSmartEmotesIndicatorOn = true, 
+	indicatorLeft = nil, 
+	indicatorTop = nil, 
+	-- ------------------------------------------------------------
+	isIdleEmotesOn = true, 
+	canPlayInstrumentsInCities = true, 
+	canDanceInCities = true, 
+	canBeDrunkInCities = true, 
+	canExerciseInZone = true, 
+	canWorship = true, 
+	isCameraSpinDisabled = true, 
+	timeBetweenIdleEmotes = 30000, 
+	-- ------------------------------------------------------------
+	isLoreWearOn = true, 
+	canActivateLWClothesWhileMounted = false,
+	maraSpouseName = "", 
+	isUsingCollectible = {
+		[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_HAT] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_HAIR] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_SKIN] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = false, 
+		[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = false, 
+	}, 
+	stylePreset = {
+		[1] = {
+			displayName = "City", 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+			}, 
+		}, 
+		[2] = {
+			displayName = "Housing", 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+			}, 
+		}, 
+		[3] = {
+			displayName = "Dungeon", 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+			}, 
+		}, 
+		[4] = {
+			displayName = "Adventure", 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+			}, 
+		}, 
+	},
+	-- variables for location recognize engine -----
+	savedSubZoneName = "", 
+	savedSubZoneId = 0, 
+	specificPOINameNearby = nil, 
+}
+
+
+-- default savedata table for [LorePlay (standard version)]
+--[[
 local defaultSettingsTable = {
 	isIdleEmotesOn = true,
 	isLoreWearOn = true,
@@ -135,18 +263,61 @@ local defaultSettingsTable = {
 -- variables for location recognize engine -----
 	savedSubZoneName = "", 
 	savedSubZoneId = 0, 
-	specificPOINameNearby = nil
+	specificPOINameNearby = nil, 
 -- ---------------------------------------------
 
 }
+]]
 
 
-local function updateSpouseName(newMaraSpouseName)
-	Settings.savedSettingsTable.maraSpouseName = newMaraSpouseName
-	Settings.savedVariables.maraSpouseName = Settings.savedSettingsTable.maraSpouseName
+local function ConvertToForeverSavedata()
+	local sv = Settings.savedVariables
+
+	if sv.isSmartEmotesIndicatorOn			then LorePlay.db.isSmartEmotesIndicatorOn			= sv.isSmartEmotesIndicatorOn				end
+	if sv.indicatorLeft						then LorePlay.db.indicatorLeft						= sv.indicatorLeft							end
+	if sv.indicatorTop						then LorePlay.db.indicatorTop						= sv.indicatorTop							end
+	-- ------------------------------------------------------------
+	if sv.isIdleEmotesOn					then LorePlay.db.isIdleEmotesOn						= sv.isIdleEmotesOn							end
+	if sv.canPlayInstrumentsInCities		then LorePlay.db.canPlayInstrumentsInCities			= sv.canPlayInstrumentsInCities				end
+	if sv.canDanceInCities					then LorePlay.db.canDanceInCities					= sv.canDanceInCities						end
+	if sv.canBeDrunkInCities				then LorePlay.db.canBeDrunkInCities					= sv.canBeDrunkInCities						end
+	if sv.canExerciseInZone					then LorePlay.db.canExerciseInZone					= sv.canExerciseInZone						end
+	if sv.canWorship						then LorePlay.db.canWorship							= sv.canWorship								end
+	if sv.isCameraSpinDisabled				then LorePlay.db.isCameraSpinDisabled				= sv.isCameraSpinDisabled					end
+	if sv.timeBetweenIdleEmotes				then LorePlay.db.timeBetweenIdleEmotes				= sv.timeBetweenIdleEmotes					end
+	-- ------------------------------------------------------------
+	if sv.isLoreWearOn						then LorePlay.db.isLoreWearOn						= sv.isLoreWearOn							end
+	if sv.canActivateLWClothesWhileMounted	then LorePlay.db.canActivateLWClothesWhileMounted	= sv.canActivateLWClothesWhileMounted		end
+	if sv.maraSpouseName					then LorePlay.db.maraSpouseName						= sv.maraSpouseName							end
+
+	for k, v in pairs(sv.isUsingFavorite) do
+		LorePlay.db.isUsingCollectible[stringToColTypeTable[k]] = v
+	end
+
+	for i, j in pairs({ "City", "Housing", "Dungeon", "Adventure", }) do
+		for k, v in pairs(sv.outfitTable[j]) do
+			LorePlay.db.stylePreset[i].collectible[stringToColTypeTable[k]] = v
+		end
+	end
+	-- ------------------------------------------------------------
+	if sv.savedSubZoneName					then LorePlay.db.savedSubZoneName					= sv.savedSubZoneName						end
+	if sv.savedSubZoneId					then LorePlay.db.savedSubZoneId						= sv.savedSubZoneId							end
+	if sv.specificPOINameNearby				then LorePlay.db.specificPOINameNearby				= sv.specificPOINameNearby					end
+
+	LorePlay.LDL:Debug("savedata migration finished.")
+	-- ==========================================================================================================================================
+	if sv.savedSubZoneName then Settings.savedVariables.savedSubZoneName = nil end
+	if sv.savedSubZoneId then Settings.savedVariables.savedSubZoneId = nil end
+	if sv.specificPOINameNearby then Settings.savedVariables.specificPOINameNearby = nil end
 end
 
 
+local function updateSpouseName(newMaraSpouseName)
+	LorePlay.db.maraSpouseName = newMaraSpouseName
+end
+
+
+--[[
 function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable = {}
 	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
@@ -166,23 +337,20 @@ function Settings.LoadSavedSettings()
 	Settings.savedSettingsTable.indicatorTop = Settings.savedVariables.indicatorTop
 	Settings.savedSettingsTable.timeBetweenIdleEmotes = Settings.savedVariables.timeBetweenIdleEmotes
 end
+]]
 
 
 local function ResetIndicator()
 	SmartEmotesIndicator:ClearAnchors()
 	SmartEmotesIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, 0, 0)
-	Settings.savedSettingsTable.indicatorLeft = nil
-	Settings.savedSettingsTable.indicatorTop = nil
-	Settings.savedVariables.indicatorLeft = Settings.savedSettingsTable.indicatorLeft
-	Settings.savedVariables.indicatorTop = Settings.savedSettingsTable.indicatorTop
+	LorePlay.db.indicatorLeft = nil
+	LorePlay.db.indicatorTop = nil
 end
 
 
 local function OnIndicatorMoved(eventCode, top, left)
-	Settings.savedSettingsTable.indicatorTop = top
-	Settings.savedSettingsTable.indicatorLeft = left
-	Settings.savedVariables.indicatorTop = Settings.savedSettingsTable.indicatorTop
-	Settings.savedVariables.indicatorLeft = Settings.savedSettingsTable.indicatorLeft
+	LorePlay.db.indicatorTop = top
+	LorePlay.db.indicatorLeft = left
 end
 
 --[[
@@ -256,8 +424,19 @@ end
 
 
 
+local function SetFavoriteStylePreset(presetIndex)
+	local collectibleId = 0
+	for k, v in pairs(Settings.collectibleType) do
+		collectibleId = GetActiveCollectibleByType(v)
+		if collectibleId == 0 then		-- no active collectible
+		end
+		LorePlay.db.stylePreset[presetIndex].collectible[v] = collectibleId
+		LorePlay.LDL:Debug("Preset[%d] collectible[%d] = %s", presetIndex, v, GetCollectibleName(collectibleId))
+	end
+end
 
 
+--[[
 local function SetFavoriteCollectible(tableToOutfit, LPCatString)
 	local didChange = true
 	local collectibleId = GetActiveCollectibleByType(stringToColTypeTable[LPCatString])
@@ -287,26 +466,27 @@ local function SetFavoriteOutfit(outfitsTable, whichOutfitString)
 	end
 	CHAT_SYSTEM:AddMessage("Success.")
 end
+]]
 
 
-function Settings.ToggleIdleEmotes(settings)
-	if Settings.savedSettingsTable.isIdleEmotesOn == settings then return end
-	Settings.savedSettingsTable.isIdleEmotesOn = settings
-	Settings.savedVariables.isIdleEmotesOn = Settings.savedSettingsTable.isIdleEmotesOn
-	if not Settings.savedSettingsTable.isIdleEmotesOn then LorePlay.UnregisterIdleEvents() end
+function Settings.ToggleIdleEmotes(value)
+	if LorePlay.db.isIdleEmotesOn == value then return end
+	LorePlay.db.isIdleEmotesOn = value
+	if not LorePlay.db.isIdleEmotesOn then LorePlay.UnregisterIdleEvents() end
 	LorePlay.InitializeIdle()
-	if settings then 
+	if value then 
 		CHAT_SYSTEM:AddMessage("[LorePlay] Toggled IdleEmotes on")
 	else
 		CHAT_SYSTEM:AddMessage("[LorePlay] Toggled IdleEmotes off")
 	end
 end
+LorePlay.ToggleIdleEmotes = Settings.ToggleIdleEmotes
 
 
 -- Fixes "Cannot play emote at this time" in most circumstances
 local scenes = {}
 local function noCameraSpin()
-	if Settings.savedSettingsTable.isCameraSpinDisabled then
+	if LorePlay.db.isCameraSpinDisabled then
 		for name, scene in pairs(SCENE_MANAGER.scenes) do
 		  if not name:find("market") and not name:find("store") and not name:find("crownCrate") and not name:find("housing") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
 			scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
@@ -352,31 +532,27 @@ function Settings.LoadMenuSettings()
 		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-		type = "editbox",
-		name = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_TIPS),
-		getFunc = function() return Settings.savedSettingsTable.maraSpouseName end,
-		setFunc = function(input)
-			Settings.savedSettingsTable.maraSpouseName = input
-			Settings.savedVariables.maraSpouseName = Settings.savedSettingsTable.maraSpouseName
-		end,
-		isMultiline = false,
-		width = "full",
-		default = "",
+		type = "editbox", 
+		name = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_NAME), 
+		tooltip = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_TIPS), 
+		getFunc = function() return LorePlay.db.maraSpouseName end, 
+		setFunc = function(input) LorePlay.db.maraSpouseName = input end, 
+		isMultiline = false, 
+		width = "full", 
+		default = "", 
 	}
 	optionsTable[#optionsTable + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_TIPS),
-		getFunc = function() return Settings.savedSettingsTable.isSmartEmotesIndicatorOn end,
-		setFunc = function(setting) 
-			Settings.savedSettingsTable.isSmartEmotesIndicatorOn = setting
-			Settings.savedVariables.isSmartEmotesIndicatorOn = Settings.savedSettingsTable.isSmartEmotesIndicatorOn
-			if not Settings.savedSettingsTable.isSmartEmotesIndicatorOn then
+		getFunc = function() return LorePlay.db.isSmartEmotesIndicatorOn end, 
+		setFunc = function(value) 
+			LorePlay.db.isSmartEmotesIndicatorOn = value
+			if value == false then
 				SmartEmotesIndicator:SetHidden(true)
 			end
-		end,
-		width = "full",
+		end, 
+		width = "full", 
 	}
 	optionsTable[#optionsTable + 1] = {
 		type = "button",
@@ -400,10 +576,10 @@ function Settings.LoadMenuSettings()
 		type = "checkbox",
 		name =  L(SI_LOREPLAY_PANEL_IE_SW_NAME),
 		tooltip =  L(SI_LOREPLAY_PANEL_IE_SW_TIPS),
-		getFunc = function() return Settings.savedSettingsTable.isIdleEmotesOn end,
-		setFunc = function(setting) 
-			Settings.ToggleIdleEmotes(setting)
-		end,
+		getFunc = function() return LorePlay.db.isIdleEmotesOn end,
+		setFunc = function(value) 
+			LorePlay.ToggleIdleEmotes(value)
+		end, 
 		width = "full",
 		reference = "IdleEmotesToggleCheckbox",
 	}
@@ -415,12 +591,11 @@ function Settings.LoadMenuSettings()
 		max = 120,
 		step = 2,
 		getFunc = function() 
-			return Settings.savedSettingsTable.timeBetweenIdleEmotes/1000 -- Converting ms to s
+			return LorePlay.db.timeBetweenIdleEmotes/1000 -- Converting ms to s
 		end,
 		setFunc = function(value)
-			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-			Settings.savedSettingsTable.timeBetweenIdleEmotes = (value*1000) -- Converting seconds to ms
-			Settings.savedVariables.timeBetweenIdleEmotes = Settings.savedSettingsTable.timeBetweenIdleEmotes
+			if not LorePlay.db.isIdleEmotesOn then return end
+			LorePlay.db.timeBetweenIdleEmotes = (value*1000) -- Converting seconds to ms
 		end,
 		width = "full",
 		default = 30,
@@ -430,16 +605,15 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_TIPS),
 		getFunc = function() 
-			if Settings.savedSettingsTable.isIdleEmotesOn then
-				return Settings.savedSettingsTable.canPlayInstrumentsInCities
+			if LorePlay.db.isIdleEmotesOn then
+				return LorePlay.db.canPlayInstrumentsInCities
 			else
 				return false
 			end
 		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-			Settings.savedSettingsTable.canPlayInstrumentsInCities = setting
-			Settings.savedVariables.canPlayInstrumentsInCities = Settings.savedSettingsTable.canPlayInstrumentsInCities
+		setFunc = function(value)
+			if not LorePlay.db.isIdleEmotesOn then return end
+			LorePlay.db.canPlayInstrumentsInCities = value
 			LorePlay.CreateDefaultIdleEmotesTable()
 		end,
 		width = "full",
@@ -449,16 +623,15 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_TIPS),
 		getFunc = function() 
-			if Settings.savedSettingsTable.isIdleEmotesOn then
-				return Settings.savedSettingsTable.canDanceInCities
+			if LorePlay.db.isIdleEmotesOn then
+				return LorePlay.db.canDanceInCities
 			else
 				return false
 			end
 		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-			Settings.savedSettingsTable.canDanceInCities = setting
-			Settings.savedVariables.canDanceInCities = Settings.savedSettingsTable.canDanceInCities
+		setFunc = function(value)
+			if not LorePlay.db.isIdleEmotesOn then return end
+			LorePlay.db.canDanceInCities = value
 			LorePlay.CreateDefaultIdleEmotesTable()
 		end,
 		width = "full",
@@ -468,16 +641,15 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_TIPS),
 		getFunc = function() 
-			if Settings.savedSettingsTable.isIdleEmotesOn then
-				return Settings.savedSettingsTable.canBeDrunkInCities
+			if LorePlay.db.isIdleEmotesOn then
+				return LorePlay.db.canBeDrunkInCities
 			else
 				return false
 			end
 		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-			Settings.savedSettingsTable.canBeDrunkInCities = setting
-			Settings.savedVariables.canBeDrunkInCities = Settings.savedSettingsTable.canBeDrunkInCities
+		setFunc = function(value)
+			if not LorePlay.db.isIdleEmotesOn then return end
+			LorePlay.db.canBeDrunkInCities = value
 			LorePlay.CreateDefaultIdleEmotesTable()
 		end,
 		width = "full",
@@ -487,16 +659,15 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_TIPS),
 		getFunc = function() 
-			if Settings.savedSettingsTable.isIdleEmotesOn then
-				return Settings.savedSettingsTable.canExerciseInZone
+			if LorePlay.db.isIdleEmotesOn then
+				return LorePlay.db.canExerciseInZone
 			else
 				return false
 			end
 		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-			Settings.savedSettingsTable.canExerciseInZone = setting
-			Settings.savedVariables.canExerciseInZone = Settings.savedSettingsTable.canExerciseInZone
+		setFunc = function(value)
+			if not LorePlay.db.isIdleEmotesOn then return end
+			LorePlay.db.canExerciseInZone = value
 			LorePlay.CreateDefaultIdleEmotesTable()
 		end,
 		width = "full",
@@ -506,16 +677,15 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS),
 		getFunc = function() 
-			if Settings.savedSettingsTable.isIdleEmotesOn then
-				return Settings.savedSettingsTable.canWorship
+			if LorePlay.db.isIdleEmotesOn then
+				return LorePlay.db.canWorship
 			else
 				return false
 			end
 		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-			Settings.savedSettingsTable.canWorship = setting
-			Settings.savedVariables.canWorship = Settings.savedSettingsTable.canWorship
+		setFunc = function(value)
+			if not LorePlay.db.isIdleEmotesOn then return end
+			LorePlay.db.canWorship = value
 			LorePlay.CreateDefaultIdleEmotesTable()
 		end,
 		width = "full",
@@ -524,17 +694,10 @@ function Settings.LoadMenuSettings()
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isCameraSpinDisabled then
-				return true
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isIdleEmotesOn then return end
-			Settings.savedSettingsTable.isCameraSpinDisabled = setting
-			Settings.savedVariables.isCameraSpinDisabled = Settings.savedSettingsTable.isCameraSpinDisabled
+		getFunc = function() return LorePlay.db.isCameraSpinDisabled end, 
+		setFunc = function(value)
+			if not LorePlay.db.isIdleEmotesOn then return end
+			LorePlay.db.isCameraSpinDisabled = value
 			noCameraSpin()
 		end,
 		width = "full",
@@ -554,11 +717,10 @@ function Settings.LoadMenuSettings()
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_LE_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_LE_SW_TIPS),
-		getFunc = function() return Settings.savedSettingsTable.isLoreWearOn end,
-		setFunc = function(setting) 
-			Settings.savedSettingsTable.isLoreWearOn = setting
-			Settings.savedVariables.isLoreWearOn = Settings.savedSettingsTable.isLoreWearOn
-			if not Settings.savedSettingsTable.isLoreWearOn then 
+		getFunc = function() return LorePlay.db.isLoreWearOn end,
+		setFunc = function(value) 
+			LorePlay.db.isLoreWearOn = value
+			if not LorePlay.db.isLoreWearOn then 
 				LorePlay.UnregisterLoreWearEvents()
 			else
 				LorePlay.ReenableLoreWear()
@@ -571,19 +733,41 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_TIPS),
 		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.canActivateLWClothesWhileMounted
+			if LorePlay.db.isLoreWearOn then
+				return LorePlay.db.canActivateLWClothesWhileMounted
 			else
 				return false
 			end
 		end,
-		setFunc = function(setting) 
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.canActivateLWClothesWhileMounted = setting
-			Settings.savedVariables.canActivateLWClothesWhileMounted = Settings.savedSettingsTable.canActivateLWClothesWhileMounted 
+		setFunc = function(value) 
+			if not LorePlay.db.isLoreWearOn then return end
+			LorePlay.db.canActivateLWClothesWhileMounted = value
 		end,
 		width = "full",
 	}
+
+	for k, v in pairs(LorePlay.collectibleType) do
+		optionsTable[#optionsTable + 1] = {
+			type = "checkbox", 
+			name = L("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_NAME_", v), 
+			tooltip = L("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_", v), 
+			getFunc = function() 
+				if LorePlay.db.isLoreWearOn then
+					return LorePlay.db.isUsingCollectible[v]
+				else
+					return false
+				end
+			end,
+			setFunc = function(value) 
+				LorePlay.db.isUsingCollectible[v] = value
+			end,
+			width = "full",
+			disabled = function() return not LorePlay.db.isLoreWearOn end, 
+			default = false,
+		}
+	end
+
+--[[
 	optionsTable[#optionsTable + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_NAME),
@@ -812,12 +996,13 @@ function Settings.LoadMenuSettings()
 		width = "full",
 		default = false,
 	}
+]]
 	optionsTable[#optionsTable + 1] = {
 		type = "button",
 		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_TIPS),
 		func = function()
-			SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, City)
+			SetFavoriteStylePreset(1)
 		end,
 		width = "half",
 	}
@@ -826,7 +1011,7 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_TIPS),
 		func = function()
-			SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Housing)
+			SetFavoriteStylePreset(2)
 		end,
 		width = "half",
 	}
@@ -835,7 +1020,7 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_TIPS),
 		func = function()
-			SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Dungeon)
+			SetFavoriteStylePreset(3)
 		end,
 		width = "half",
 	}
@@ -844,7 +1029,7 @@ function Settings.LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_TIPS),
 		func = function()
-			SetFavoriteOutfit(Settings.savedSettingsTable.outfitTable, Adventure)
+			SetFavoriteStylePreset(4)
 		end,
 		width = "half",
 	}
@@ -861,13 +1046,17 @@ end
 
 
 function Settings.InitializeSettings()
-	Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", LorePlay.majorVersion, nil, defaultSettingsTable)
-	Settings.LoadSavedSettings()
+	LorePlay.db = ZO_SavedVars:NewCharacterIdSettings(LorePlay.savedVars, LorePlay.savedVarsVersion, nil, default_db, "ForeverDB")
+	if LorePlay.db.migrated == false then
+		Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", 1, nil, {})	-- save data of LorePlay standard version
+		ConvertToForeverSavedata()
+		LorePlay.db.migrated = true
+	end
+
 --	LAM2 = LibStub("LibAddonMenu-2.0")
 	Settings.LoadMenuSettings()
 	noCameraSpin()
 	RegisterSettingsEvents()
 end
+LorePlay.InitializeSettings = Settings.InitializeSettings
 
-
-LorePlay = Settings
