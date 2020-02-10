@@ -15,6 +15,8 @@ YOU NEED TO INSTALL THE FOLLOWING LIBRARY SEPARATELY.
 - Forked from Justinon's standard version 1.5.1
 - Removed embedded LibStub and LibAddonMenu-2.0 libraries, you now need to have LibAddonMenu-2.0 separately.
 - LoreWear now support for three non-English language modes: DE, FR, and JP
+- Support for following DLCs and Chapters: Clockwork City, Summerset, Murkmire, Elsweyr, and Dragonhold.
+
 - **[COMPATIBILITY-BREAKING CHANGE]**  
   The various zone and city recognitions have been rewritten to a brand-new identifier based approach by Calamath, and are no longer language mode dependent.
   As the result, the boundaries of whether the add-on recognizes cities may be slightly different from the standard version.
@@ -26,8 +28,6 @@ YOU NEED TO INSTALL THE FOLLOWING LIBRARY SEPARATELY.
 ### Comments from the author:
 I think Justinon's originality Lore Play has some cool ideas. One of my favorite is a location-based event-driven. 
 That's why I was disappointed that some features of the current standard version didn't work well in non-English modes.
-This modified version focuses especifically on making it work well in the non-English modes.
-Therefore, if you are playing ESO in English mode, you don't need to switch to this version.
 
 ### DISCLAIMER:
 With the current game specs, it is not easy for the Eso UI to recognize if your avatar is in a city or not, unlike the players themselves.
