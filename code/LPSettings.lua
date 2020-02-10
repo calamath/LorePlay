@@ -592,103 +592,73 @@ function Settings.LoadMenuSettings()
 		step = 2,
 		getFunc = function() 
 			return LorePlay.db.timeBetweenIdleEmotes/1000 -- Converting ms to s
-		end,
+		end, 
 		setFunc = function(value)
-			if not LorePlay.db.isIdleEmotesOn then return end
 			LorePlay.db.timeBetweenIdleEmotes = (value*1000) -- Converting seconds to ms
-		end,
+		end, 
 		width = "full",
+		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 		default = 30,
 	}
 	optionsTable[#optionsTable + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_TIPS),
-		getFunc = function() 
-			if LorePlay.db.isIdleEmotesOn then
-				return LorePlay.db.canPlayInstrumentsInCities
-			else
-				return false
-			end
-		end,
+		getFunc = function() return LorePlay.db.canPlayInstrumentsInCities end, 
 		setFunc = function(value)
-			if not LorePlay.db.isIdleEmotesOn then return end
 			LorePlay.db.canPlayInstrumentsInCities = value
 			LorePlay.CreateDefaultIdleEmotesTable()
-		end,
+		end, 
 		width = "full",
+		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
 	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
+		type = "checkbox", 
 		name = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_TIPS),
-		getFunc = function() 
-			if LorePlay.db.isIdleEmotesOn then
-				return LorePlay.db.canDanceInCities
-			else
-				return false
-			end
-		end,
+		getFunc = function() return LorePlay.db.canDanceInCities end, 
 		setFunc = function(value)
-			if not LorePlay.db.isIdleEmotesOn then return end
 			LorePlay.db.canDanceInCities = value
 			LorePlay.CreateDefaultIdleEmotesTable()
-		end,
+		end, 
 		width = "full",
+		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
 	optionsTable[#optionsTable + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_TIPS),
-		getFunc = function() 
-			if LorePlay.db.isIdleEmotesOn then
-				return LorePlay.db.canBeDrunkInCities
-			else
-				return false
-			end
-		end,
+		getFunc = function() return LorePlay.db.canBeDrunkInCities end, 
 		setFunc = function(value)
-			if not LorePlay.db.isIdleEmotesOn then return end
 			LorePlay.db.canBeDrunkInCities = value
 			LorePlay.CreateDefaultIdleEmotesTable()
-		end,
+		end, 
 		width = "full",
+		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
 	optionsTable[#optionsTable + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_TIPS),
-		getFunc = function() 
-			if LorePlay.db.isIdleEmotesOn then
-				return LorePlay.db.canExerciseInZone
-			else
-				return false
-			end
-		end,
+		getFunc = function() return LorePlay.db.canExerciseInZone end, 
 		setFunc = function(value)
-			if not LorePlay.db.isIdleEmotesOn then return end
 			LorePlay.db.canExerciseInZone = value
 			LorePlay.CreateDefaultIdleEmotesTable()
-		end,
+		end, 
 		width = "full",
+		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
 	optionsTable[#optionsTable + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS),
-		getFunc = function() 
-			if LorePlay.db.isIdleEmotesOn then
-				return LorePlay.db.canWorship
-			else
-				return false
-			end
-		end,
+		getFunc = function() return LorePlay.db.canWorship end, 
 		setFunc = function(value)
-			if not LorePlay.db.isIdleEmotesOn then return end
 			LorePlay.db.canWorship = value
 			LorePlay.CreateDefaultIdleEmotesTable()
-		end,
+		end, 
 		width = "full",
+		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
 	optionsTable[#optionsTable + 1] = {
 		type = "checkbox",
@@ -696,11 +666,11 @@ function Settings.LoadMenuSettings()
 		tooltip = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS),
 		getFunc = function() return LorePlay.db.isCameraSpinDisabled end, 
 		setFunc = function(value)
-			if not LorePlay.db.isIdleEmotesOn then return end
 			LorePlay.db.isCameraSpinDisabled = value
 			noCameraSpin()
-		end,
+		end, 
 		width = "full",
+--		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
 	optionsTable[#optionsTable + 1] = {
 		type = "header",
