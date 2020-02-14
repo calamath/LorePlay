@@ -33,12 +33,6 @@ local LPUtilities = LorePlay.LPUtilities
 
 -- === LPSettings.lua ===
 
---local LAM2
-local LAM2 = LibAddonMenu2
-if not LAM2 then d("[LorePlay] Error : 'LibAddonMenu' not found.") return end
-
-local L = GetString
-
 LorePlay.collectibleType = {
 	COLLECTIBLE_CATEGORY_TYPE_COSTUME, 
 	COLLECTIBLE_CATEGORY_TYPE_HAT, 
@@ -52,17 +46,59 @@ LorePlay.collectibleType = {
 	COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY, 
 	COLLECTIBLE_CATEGORY_TYPE_PERSONALITY, 
 	COLLECTIBLE_CATEGORY_TYPE_VANITY_PET, 
+	COLLECTIBLE_CATEGORY_TYPE_ASSISTANT, 
 }
+LorePlay.const = {
+	LW_BEHAVIOR_ID_DONT_CARE			= 0, 
+	LW_BEHAVIOR_ID_PREVENT_CHANGE		= 1, 
+	LW_BEHAVIOR_ID_USE_SPECIFIED_ONE	= 2, 
+	LW_BEHAVIOR_ID_CANCEL_HIDE_HELM		= 3, 
+	LW_USAGE_ID_NOT_USED				= 0, 
+	LW_USAGE_ID_CITY					= 1, 
+	LW_USAGE_ID_HOUSING					= 2, 
+	LW_USAGE_ID_DUNGEON					= 3, 
+	LW_USAGE_ID_ADVENTURE				= 4, 
+	LW_USAGE_ID_RIDING					= 5, 
+	LW_USAGE_ID_COMBAT					= 6, 
+	LW_USAGE_ID_SWIMMING				= 7, 
+	LW_PRESET_TURN_OFF_HIDE_HELM		= 10001, 
+	LW_PRESET_EQUIP_WEDDING_COSTUME		= 10002, 
+	LW_PRESET_TOGGLE_ALL_COLLECTIBLES	= 10003, 
+	LW_PRESET_TOGGLE_COSTUME_ONLY		= 10004, 
+}
+local LW_BEHAVIOR_ID_DONT_CARE			= LorePlay.const.LW_BEHAVIOR_ID_DONT_CARE
+local LW_BEHAVIOR_ID_PREVENT_CHANGE		= LorePlay.const.LW_BEHAVIOR_ID_PREVENT_CHANGE
+local LW_BEHAVIOR_ID_USE_SPECIFIED_ONE	= LorePlay.const.LW_BEHAVIOR_ID_USE_SPECIFIED_ONE
+local LW_BEHAVIOR_ID_CANCEL_HIDE_HELM	= LorePlay.const.LW_BEHAVIOR_ID_CANCEL_HIDE_HELM
+local LW_USAGE_ID_NOT_USED				= LorePlay.const.LW_USAGE_ID_NOT_USED
+local LW_USAGE_ID_CITY					= LorePlay.const.LW_USAGE_ID_CITY
+local LW_USAGE_ID_HOUSING				= LorePlay.const.LW_USAGE_ID_HOUSING
+local LW_USAGE_ID_DUNGEON				= LorePlay.const.LW_USAGE_ID_DUNGEON
+local LW_USAGE_ID_ADVENTURE				= LorePlay.const.LW_USAGE_ID_ADVENTURE
+local LW_USAGE_ID_RIDING				= LorePlay.const.LW_USAGE_ID_RIDING
+local LW_USAGE_ID_COMBAT				= LorePlay.const.LW_USAGE_ID_COMBAT
+local LW_USAGE_ID_SWIMMING				= LorePlay.const.LW_USAGE_ID_SWIMMING
+local LW_PRESET_TURN_OFF_HIDE_HELM		= LorePlay.const.LW_PRESET_TURN_OFF_HIDE_HELM
+local LW_PRESET_EQUIP_WEDDING_COSTUME	= LorePlay.const.LW_PRESET_EQUIP_WEDDING_COSTUME
+local LW_PRESET_TOGGLE_ALL_COLLECTIBLES = LorePlay.const.LW_PRESET_TOGGLE_ALL_COLLECTIBLES
+local LW_PRESET_TOGGLE_COSTUME_ONLY		= LorePlay.const.LW_PRESET_TOGGLE_COSTUME_ONLY
 
+--local LAM2
+local LAM2 = LibAddonMenu2
+if not LAM2 then d("[LorePlay] Error : 'LibAddonMenu' not found.") return end
+
+local L = GetString
 local Settings = LorePlay
 
 -- default savedata table for [LorePlay Forever]
 local default_db = {
 	migrated = false, 
+	dataVersion = 1, 
 	-- ------------------------------------------------------------
 	isSmartEmotesIndicatorOn = true, 
 	indicatorLeft = nil, 
 	indicatorTop = nil, 
+	maraSpouseName = "", 
 	-- ------------------------------------------------------------
 	isIdleEmotesOn = true, 
 	canPlayInstrumentsInCities = true, 
@@ -73,26 +109,35 @@ local default_db = {
 	isCameraSpinDisabled = true, 
 	timeBetweenIdleEmotes = 30000, 
 	-- ------------------------------------------------------------
-	isLoreWearOn = true, 
-	canActivateLWClothesWhileMounted = false,
-	maraSpouseName = "", 
-	isUsingCollectible = {
-		[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_HAT] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_HAIR] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_SKIN] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = false, 
-		[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = false, 
+	isLoreWearOn = false, 
+	lwControlTable = {
+		whileMounted = LW_BEHAVIOR_ID_DONT_CARE, 
+		duringSwimming = LW_BEHAVIOR_ID_DONT_CARE, 
+		inCombat = LW_BEHAVIOR_ID_DONT_CARE, 
+		inFastTraveling = LW_BEHAVIOR_ID_DONT_CARE, 
 	}, 
+	isUsingCollectible = {
+		[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_HAT] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_HAIR] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_SKIN] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = true, 
+		[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = false, 
+	}, 
+	isUsingOutfit = true, 
+	equippedPresetIndex = 0, 	-- 0 means unknown
+	preferedStylePresetByUsage = { 1, 2, 3, 4, 0, 0, 0, 0, 0,  }, 
 	stylePreset = {
 		[1] = {
 			displayName = "City", 
+			usage = LW_USAGE_ID_CITY, 
 			collectible = {
 				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
@@ -106,10 +151,13 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
+			outfitIndex = 0, 
 		}, 
 		[2] = {
 			displayName = "Housing", 
+			usage = LW_USAGE_ID_HOUSING, 
 			collectible = {
 				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
@@ -123,10 +171,13 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
+			outfitIndex = 0, 
 		}, 
 		[3] = {
 			displayName = "Dungeon", 
+			usage = LW_USAGE_ID_DUNGEON, 
 			collectible = {
 				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
@@ -140,10 +191,13 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
+			outfitIndex = 0, 
 		}, 
 		[4] = {
 			displayName = "Adventure", 
+			usage = LW_USAGE_ID_ADVENTURE, 
 			collectible = {
 				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
@@ -157,7 +211,109 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
 				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
+			outfitIndex = 0, 
+		}, 
+		[5] = {
+			displayName = "Option1", 
+			usage = LW_USAGE_ID_NOT_USED, 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
+			}, 
+			outfitIndex = 0, 
+		}, 
+		[6] = {
+			displayName = "Option2", 
+			usage = LW_USAGE_ID_NOT_USED, 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
+			}, 
+			outfitIndex = 0, 
+		}, 
+		[7] = {
+			displayName = "Option3", 
+			usage = LW_USAGE_ID_NOT_USED, 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
+			}, 
+			outfitIndex = 0, 
+		}, 
+		[8] = {
+			displayName = "Option4", 
+			usage = LW_USAGE_ID_NOT_USED, 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
+			}, 
+			outfitIndex = 0, 
+		}, 
+		[9] = {
+			displayName = "Option5", 
+			usage = LW_USAGE_ID_NOT_USED, 
+			collectible = {
+				[COLLECTIBLE_CATEGORY_TYPE_COSTUME] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAT] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HAIR] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_SKIN] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_POLYMORPH] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_PERSONALITY] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = 0, 
+				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
+			}, 
+			outfitIndex = 0, 
 		}, 
 	},
 	-- variables for location recognize engine -----
@@ -276,6 +432,7 @@ local function ConvertToForeverSavedata()
 	if sv.isSmartEmotesIndicatorOn			then LorePlay.db.isSmartEmotesIndicatorOn			= sv.isSmartEmotesIndicatorOn				end
 	if sv.indicatorLeft						then LorePlay.db.indicatorLeft						= sv.indicatorLeft							end
 	if sv.indicatorTop						then LorePlay.db.indicatorTop						= sv.indicatorTop							end
+	if sv.maraSpouseName					then LorePlay.db.maraSpouseName						= sv.maraSpouseName							end
 	-- ------------------------------------------------------------
 	if sv.isIdleEmotesOn					then LorePlay.db.isIdleEmotesOn						= sv.isIdleEmotesOn							end
 	if sv.canPlayInstrumentsInCities		then LorePlay.db.canPlayInstrumentsInCities			= sv.canPlayInstrumentsInCities				end
@@ -287,8 +444,13 @@ local function ConvertToForeverSavedata()
 	if sv.timeBetweenIdleEmotes				then LorePlay.db.timeBetweenIdleEmotes				= sv.timeBetweenIdleEmotes					end
 	-- ------------------------------------------------------------
 	if sv.isLoreWearOn						then LorePlay.db.isLoreWearOn						= sv.isLoreWearOn							end
-	if sv.canActivateLWClothesWhileMounted	then LorePlay.db.canActivateLWClothesWhileMounted	= sv.canActivateLWClothesWhileMounted		end
-	if sv.maraSpouseName					then LorePlay.db.maraSpouseName						= sv.maraSpouseName							end
+	if sv.canActivateLWClothesWhileMounted	then 
+		if sv.canActivateLWClothesWhileMounted == true then
+			LorePlay.db.lwControlTable.whileMounted = LW_BEHAVIOR_ID_DONT_CARE
+		else
+			LorePlay.db.lwControlTable.whileMounted = LW_BEHAVIOR_ID_PREVENT_CHANGE
+		end
+	end
 
 	for k, v in pairs(sv.isUsingFavorite) do
 		LorePlay.db.isUsingCollectible[stringToColTypeTable[k]] = v
@@ -317,29 +479,6 @@ local function updateSpouseName(newMaraSpouseName)
 end
 
 
---[[
-function Settings.LoadSavedSettings()
-	Settings.savedSettingsTable = {}
-	Settings.savedSettingsTable.isIdleEmotesOn = Settings.savedVariables.isIdleEmotesOn
-	Settings.savedSettingsTable.isLoreWearOn = Settings.savedVariables.isLoreWearOn
-	Settings.savedSettingsTable.isSmartEmotesIndicatorOn = Settings.savedVariables.isSmartEmotesIndicatorOn
-	Settings.savedSettingsTable.canPlayInstrumentsInCities = Settings.savedVariables.canPlayInstrumentsInCities
-	Settings.savedSettingsTable.canDanceInCities = Settings.savedVariables.canDanceInCities
-	Settings.savedSettingsTable.canBeDrunkInCities = Settings.savedVariables.canBeDrunkInCities
-	Settings.savedSettingsTable.canExerciseInZone = Settings.savedVariables.canExerciseInZone
-	Settings.savedSettingsTable.canWorship = Settings.savedVariables.canWorship
-	Settings.savedSettingsTable.isCameraSpinDisabled = Settings.savedVariables.isCameraSpinDisabled
-	Settings.savedSettingsTable.isUsingFavorite = Settings.savedVariables.isUsingFavorite
-	Settings.savedSettingsTable.outfitTable = Settings.savedVariables.outfitTable
-	Settings.savedSettingsTable.maraSpouseName = Settings.savedVariables.maraSpouseName
-	Settings.savedSettingsTable.canActivateLWClothesWhileMounted = Settings.savedVariables.canActivateLWClothesWhileMounted
-	Settings.savedSettingsTable.indicatorLeft = Settings.savedVariables.indicatorLeft
-	Settings.savedSettingsTable.indicatorTop = Settings.savedVariables.indicatorTop
-	Settings.savedSettingsTable.timeBetweenIdleEmotes = Settings.savedVariables.timeBetweenIdleEmotes
-end
-]]
-
-
 local function ResetIndicator()
 	SmartEmotesIndicator:ClearAnchors()
 	SmartEmotesIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, 0, 0)
@@ -353,79 +492,10 @@ local function OnIndicatorMoved(eventCode, top, left)
 	LorePlay.db.indicatorLeft = left
 end
 
---[[
-local function SetFavoriteCostume(tableToOutfit)
-	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
-	if collectibleId == 0 then CHAT_SYSTEM:AddMessage("No costume was detected.") end
-	tableToOutfit[Costumes] = collectibleId
-	Settings.savedVariables.outfitTable = Settings.savedSettingsTable.outfitTable
-	Settings.savedSettingsTable.isUsingFavorite[Costumes] = true
-	Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-	CHAT_SYSTEM:AddMessage("Favorite costume set as '"..GetCollectibleName(collectibleId).."'")
-end
-
-
-local function SetFavoriteHat(tableToOutfit)
-	local didChange = true
-	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAT)
-	local name = GetCollectibleName(collectibleId)
-	if collectibleId == 0 then 
-		CHAT_SYSTEM:AddMessage("No hat was detected.") 
-		name = "None"
-		didChange = false
-	end
-	tableToOutfit[Hats] = collectibleId
-	Settings.savedVariables.outfitTable = Settings.savedSettingsTable.outfitTable
-	if didChange then
-		Settings.savedSettingsTable.isUsingFavorite[Hats] = true
-		Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-	end
-	CHAT_SYSTEM:AddMessage("Favorite hat set as '"..name.."'")
-end
-
-
-local function SetFavoriteHair(tableToOutfit)
-	local didChange = true
-	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAIR)
-	local name = GetCollectibleName(collectibleId)
-	if collectibleId == 0 then 
-		CHAT_SYSTEM:AddMessage("Default hair detected.") 
-		name = "Default"
-		didChange = false
-	end
-	tableToOutfit[Hair] = collectibleId
-	Settings.savedVariables.outfitTable = Settings.savedSettingsTable.outfitTable
-	if didChange then
-		Settings.savedSettingsTable.isUsingFavorite[Hair] = true
-		Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-	end
-	CHAT_SYSTEM:AddMessage("Favorite hair set as '"..name.."'")
-end
-
-
-local function SetFavoriteSkin(tableToOutfit)
-	local didChange = true
-	local collectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_SKIN)
-	local name = GetCollectibleName(collectibleId)
-	if collectibleId == 0 then 
-		CHAT_SYSTEM:AddMessage("No skin was detected.") 
-		name = "None"
-		didChange = false
-	end
-	tableToOutfit[Skins] = collectibleId
-	Settings.savedVariables.outfitTable = Settings.savedSettingsTable.outfitTable
-	if didChange then
-		Settings.savedSettingsTable.isUsingFavorite[Skins] = true
-		Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-	end
-	CHAT_SYSTEM:AddMessage("Favorite skin set as '"..name.."'")
-end
-]]--
-
-
 
 local function SetFavoriteStylePreset(presetIndex)
 	local collectibleId = 0
+	LorePlay.db.stylePreset[presetIndex].outfitIndex = GetEquippedOutfitIndex() or 0
 	for k, v in pairs(Settings.collectibleType) do
 		collectibleId = GetActiveCollectibleByType(v)
 		if collectibleId == 0 then		-- no active collectible
@@ -434,39 +504,6 @@ local function SetFavoriteStylePreset(presetIndex)
 		LorePlay.LDL:Debug("Preset[%d] collectible[%d] = %s", presetIndex, v, GetCollectibleName(collectibleId))
 	end
 end
-
-
---[[
-local function SetFavoriteCollectible(tableToOutfit, LPCatString)
-	local didChange = true
-	local collectibleId = GetActiveCollectibleByType(stringToColTypeTable[LPCatString])
-	local name = GetCollectibleName(collectibleId)
-	if collectibleId == 0 then 
-		name = "None"
-		didChange = false
-	end
-	tableToOutfit[LPCatString] = collectibleId
-	Settings.savedVariables.outfitTable = Settings.savedSettingsTable.outfitTable
-	if didChange then
-		Settings.savedSettingsTable.isUsingFavorite[LPCatString] = true
-		Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-	end
-	CHAT_SYSTEM:AddMessage(LPCatString.." set as ".."'"..name.."'.")
-end
-
-
-
-local function SetFavoriteOutfit(outfitsTable, whichOutfitString)
-	CHAT_SYSTEM:AddMessage("[LorePlay] "..whichOutfitString.." Outfit:")
-
-	for i,_ in pairs(stringToColTypeTable) do
-		if Settings.savedSettingsTable.isUsingFavorite[i] then
-			SetFavoriteCollectible(outfitsTable[whichOutfitString], i)
-		end
-	end
-	CHAT_SYSTEM:AddMessage("Success.")
-end
-]]
 
 
 function Settings.ToggleIdleEmotes(value)
@@ -507,12 +544,64 @@ local function OnPlayerMaraResult(eventCode, isGettingMarried, playerMarriedTo)
 	end
 end
 
+-- ------------------------------------------------------------------------------------------
+-- LorePlay Forever UI
+-- ------------------------------------------------------------------------------------------
+local uiPanel
+local uiPresetIndex = 1
 
-function Settings.LoadMenuSettings()
+
+local function DoChangePresetIndex(value)
+	uiPresetIndex = value
+end
+
+local function DoChangePresetUsage(value)
+	local previousUsage = LorePlay.db.stylePreset[uiPresetIndex].usage
+	-- update preferedStylePresetByUsage table if it was registered as prefered preset before the change.
+	if previousUsage ~= LW_USAGE_ID_NOT_USED then
+		if LorePlay.db.preferedStylePresetByUsage[previousUsage] == uiPresetIndex then
+			local previousNext = LorePlay.FindNextPresetIndex(previousUsage, uiPresetIndex) or 0
+			if previousNext == uiPresetIndex then	-- it means there was no entry other than itself
+				 previousNext = 0
+			end
+			LorePlay.db.preferedStylePresetByUsage[previousUsage] = previousNext
+			LorePlay.db.equippedPresetIndex = previousNext
+		end
+	end
+	-- update preferedStylePresetByUsage table if nothing is registered as prefered preset before the change.
+	if LorePlay.db.preferedStylePresetByUsage[value] == 0 then
+		LorePlay.db.preferedStylePresetByUsage[value] = uiPresetIndex
+	end
+	LorePlay.db.stylePreset[uiPresetIndex].usage = value
+--	LorePlay.LDL:Debug("preferedStylePresetByUsage=", tostring(table.concat(LorePlay.db.preferedStylePresetByUsage, ", ")))
+end
+
+
+local function OnLAMPanelControlsCreated(panel)
+	if panel ~= uiPanel then return end
+	CALLBACK_MANAGER:UnregisterCallback("LAM-PanelControlsCreated", OnLAMPanelControlsCreated)
+--	LorePlay.LDL:Debug("LAM-Panel Created")
+
+end
+
+local function OnLAMPanelClosed(panel)
+	if panel ~= uiPanel then return end
+--	LorePlay.LDL:Debug("LAM-Panel Closed")
+
+end
+
+local function OnLAMPanelOpened(panel)
+	if panel ~= uiPanel then return end
+--	LorePlay.LDL:Debug("LAM-Panel Opened")
+
+end
+
+
+local function LoadMenuSettings()
 	local panelData = {
 		type = "panel",
 		name = LorePlay.name,
-		displayName = "|c8c7037LorePlay Forever",
+		displayName = "|c8c7037LorePlay Forever|r",
 		author = "Justinon, modified by Calamath",
 		version = LorePlay.version,
 		slashCommand = "/loreplay",
@@ -520,18 +609,31 @@ function Settings.LoadMenuSettings()
 	}
 
 	local optionsTable = {}
-	optionsTable[#optionsTable + 1] = {
-		type = "header",
-		name = L(SI_LOREPLAY_PANEL_SE_HEADER),
-		width = "full",
-	}
-	optionsTable[#optionsTable + 1] = {
+	local uiMenuSmartEmote = {}
+	local uiMenuIdleEmote = {}
+	local uiMenuLoreWear = {}
+	local uiSubMenuManagementRange = {}
+	local uiSubMenuLoreWearControlPanel = {}
+	local uiPresetChoices = { "|c4169e1City|r", "|c4169e1Housing|r", "|c4169e1Dungeon|r", "|c4169e1Adventure|r", "option1", "option2", "option3", "option4", "option5", }
+	local uiPresetChoicesValues = { 1, 2, 3, 4, 5, 6, 7, 8, 9,  }
+	local uiUsageChoices = { "Not used", "City Outfit", "Housing Outfit", "Dungeon Outfit", "Adventure Outfit", "Riding Clothes", "Combat Uniform", "Wet Suit", }
+	local uiUsageChoicesValues = { LW_USAGE_ID_NOT_USED, LW_USAGE_ID_CITY, LW_USAGE_ID_HOUSING, LW_USAGE_ID_DUNGEON, LW_USAGE_ID_ADVENTURE, LW_USAGE_ID_RIDING, LW_USAGE_ID_COMBAT, LW_USAGE_ID_SWIMMING, }
+	local uiWhileMountedChoices = { "Don't care", "Prevent change outfit", "Use Riding Clothes", }
+	local uiWhileMountedChoicesValues = { LW_BEHAVIOR_ID_DONT_CARE, LW_BEHAVIOR_ID_PREVENT_CHANGE, LW_BEHAVIOR_ID_USE_SPECIFIED_ONE, }
+	local uiDuringSwimmingChoices = { "Don't care", "Prevent change outfit", "Use Wet Suit", }
+	local uiDuringSwimmingChoicesValues = { LW_BEHAVIOR_ID_DONT_CARE, LW_BEHAVIOR_ID_PREVENT_CHANGE, LW_BEHAVIOR_ID_USE_SPECIFIED_ONE, }
+	local uiInCombatChoices = { "Don't care", "Prevent change outfit", "Use Combat Uniform", "Turn off 'HIDE HELM'", }
+	local uiInCombatChoicesValues = { LW_BEHAVIOR_ID_DONT_CARE, LW_BEHAVIOR_ID_PREVENT_CHANGE, LW_BEHAVIOR_ID_USE_SPECIFIED_ONE, LW_BEHAVIOR_ID_CANCEL_HIDE_HELM, }
+	local uiInFastTravelChoices = { "Don't care", "Prevent change outfit", }
+	local uiInFastTravelChoicesValues = { LW_BEHAVIOR_ID_DONT_CARE, LW_BEHAVIOR_ID_PREVENT_CHANGE, }
+
+	uiMenuSmartEmote[#uiMenuSmartEmote + 1] = {
 		type = "description",
 		title = nil,
 		text = L(SI_LOREPLAY_PANEL_SE_DESCRIPTION),
 		width = "full",
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuSmartEmote[#uiMenuSmartEmote + 1] = {
 		type = "editbox", 
 		name = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_NAME), 
 		tooltip = L(SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_TIPS), 
@@ -541,7 +643,7 @@ function Settings.LoadMenuSettings()
 		width = "full", 
 		default = "", 
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuSmartEmote[#uiMenuSmartEmote + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_SW_TIPS),
@@ -554,7 +656,7 @@ function Settings.LoadMenuSettings()
 		end, 
 		width = "full", 
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuSmartEmote[#uiMenuSmartEmote + 1] = {
 		type = "button",
 		name = L(SI_LOREPLAY_PANEL_SE_INDICATOR_POS_RESET_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_SE_INDICATOR_POS_RESET_TIPS),
@@ -562,17 +664,20 @@ function Settings.LoadMenuSettings()
 		width = "full",
 	}
 	optionsTable[#optionsTable + 1] = {
-		type = "header",
-		name =  L(SI_LOREPLAY_PANEL_IE_HEADER),
-		width = "full",
+		type = "submenu", 
+		name = L(SI_LOREPLAY_PANEL_SE_HEADER), 
+		controls = uiMenuSmartEmote, 
 	}
-	optionsTable[#optionsTable + 1] = {
+
+	-- ------------------------------------------------------------------
+
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "description",
 		title = nil,
 		text =  L(SI_LOREPLAY_PANEL_IE_DESCRIPTION),
 		width = "full",
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "checkbox",
 		name =  L(SI_LOREPLAY_PANEL_IE_SW_NAME),
 		tooltip =  L(SI_LOREPLAY_PANEL_IE_SW_TIPS),
@@ -583,7 +688,7 @@ function Settings.LoadMenuSettings()
 		width = "full",
 		reference = "IdleEmotesToggleCheckbox",
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "slider",
 		name = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_TIPS),
@@ -600,7 +705,7 @@ function Settings.LoadMenuSettings()
 		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 		default = 30,
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_TIPS),
@@ -612,7 +717,7 @@ function Settings.LoadMenuSettings()
 		width = "full",
 		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "checkbox", 
 		name = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_DANCE_IN_CITY_SW_TIPS),
@@ -624,7 +729,7 @@ function Settings.LoadMenuSettings()
 		width = "full",
 		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_BE_DRUNK_IN_CITY_SW_TIPS),
@@ -636,7 +741,7 @@ function Settings.LoadMenuSettings()
 		width = "full",
 		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_TIPS),
@@ -648,7 +753,7 @@ function Settings.LoadMenuSettings()
 		width = "full",
 		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS),
@@ -660,7 +765,7 @@ function Settings.LoadMenuSettings()
 		width = "full",
 		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS),
@@ -673,20 +778,23 @@ function Settings.LoadMenuSettings()
 --		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
 	}
 	optionsTable[#optionsTable + 1] = {
-		type = "header",
-		name = L(SI_LOREPLAY_PANEL_LE_HEADER),
-		width = "full",
+		type = "submenu", 
+		name = L(SI_LOREPLAY_PANEL_IE_HEADER), 
+		controls = uiMenuIdleEmote, 
 	}
-	optionsTable[#optionsTable + 1] = {
+
+	-- ------------------------------------------------------------------
+
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
 		type = "description",
 		title = nil,
-		text = L(SI_LOREPLAY_PANEL_LE_DESCRIPTION),
+		text = L(SI_LOREPLAY_PANEL_LW_DESCRIPTION),
 		width = "full",
 	}
-	optionsTable[#optionsTable + 1] = {
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
 		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_SW_TIPS),
+		name = L(SI_LOREPLAY_PANEL_LW_SW_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_LW_SW_TIPS),
 		getFunc = function() return LorePlay.db.isLoreWearOn end,
 		setFunc = function(value) 
 			LorePlay.db.isLoreWearOn = value
@@ -698,314 +806,215 @@ function Settings.LoadMenuSettings()
 		end,
 		width = "full",
 	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_TIPS),
-		getFunc = function() 
-			if LorePlay.db.isLoreWearOn then
-				return LorePlay.db.canActivateLWClothesWhileMounted
-			else
-				return false
-			end
-		end,
-		setFunc = function(value) 
-			if not LorePlay.db.isLoreWearOn then return end
-			LorePlay.db.canActivateLWClothesWhileMounted = value
-		end,
+
+	uiSubMenuManagementRange[#uiSubMenuManagementRange + 1] = {
+		type = "description",
+		title = nil,
+		text = "LoreWear automatically switches the appearance type you turned on.",
 		width = "full",
 	}
-
+	uiSubMenuManagementRange[#uiSubMenuManagementRange + 1] = {
+		type = "button",
+		name = "Turn ALL ON", 
+		tooltip = "", 
+		func = function() 
+			LorePlay.db.isUsingOutfit = true
+			for _, v in pairs(LorePlay.collectibleType) do
+				LorePlay.db.isUsingCollectible[v] = true
+			end
+		end, 
+		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiSubMenuManagementRange[#uiSubMenuManagementRange + 1] = {
+		type = "button",
+		name = "Turn ALL OFF", 
+		tooltip = "", 
+		func = function() 
+			LorePlay.db.isUsingOutfit = false
+			for _, v in pairs(LorePlay.collectibleType) do
+				LorePlay.db.isUsingCollectible[v] = false
+			end
+		end, 
+		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiSubMenuManagementRange[#uiSubMenuManagementRange + 1] = {
+		type = "checkbox", 
+		name = L(SI_LOREPLAY_PANEL_LW_OUTFIT_SW_NAME), 
+		tooltip = L(SI_LOREPLAY_PANEL_LW_OUTFIT_SW_TIPS), 
+		getFunc = function() return LorePlay.db.isUsingOutfit end, 
+		setFunc = function(value) LorePlay.db.isUsingOutfit = value end, 
+		width = "full",
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+		default = false,
+	}
 	for k, v in pairs(LorePlay.collectibleType) do
-		optionsTable[#optionsTable + 1] = {
+		uiSubMenuManagementRange[#uiSubMenuManagementRange + 1] = {
 			type = "checkbox", 
 			name = L("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_NAME_", v), 
 			tooltip = L("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_", v), 
-			getFunc = function() 
-				if LorePlay.db.isLoreWearOn then
-					return LorePlay.db.isUsingCollectible[v]
-				else
-					return false
-				end
-			end,
-			setFunc = function(value) 
-				LorePlay.db.isUsingCollectible[v] = value
-			end,
+			getFunc = function() return LorePlay.db.isUsingCollectible[v] end, 
+			setFunc = function(value) LorePlay.db.isUsingCollectible[v] = value end, 
 			width = "full",
 			disabled = function() return not LorePlay.db.isLoreWearOn end, 
 			default = false,
 		}
 	end
-
---[[
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_COSTUME_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[Costumes] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[Costumes] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite 
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_HAT_SW_NAME),
-		tooltip =L(SI_LOREPLAY_PANEL_LE_USE_HAT_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[Hats]
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[Hats] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_HAIR_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_HAIR_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[Hair]
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[Hair] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_SKIN_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_SKIN_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[Skins] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[Skins] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_POLYMORPH_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_POLYMORPH_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[Polymorphs] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[Polymorphs] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_ACC_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_ACC_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[FacialAcc] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[FacialAcc] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_HAIR_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_FACIAL_HAIR_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[FacialHair] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[FacialHair] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_BODY_MARKING_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_BODY_MARKING_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[BodyMarkings] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[BodyMarkings] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_HEAD_MARKING_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_HEAD_MARKING_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[HeadMarkings] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[HeadMarkings] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_JEWELRY_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_JEWELRY_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[Jewelry] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[Jewelry] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_PERSONALITY_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_PERSONALITY_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[Personalities] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[Personalities] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "checkbox",
-		name = L(SI_LOREPLAY_PANEL_LE_USE_PET_SW_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_USE_PET_SW_TIPS),
-		getFunc = function() 
-			if Settings.savedSettingsTable.isLoreWearOn then
-				return Settings.savedSettingsTable.isUsingFavorite[VanityPets] 
-			else
-				return false
-			end
-		end,
-		setFunc = function(setting)
-			if not Settings.savedSettingsTable.isLoreWearOn then return end
-			Settings.savedSettingsTable.isUsingFavorite[VanityPets] = setting
-			Settings.savedVariables.isUsingFavorite = Settings.savedSettingsTable.isUsingFavorite
-		end,
-		width = "full",
-		default = false,
-	}
-]]
-	optionsTable[#optionsTable + 1] = {
-		type = "button",
-		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_TIPS),
-		func = function()
-			SetFavoriteStylePreset(1)
-		end,
-		width = "half",
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "button",
-		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_TIPS),
-		func = function()
-			SetFavoriteStylePreset(2)
-		end,
-		width = "half",
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "button",
-		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_TIPS),
-		func = function()
-			SetFavoriteStylePreset(3)
-		end,
-		width = "half",
-	}
-	optionsTable[#optionsTable + 1] = {
-		type = "button",
-		name = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_NAME),
-		tooltip = L(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_TIPS),
-		func = function()
-			SetFavoriteStylePreset(4)
-		end,
-		width = "half",
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "submenu", 
+		name = "Management Range", 
+		tooltip = "LoreWear management range", 
+		controls = uiSubMenuManagementRange, 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
 	}
 
-	LAM2:RegisterAddonPanel("LorePlayOptions", panelData)
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "description", 
+		title = "Outfit Setting", 
+		text = "", 
+--		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+		reference = "LOREPLAY_UI_PresetUsageLabel", 
+	}
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "dropdown", 
+		name = "Select Preset", 
+		tooltip = "Select your preset", 
+		choices = uiPresetChoices, 
+		choicesValues = uiPresetChoicesValues, 
+		getFunc = function() return uiPresetIndex end, 
+		setFunc = DoChangePresetIndex, 
+--		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+		default = 1, 
+	}
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "dropdown", 
+		name = "Usage", 
+		tooltip = "Set the usage of the selected preset", 
+		choices = uiUsageChoices, 
+		choicesValues = uiUsageChoicesValues, 
+		getFunc = function() return LorePlay.db.stylePreset[uiPresetIndex].usage end, 
+		setFunc = DoChangePresetUsage, 
+--		width = "half", 
+		disabled = function() 
+			if not LorePlay.db.isLoreWearOn then return true end
+			if uiPresetIndex > 0 and uiPresetIndex < 5 then return true end		-- the usage of basic 4 slots cannot be changed.
+			return false
+		end, 
+		default = 1, 
+	}
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "button",
+		name = "Register Outfit", 
+		tooltip = "Capture your current appearance and register to the selected preset.", 
+		func = function() SetFavoriteStylePreset(uiPresetIndex) end, 
+--		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "divider", 
+	}
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "description", 
+		title = "Dressing room", 
+		text = "", 
+--		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "button", 
+		name = "Equip outfit", 
+		tooltip = "Equip this outfit preset", 
+		func = function() LorePlay.EquipStylePreset(uiPresetIndex) end, 
+		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "button", 
+		name = "Modify appearance", 
+		tooltip = "Adjustment", 
+		func = function() return end, 
+		width = "half", 
+--		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+		disabled = function() return true end, 
+	}
+
+	uiSubMenuLoreWearControlPanel[#uiSubMenuLoreWearControlPanel + 1] = {
+		type = "description", 
+		title = "Detailed operating conditions", 
+		text = "If you want to switch automatically to riding clothes, combat uniform and/or wet suit, you have to change the settings here properly.", 
+--		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiSubMenuLoreWearControlPanel[#uiSubMenuLoreWearControlPanel + 1] = {
+		type = "dropdown", 
+		name = "    Behavior : while mounted", 
+		tooltip = "", 
+		choices = uiWhileMountedChoices, 
+		choicesValues = uiWhileMountedChoicesValues, 
+		getFunc = function() return LorePlay.db.lwControlTable.whileMounted end, 
+		setFunc = function(value) LorePlay.db.lwControlTable.whileMounted = value end, 
+		width = "full",
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiSubMenuLoreWearControlPanel[#uiSubMenuLoreWearControlPanel + 1] = {
+		type = "dropdown", 
+		name = "    Behavior : during swimming", 
+		tooltip = "", 
+		choices = uiDuringSwimmingChoices, 
+		choicesValues = uiDuringSwimmingChoicesValues, 
+		getFunc = function() return LorePlay.db.lwControlTable.duringSwimming end, 
+		setFunc = function(value) LorePlay.db.lwControlTable.duringSwimming = value end, 
+		width = "full",
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiSubMenuLoreWearControlPanel[#uiSubMenuLoreWearControlPanel + 1] = {
+		type = "dropdown", 
+		name = "    Behavior : in combat", 
+		tooltip = "", 
+		choices = uiInCombatChoices, 
+		choicesValues = uiInCombatChoicesValues, 
+		getFunc = function() return LorePlay.db.lwControlTable.inCombat end, 
+		setFunc = function(value) LorePlay.db.lwControlTable.inCombat = value end, 
+		width = "full",
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiSubMenuLoreWearControlPanel[#uiSubMenuLoreWearControlPanel + 1] = {
+		type = "description", 
+		title = "Control panel", 
+		text = "", 
+--		width = "half", 
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiSubMenuLoreWearControlPanel[#uiSubMenuLoreWearControlPanel + 1] = {
+		type = "dropdown", 
+		name = "    Behavior : in fast travel interaction", 
+		tooltip = "", 
+		choices = uiInFastTravelChoices, 
+		choicesValues = uiInFastTravelChoicesValues, 
+		getFunc = function() return LorePlay.db.lwControlTable.inFastTraveling end, 
+		setFunc = function(value) LorePlay.db.lwControlTable.inFastTraveling = value end, 
+		width = "full",
+		disabled = function() return not LorePlay.db.isLoreWearOn end, 
+	}
+	uiMenuLoreWear[#uiMenuLoreWear + 1] = {
+		type = "submenu", 
+		name = "Advanced Setting", 
+		controls = uiSubMenuLoreWearControlPanel, 
+	}
+	optionsTable[#optionsTable + 1] = {
+		type = "submenu", 
+		name = L(SI_LOREPLAY_PANEL_LW_HEADER), 
+		controls = uiMenuLoreWear, 
+	}
+
+	uiPanel = LAM2:RegisterAddonPanel("LorePlayOptions", panelData)
 	LAM2:RegisterOptionControls("LorePlayOptions", optionsTable)
+	CALLBACK_MANAGER:RegisterCallback("LAM-PanelControlsCreated", OnLAMPanelControlsCreated)
+	CALLBACK_MANAGER:RegisterCallback("LAM-PanelClosed", OnLAMPanelClosed)
+	CALLBACK_MANAGER:RegisterCallback("LAM-PanelOpened", OnLAMPanelOpened)
 end
 
 
@@ -1015,7 +1024,7 @@ local function RegisterSettingsEvents()
 end
 
 
-function Settings.InitializeSettings()
+local function InitializeSettings()
 	LorePlay.db = ZO_SavedVars:NewCharacterIdSettings(LorePlay.savedVars, LorePlay.savedVarsVersion, nil, default_db, "ForeverDB")
 	if LorePlay.db.migrated == false then
 		Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", 1, nil, {})	-- save data of LorePlay standard version
@@ -1024,9 +1033,9 @@ function Settings.InitializeSettings()
 	end
 
 --	LAM2 = LibStub("LibAddonMenu-2.0")
-	Settings.LoadMenuSettings()
+	LoadMenuSettings()
 	noCameraSpin()
 	RegisterSettingsEvents()
 end
-LorePlay.InitializeSettings = Settings.InitializeSettings
+LorePlay.InitializeSettings = InitializeSettings
 

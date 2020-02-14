@@ -25,12 +25,13 @@ local strings = {
 	SI_LOREPLAY_PC_TITLE_NAME_F_63				= "Ophidian Overlord", 			-- "Ophidian Overlord"
 
 	SI_BINDING_NAME_LP_PERFORM_SMART_EMOTE			= "Perform Smart Emote", 
-	SI_BINDING_NAME_LP_SHOW_HIDE_LOREWEAR_CLOTHES	= "Show/Hide LoreWear Clothes", 
 	SI_BINDING_NAME_LP_TOGGLE_IDLEEMOTES			= "Toggle IdleEmotes On/Off", 
+	SI_BINDING_NAME_LP_SHOW_HIDE_LOREWEAR_CLOTHES	= "Show/Hide Costumes Only", 
 	SI_BINDING_NAME_LP_FORCE_EQUIP_CITY_OUTFIT		= "Force Equip City Outfit", 
 	SI_BINDING_NAME_LP_FORCE_EQUIP_HOUSING_OUTFIT	= "Force Equip Housing Outfit", 
 	SI_BINDING_NAME_LP_FORCE_EQUIP_DUNGEON_OUTFIT	= "Force Equip Dungeon Outfit", 
 	SI_BINDING_NAME_LP_FORCE_EQUIP_ADVENTURE_OUTFIT	= "Force Equip Adventure Outfit", 
+	SI_BINDING_NAME_LP_TOGGLE_ALTERNATIVE_OUTFIT	= "Toggle Prefered Outfits", 
 
 	SI_LOREPLAY_UI_WELCOME							= "[LorePlay] Welcome to LorePlay, Soulless One!", 
 	SI_LOREPLAY_PANEL_SE_HEADER						= "Smart Emotes", 
@@ -59,12 +60,6 @@ local strings = {
 	SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS			= "Determines whether or not your character can perform prayer and worship emotes when idle in general.", 
 	SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME	= "Camera Spin Disabler", 
 	SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS	= "Allows for emotes to be performed while in menus. Disables camera spin in menus. Removes '" .. GetString(SI_PLAYEREMOTEPLAYFAILURE0) .. "' message.", 
-	SI_LOREPLAY_PANEL_LE_HEADER						= "Lore Wear", 
-	SI_LOREPLAY_PANEL_LE_DESCRIPTION				= "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically and appropriately equip their favorite collectibles depending on where they are.\n|cFF0000Don't forget to bind your LoreWear show/hide clothes button!|r", 
-	SI_LOREPLAY_PANEL_LE_SW_NAME					= "Toggle LoreWear On/Off", 
-	SI_LOREPLAY_PANEL_LE_SW_TIPS					= "Turns on/off the automatic, contextual clothing that will be put on when entering the areas respective to your outfits.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)", 
-	SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_NAME	= "Allow Equip While Mounted", 
-	SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_TIPS	= "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.", 
 	SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_NAME		= "Set City Outfit", 
 	SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_TIPS		= "Sets the current outfit (collectibles) your character is wearing as their city outfit, allowing for automatic collectible changing when entering a city.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!", 
 	SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_NAME	= "Set Housing Outfit", 
@@ -74,6 +69,14 @@ local strings = {
 	SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_NAME	= "Set Adventure Outfit", 
 	SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_TIPS	= "Sets the current outfit (collectibles) your character is wearing as their adventuring outfit, allowing for automatic collectible changing when running around the land of Tamriel.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!", 
 
+	SI_LOREPLAY_PANEL_LW_HEADER						= "Lore Wear", 
+	SI_LOREPLAY_PANEL_LW_DESCRIPTION				= "Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically and appropriately equip their favorite collectibles depending on where they are.\n|cFF0000Don't forget to bind your LoreWear show/hide clothes button!|r", 
+	SI_LOREPLAY_PANEL_LW_SW_NAME					= "Toggle LoreWear On/Off", 
+	SI_LOREPLAY_PANEL_LW_SW_TIPS					= "Turns on/off the automatic, contextual clothing that will be put on when entering the areas respective to your outfits.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)", 
+	SI_LOREPLAY_PANEL_LW_EQUIP_WHILE_MOUNT_SW_NAME	= "Allow Equip While Mounted", 
+	SI_LOREPLAY_PANEL_LW_EQUIP_WHILE_MOUNT_SW_TIPS	= "Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.", 
+	SI_LOREPLAY_PANEL_LW_OUTFIT_SW_NAME				= "Use Favorite Outfits managed at the outfit station", 
+	SI_LOREPLAY_PANEL_LW_OUTFIT_SW_TIPS				= "", 
 
 }
 for stringId, stringToAdd in pairs(strings) do
@@ -82,7 +85,8 @@ for stringId, stringToAdd in pairs(strings) do
 end
 
 ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_NAME_"..tostring(COLLECTIBLE_CATEGORY_TYPE_COSTUME), 			"Use Favorite Costume")
-ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_"..tostring(COLLECTIBLE_CATEGORY_TYPE_COSTUME), 			"If enabled, uses your favorite costume in outfits, along with your other favrotie collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.")
+--ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_"..tostring(COLLECTIBLE_CATEGORY_TYPE_COSTUME), 			"If enabled, uses your favorite costume in outfits, along with your other favrotie collectibles.\n|cFF0000Note|r: Use if you want to save 'None' as your favorite, treating the empty slot as a piece of your outfit.")
+ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_"..tostring(COLLECTIBLE_CATEGORY_TYPE_COSTUME), 			"")
 ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_NAME_"..tostring(COLLECTIBLE_CATEGORY_TYPE_HAT), 				"Use Favorite Hat")
 ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_"..tostring(COLLECTIBLE_CATEGORY_TYPE_HAT), 				"")
 ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_NAME_"..tostring(COLLECTIBLE_CATEGORY_TYPE_HAIR), 				"Use Favorite Hair")
@@ -105,5 +109,7 @@ ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_NAME_"..tostring(COLLECTI
 ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_"..tostring(COLLECTIBLE_CATEGORY_TYPE_PERSONALITY), 		"")
 ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_NAME_"..tostring(COLLECTIBLE_CATEGORY_TYPE_VANITY_PET), 			"Use Favorite Pets")
 ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_"..tostring(COLLECTIBLE_CATEGORY_TYPE_VANITY_PET), 			"")
+ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_NAME_"..tostring(COLLECTIBLE_CATEGORY_TYPE_ASSISTANT), 			"Use Favorite Assistants")
+ZO_CreateStringId("SI_LOREPLAY_PANEL_LW_COLLECTIBLE_SW_TIPS_"..tostring(COLLECTIBLE_CATEGORY_TYPE_ASSISTANT), 			"")
 
 -- ---

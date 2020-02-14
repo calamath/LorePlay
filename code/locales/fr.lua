@@ -26,12 +26,13 @@ SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_56,			"La conquérante implacable", 1)
 SafeAddString(SI_LOREPLAY_PC_TITLE_NAME_F_63,			"Suzeraine ophidienne", 1)							-- "Ophidian Overlord"
 
 SafeAddString(SI_BINDING_NAME_LP_PERFORM_SMART_EMOTE, 			"Perform Smart Emote", 1)
-SafeAddString(SI_BINDING_NAME_LP_SHOW_HIDE_LOREWEAR_CLOTHES, 	"Show/Hide LoreWear Clothes", 1)
 SafeAddString(SI_BINDING_NAME_LP_TOGGLE_IDLEEMOTES, 			"Toggle IdleEmotes On/Off", 1)
+SafeAddString(SI_BINDING_NAME_LP_SHOW_HIDE_LOREWEAR_CLOTHES, 	"Show/Hide Costumes Only", 1)
 SafeAddString(SI_BINDING_NAME_LP_FORCE_EQUIP_CITY_OUTFIT, 		"Force Equip City Outfit", 1)
 SafeAddString(SI_BINDING_NAME_LP_FORCE_EQUIP_HOUSING_OUTFIT, 	"Force Equip Housing Outfit", 1)
 SafeAddString(SI_BINDING_NAME_LP_FORCE_EQUIP_DUNGEON_OUTFIT, 	"Force Equip Dungeon Outfit", 1)
 SafeAddString(SI_BINDING_NAME_LP_FORCE_EQUIP_ADVENTURE_OUTFIT, 	"Force Equip Adventure Outfit", 1)
+SafeAddString(SI_BINDING_NAME_LP_TOGGLE_ALTERNATIVE_OUTFIT, 	"Toggle Prefered Outfits", 1)
 
 SafeAddString(SI_LOREPLAY_UI_WELCOME, 							"[LorePlay] Welcome to LorePlay, Soulless One!", 1)
 SafeAddString(SI_LOREPLAY_PANEL_SE_HEADER, 						"Smart Emotes", 1)
@@ -60,13 +61,6 @@ SafeAddString(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_NAME, 			"Can Worship/Pray", 1)
 SafeAddString(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS, 			"Determines whether or not your character can perform prayer and worship emotes when idle in general.", 1)
 SafeAddString(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME, 	"Camera Spin Disabler", 1)
 SafeAddString(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS, 	"Allows for emotes to be performed while in menus. Disables camera spin in menus. Removes '" .. GetString(SI_PLAYEREMOTEPLAYFAILURE0) .. "' message.", 1)
-SafeAddString(SI_LOREPLAY_PANEL_LE_HEADER, 						"Lore Wear", 1)
-SafeAddString(SI_LOREPLAY_PANEL_LE_DESCRIPTION, 				"Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically and appropriately equip their favorite collectibles depending on where they are.\n|cFF0000Don't forget to bind your LoreWear show/hide clothes button!|r", 1)
-SafeAddString(SI_LOREPLAY_PANEL_LE_SW_NAME, 					"Toggle LoreWear On/Off", 1)
-SafeAddString(SI_LOREPLAY_PANEL_LE_SW_TIPS, 					"Turns on/off the automatic, contextual clothing that will be put on when entering the areas respective to your outfits.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)", 1)
-SafeAddString(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_NAME, 	"Allow Equip While Mounted", 1)
-SafeAddString(SI_LOREPLAY_PANEL_LE_EQUIP_WHILE_MOUNT_SW_TIPS, 	"Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.", 1)
-
 SafeAddString(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_NAME, 		"Set City Outfit", 1)
 SafeAddString(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_TIPS, 		"Sets the current outfit (collectibles) your character is wearing as their city outfit, allowing for automatic collectible changing when entering a city.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!", 1)
 SafeAddString(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_HOUSING_NAME, 	"Set Housing Outfit", 1)
@@ -75,5 +69,12 @@ SafeAddString(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_NAME, 	"Set Dungeon Outfit
 SafeAddString(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_DUNGEON_TIPS, 	"Sets the current outfit (collectibles) your character is wearing as their dungeon outfit, allowing for automatic collectible changing when entering a dungeon.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!", 1)
 SafeAddString(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_NAME, 	"Set Adventure Outfit", 1)
 SafeAddString(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_ADVENTURE_TIPS, 	"Sets the current outfit (collectibles) your character is wearing as their adventuring outfit, allowing for automatic collectible changing when running around the land of Tamriel.\nAlso saves |cFF0000empty slots|r if the 'Use Favorite ...' setting for that category is enabled!", 1)
+
+SafeAddString(SI_LOREPLAY_PANEL_LW_HEADER, 						"Lore Wear", 1)
+SafeAddString(SI_LOREPLAY_PANEL_LW_DESCRIPTION, 				"Armor should be worn when venturing Tamriel, but not when in comfortable cities! Your character will automatically and appropriately equip their favorite collectibles depending on where they are.\n|cFF0000Don't forget to bind your LoreWear show/hide clothes button!|r", 1)
+SafeAddString(SI_LOREPLAY_PANEL_LW_SW_NAME, 					"Toggle LoreWear On/Off", 1)
+SafeAddString(SI_LOREPLAY_PANEL_LW_SW_TIPS, 					"Turns on/off the automatic, contextual clothing that will be put on when entering the areas respective to your outfits.\n(Note: Disabling LoreWear displays all its settings as off, but will persist after re-enabling.)", 1)
+SafeAddString(SI_LOREPLAY_PANEL_LW_EQUIP_WHILE_MOUNT_SW_NAME, 	"Allow Equip While Mounted", 1)
+SafeAddString(SI_LOREPLAY_PANEL_LW_EQUIP_WHILE_MOUNT_SW_TIPS, 	"Turns on/off the automatic, contextual clothing that can be put on while riding your trusty steed.", 1)
 
 -- ---
