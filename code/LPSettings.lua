@@ -525,7 +525,7 @@ local scenes = {}
 local function noCameraSpin()
 	if LorePlay.db.isCameraSpinDisabled then
 		for name, scene in pairs(SCENE_MANAGER.scenes) do
-		  if not name:find("market") and not name:find("store") and not name:find("crownCrate") and not name:find("housing") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
+		  if not name:find("market") and not name:find("store") and not name:find("crownCrate") and not name:find("housing") and not name:find("collectionsBook") and not name:find("outfitStylesBook") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
 			scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
 			scenes[name] = scene
 		  end

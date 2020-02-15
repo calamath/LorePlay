@@ -5,6 +5,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.70 : by Calamath
 [COMPATIBILITY-BREAKING CHANGE]
 - MAJOR REVAMP OF LOREWEAR FEATURE
   Complete transition to Calamath's new outfit change algorithm.
@@ -19,7 +20,7 @@ NOTE : this modified version is still under the Artistic License 2.0
   NOTE: Users don't need to worry about this change, but any configuration changes you make in this version or later will not take effect if you switch back to the standard version in the future.
 - Eliminated the double buffering of save data, and changed to direct access.
 - Fixed UI related known issues that advanced settings of IdleEmotes were not saved correctly when IdleEmotes features was turned off.
-
+- Fixed known issue that the restyle preview was not displayed on the collection screen due to the camera spin disabler.
 
 Version 1.6.62 : by Calamath
 [HotFix] Fixed a rare bug that could cause in-game world map textures to be mismatched.
