@@ -131,7 +131,7 @@ local default_db = {
 		[COLLECTIBLE_CATEGORY_TYPE_VANITY_PET] = true, 
 		[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = false, 
 	}, 
-	isUsingOutfit = true, 
+	isUsingOutfit = false, 
 	equippedPresetIndex = 0, 	-- 0 means unknown
 	preferedStylePresetByUsage = { 1, 2, 3, 4, 0, 0, 0, 0, 0,  }, 
 	stylePreset = {
@@ -429,22 +429,22 @@ local defaultSettingsTable = {
 local function ConvertToForeverSavedata()
 	local sv = Settings.savedVariables
 
-	if sv.isSmartEmotesIndicatorOn			then LorePlay.db.isSmartEmotesIndicatorOn			= sv.isSmartEmotesIndicatorOn				end
-	if sv.indicatorLeft						then LorePlay.db.indicatorLeft						= sv.indicatorLeft							end
-	if sv.indicatorTop						then LorePlay.db.indicatorTop						= sv.indicatorTop							end
-	if sv.maraSpouseName					then LorePlay.db.maraSpouseName						= sv.maraSpouseName							end
+	if sv.isSmartEmotesIndicatorOn			~= nil then LorePlay.db.isSmartEmotesIndicatorOn			= sv.isSmartEmotesIndicatorOn				end
+	if sv.indicatorLeft						~= nil then LorePlay.db.indicatorLeft						= sv.indicatorLeft							end
+	if sv.indicatorTop						~= nil then LorePlay.db.indicatorTop						= sv.indicatorTop							end
+	if sv.maraSpouseName					~= nil then LorePlay.db.maraSpouseName						= sv.maraSpouseName							end
 	-- ------------------------------------------------------------
-	if sv.isIdleEmotesOn					then LorePlay.db.isIdleEmotesOn						= sv.isIdleEmotesOn							end
-	if sv.canPlayInstrumentsInCities		then LorePlay.db.canPlayInstrumentsInCities			= sv.canPlayInstrumentsInCities				end
-	if sv.canDanceInCities					then LorePlay.db.canDanceInCities					= sv.canDanceInCities						end
-	if sv.canBeDrunkInCities				then LorePlay.db.canBeDrunkInCities					= sv.canBeDrunkInCities						end
-	if sv.canExerciseInZone					then LorePlay.db.canExerciseInZone					= sv.canExerciseInZone						end
-	if sv.canWorship						then LorePlay.db.canWorship							= sv.canWorship								end
-	if sv.isCameraSpinDisabled				then LorePlay.db.isCameraSpinDisabled				= sv.isCameraSpinDisabled					end
-	if sv.timeBetweenIdleEmotes				then LorePlay.db.timeBetweenIdleEmotes				= sv.timeBetweenIdleEmotes					end
+	if sv.isIdleEmotesOn					~= nil then LorePlay.db.isIdleEmotesOn						= sv.isIdleEmotesOn							end
+	if sv.canPlayInstrumentsInCities		~= nil then LorePlay.db.canPlayInstrumentsInCities			= sv.canPlayInstrumentsInCities				end
+	if sv.canDanceInCities					~= nil then LorePlay.db.canDanceInCities					= sv.canDanceInCities						end
+	if sv.canBeDrunkInCities				~= nil then LorePlay.db.canBeDrunkInCities					= sv.canBeDrunkInCities						end
+	if sv.canExerciseInZone					~= nil then LorePlay.db.canExerciseInZone					= sv.canExerciseInZone						end
+	if sv.canWorship						~= nil then LorePlay.db.canWorship							= sv.canWorship								end
+	if sv.isCameraSpinDisabled				~= nil then LorePlay.db.isCameraSpinDisabled				= sv.isCameraSpinDisabled					end
+	if sv.timeBetweenIdleEmotes				~= nil then LorePlay.db.timeBetweenIdleEmotes				= sv.timeBetweenIdleEmotes					end
 	-- ------------------------------------------------------------
-	if sv.isLoreWearOn						then LorePlay.db.isLoreWearOn						= sv.isLoreWearOn							end
-	if sv.canActivateLWClothesWhileMounted	then 
+	if sv.isLoreWearOn						~= nil then LorePlay.db.isLoreWearOn						= sv.isLoreWearOn							end
+	if sv.canActivateLWClothesWhileMounted	~= nil then 
 		if sv.canActivateLWClothesWhileMounted == true then
 			LorePlay.db.lwControlTable.whileMounted = LW_BEHAVIOR_ID_DONT_CARE
 		else
@@ -462,16 +462,37 @@ local function ConvertToForeverSavedata()
 		end
 	end
 	-- ------------------------------------------------------------
-	if sv.savedSubZoneName					then LorePlay.db.savedSubZoneName					= sv.savedSubZoneName						end
-	if sv.savedSubZoneId					then LorePlay.db.savedSubZoneId						= sv.savedSubZoneId							end
-	if sv.specificPOINameNearby				then LorePlay.db.specificPOINameNearby				= sv.specificPOINameNearby					end
+	if sv.savedSubZoneName					~= nil then LorePlay.db.savedSubZoneName					= sv.savedSubZoneName						end
+	if sv.savedSubZoneId					~= nil then LorePlay.db.savedSubZoneId						= sv.savedSubZoneId							end
+	if sv.specificPOINameNearby				~= nil then LorePlay.db.specificPOINameNearby				= sv.specificPOINameNearby					end
 
 	LorePlay.LDL:Debug("savedata migration finished.")
 	-- ==========================================================================================================================================
-	if sv.savedSubZoneName then Settings.savedVariables.savedSubZoneName = nil end
-	if sv.savedSubZoneId then Settings.savedVariables.savedSubZoneId = nil end
-	if sv.specificPOINameNearby then Settings.savedVariables.specificPOINameNearby = nil end
+	if sv.savedSubZoneName ~= nil then Settings.savedVariables.savedSubZoneName = nil end
+	if sv.savedSubZoneId ~= nil then Settings.savedVariables.savedSubZoneId = nil end
+	if sv.specificPOINameNearby ~= nil then Settings.savedVariables.specificPOINameNearby = nil end
 end
+
+
+-- [HotFix] correct savedata conversion mistakes in Version 1.6.70
+local function FixSavedata1670()
+	if LorePlay.db.migrated == true and Settings.savedVariables == nil then
+		Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", 1, nil, {})	-- save data of LorePlay standard version
+		local sv = Settings.savedVariables
+		if sv.isSmartEmotesIndicatorOn			== false then LorePlay.db.isSmartEmotesIndicatorOn		= sv.isSmartEmotesIndicatorOn		end
+		if sv.isIdleEmotesOn					== false then LorePlay.db.isIdleEmotesOn				= sv.isIdleEmotesOn					end
+		if sv.canPlayInstrumentsInCities		== false then LorePlay.db.canPlayInstrumentsInCities	= sv.canPlayInstrumentsInCities		end
+		if sv.canDanceInCities					== false then LorePlay.db.canDanceInCities				= sv.canDanceInCities				end
+		if sv.canBeDrunkInCities				== false then LorePlay.db.canBeDrunkInCities			= sv.canBeDrunkInCities				end
+		if sv.canExerciseInZone					== false then LorePlay.db.canExerciseInZone				= sv.canExerciseInZone				end
+		if sv.canWorship						== false then LorePlay.db.canWorship					= sv.canWorship						end
+		if sv.isCameraSpinDisabled				== false then LorePlay.db.isCameraSpinDisabled			= sv.isCameraSpinDisabled			end
+		if sv.isLoreWearOn						== false then LorePlay.db.isLoreWearOn					= sv.isLoreWearOn					end
+		if sv.canActivateLWClothesWhileMounted	== false then LorePlay.db.lwControlTable.whileMounted	= LW_BEHAVIOR_ID_PREVENT_CHANGE		end
+		ReloadUI()
+	end
+end
+LorePlay.FixSavedata1670 = FixSavedata1670
 
 
 local function updateSpouseName(newMaraSpouseName)
@@ -1022,6 +1043,13 @@ local function RegisterSettingsEvents()
 	LPEventHandler:RegisterForLocalEvent(EVENT_INDICATOR_MOVED, OnIndicatorMoved)
 	LPEventHandler:RegisterForLocalEvent(EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraResult)
 end
+
+
+local function ReconvertLorePlaySavedata()
+	LorePlay.db.migrated = false
+	ReloadUI()
+end
+LorePlay.ReconvertLorePlaySavedata = ReconvertLorePlaySavedata
 
 
 local function InitializeSettings()

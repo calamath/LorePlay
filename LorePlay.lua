@@ -1,7 +1,7 @@
 LorePlay = LorePlay or {}
 LorePlay.majorVersion = 1
 LorePlay.minorVersion = 6
-LorePlay.bugVersion = 70
+LorePlay.bugVersion = 71
 LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LorePlay.bugVersion
 LorePlay.name = "LorePlay"
 LorePlay.savedVars = "LorePlaySavedVars"
@@ -51,3 +51,5 @@ end
 EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_ADD_ON_LOADED, LorePlay.OnAddOnLoaded)
 
 SLASH_COMMANDS["/loreplay.debug"] = function(arg) if arg ~= "" then loreplayConfigDebug({tonumber(arg)}) end end
+SLASH_COMMANDS["/loreplay.reload"] = function(arg) LorePlay.ReconvertLorePlaySavedata() end
+SLASH_COMMANDS["/loreplay.fixdata1670"] = function(arg) LorePlay.FixSavedata1670() end

@@ -5,6 +5,13 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.71 : by Calamath
+[HotFix] Changed the default value of the 'Use Outfit' item to 'OFF' in add-on setting LoreWear Management Range.
+         If you want to switch outfit automatically by LoreWear, please change the setting to 'ON'
+[HotFix] Fixed a bug regarding savedata migration process, and the 'OFF' settings would be converted correctly.
+         Added a special savedata fix command '/loreplay.fixdata1670' for your characters logged in with Version 1.6.70. 
+       --NOTE: The user can modify the add-on settings checkbox as needed, or use the command above for each characters.
+
 Version 1.6.70 : by Calamath
 [COMPATIBILITY-BREAKING CHANGE]
 - MAJOR REVAMP OF LOREWEAR FEATURE
