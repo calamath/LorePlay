@@ -5,6 +5,9 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.72 : by Calamath
+[HotFix] Fixed a bug that a new LorePlay user would get a nil error when launching the game. Thanks Melhael for the report.
+
 Version 1.6.71 : by Calamath
 [HotFix] Changed the default value of the 'Use Outfit' item to 'OFF' in add-on setting LoreWear Management Range.
          If you want to switch outfit automatically by LoreWear, please change the setting to 'ON'

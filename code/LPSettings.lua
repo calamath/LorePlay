@@ -452,13 +452,17 @@ local function ConvertToForeverSavedata()
 		end
 	end
 
-	for k, v in pairs(sv.isUsingFavorite) do
-		LorePlay.db.isUsingCollectible[stringToColTypeTable[k]] = v
+	if sv.isUsingFavorite ~= nil then
+		for k, v in pairs(sv.isUsingFavorite) do
+			LorePlay.db.isUsingCollectible[stringToColTypeTable[k]] = v
+		end
 	end
 
-	for i, j in pairs({ "City", "Housing", "Dungeon", "Adventure", }) do
-		for k, v in pairs(sv.outfitTable[j]) do
-			LorePlay.db.stylePreset[i].collectible[stringToColTypeTable[k]] = v
+	if sv.outfitTable ~= nil then
+		for i, j in pairs({ "City", "Housing", "Dungeon", "Adventure", }) do
+			for k, v in pairs(sv.outfitTable[j]) do
+				LorePlay.db.stylePreset[i].collectible[stringToColTypeTable[k]] = v
+			end
 		end
 	end
 	-- ------------------------------------------------------------
