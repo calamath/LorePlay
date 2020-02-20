@@ -5,6 +5,14 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.73 : by Calamath
+[LoreWear]small optimizations for some unnatural movements in automatic wearing.
+-- no longer changes outfits right after login.
+-- no longer wearing your favorite wet suit during battles, even if you select "use wetsuit" option.
+-- no longer wearing your favorite combat uniform while riding or swimming, even if you select "use combat uniform" option.
+-- no longer wearing a helmet while swimming, even if you select "turn off 'hide your helm' during combat" option.
+-- no longer changes your favorite wet suit if you ninja players skipping across the water. (effective after Update 25)
+
 Version 1.6.72 : by Calamath
 [HotFix] Fixed a bug that a new LorePlay user would get a nil error when launching the game. Thanks Melhael for the report.
 

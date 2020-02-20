@@ -372,7 +372,7 @@ local function OnCollectibleCooldownOver()
 	else
 		EVENT_MANAGER:UnregisterForUpdate("LorePlayCollectibleCooldown")
 		isCooldown = false
-		LorePlay.LDL:Debug("Collectible cooldown is over right now.")
+--		LorePlay.LDL:Debug("Collectible cooldown is over right now.")
 	end
 end
 local function RegisterChangeStylePreset(presetIndex)
@@ -393,7 +393,7 @@ local function RegisterChangeStylePreset(presetIndex)
 		end
 		isCooldown = true
 		EVENT_MANAGER:RegisterForUpdate("LorePlayCollectibleCooldown", duration, OnCollectibleCooldownOver)
-		LorePlay.LDL:Debug("RegisterForUpdate : OnCollectibleCooldownOver")
+--		LorePlay.LDL:Debug("RegisterForUpdate : OnCollectibleCooldownOver")
 	end
 end
 
@@ -464,6 +464,7 @@ local function RequestChangeOutfits(eventCode)
 	local isPlayerMounted
 	local isPlayerSwimming
 	local isPlayerInCombat
+	local IsUnitInAir = IsUnitInAir or function() return false end
 
 --	LorePlay.LDL:Debug("[RequestChangeOutfits] : eventCode=", eventCode)
 
@@ -492,21 +493,28 @@ local function RequestChangeOutfits(eventCode)
 	if isFastTraveling then
 		if controlTable.inFastTraveling == LW_BEHAVIOR_ID_PREVENT_CHANGE then return end
 	end
+	if IsUnitInAir("player") then
+--		LorePlay.LDL:Debug("Outfit change request postponed : player is in air")	-- Do not change outfit when character is in air (countermeasure for water jump)
+		zo_callLater(function() RequestChangeOutfits(nil) end, 2000)	-- for fail safe
+		return
+	end
 
 --	LorePlay.LDL:Debug("[RequestChangeOutfits] : reject check passed")
 
 	-- determine outfit category based on higher priority events
-	if eventCode == EVENT_MOUNTED_STATE_CHANGED and isPlayerMounted then	-- ----- start riding
+	if eventCode == EVENT_MOUNTED_STATE_CHANGED and isPlayerMounted then	-- ------- start riding
 		if controlTable.whileMounted == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
 --			LorePlay.LDL:Debug("[RequestChangeOutfits] : EVENT_MOUNTED_STATE_CHANGED")
 			selectUsage = LW_USAGE_ID_RIDING	-- riding clothes
 		end
-	elseif eventCode == EVENT_PLAYER_SWIMMING then	-- ----------------------------- start swimming
+	elseif eventCode == EVENT_PLAYER_SWIMMING then
 		if controlTable.duringSwimming == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
---			LorePlay.LDL:Debug("[RequestChangeOutfits] : EVENT_PLAYER_SWIMMING")
-			selectUsage = LW_USAGE_ID_SWIMMING	-- wet suit
+			if isPlayerInCombat == false then									-- --- start swimming in non-combat
+--				LorePlay.LDL:Debug("[RequestChangeOutfits] : EVENT_PLAYER_SWIMMING")
+				selectUsage = LW_USAGE_ID_SWIMMING	-- wet suit
+			end
 		end
-	elseif eventCode == EVENT_PLAYER_COMBAT_STATE and isPlayerInCombat then	-- ----- just after the battle started
+	elseif eventCode == EVENT_PLAYER_COMBAT_STATE and isPlayerInCombat then	-- ------- just after the battle started
 		if isPlayerSwimming == false then
 --			LorePlay.LDL:Debug("[RequestChangeOutfits] : EVENT_PLAYER_COMBAT_STATE")
 			if controlTable.inCombat == LW_BEHAVIOR_ID_CANCEL_HIDE_HELM then
@@ -523,26 +531,41 @@ local function RequestChangeOutfits(eventCode)
 				end
 			end
 		end
-	else
+	end
 
 	-- determine outfit category based on player situation
-		if isPlayerMounted and controlTable.whileMounted == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
+	if selectUsage == nil then
+		if controlTable.whileMounted == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE and isPlayerMounted then
 			selectUsage = LW_USAGE_ID_RIDING	-- riding clothes
-		elseif isPlayerSwimming and controlTable.duringSwimming == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
-			selectUsage = LW_USAGE_ID_SWIMMING	-- wet suit
-		elseif isPlayerInCombat and controlTable.inCombat == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
-			selectUsage = LW_USAGE_ID_COMBAT	-- combat uniform
-		elseif isPlayerInCombat and controlTable.inCombat == LW_BEHAVIOR_ID_CANCEL_HIDE_HELM then
-			if currentOutfitUsageCategory ~= LW_USAGE_ID_COMBAT then		-- allow turning off hide helm
+		elseif controlTable.duringSwimming == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE and isPlayerSwimming then
+			if isPlayerInCombat == false then
+				selectUsage = LW_USAGE_ID_SWIMMING	-- wet suit
+			end
+		end
+	end
+	if selectUsage == nil then
+		if controlTable.inCombat == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE and isPlayerInCombat then
+			if isPlayerMounted == false and isPlayerSwimming == false then
+				selectUsage = LW_USAGE_ID_COMBAT	-- combat uniform
+			else
+				if currentOutfitUsageCategory == LW_USAGE_ID_COMBAT then
+					selectUsage = LW_USAGE_ID_COMBAT	-- combat uniform
+				end
+			end
+		elseif controlTable.inCombat == LW_BEHAVIOR_ID_CANCEL_HIDE_HELM and isPlayerInCombat then
+			if isPlayerSwimming == false and currentOutfitUsageCategory ~= LW_USAGE_ID_COMBAT then		-- allow turning off hide helm
 				currentOutfitUsageCategory = LW_USAGE_ID_COMBAT				-- as same as combat uniform
 				RegisterChangeStylePreset(LW_PRESET_TURN_OFF_HIDE_HELM)
+				return
 			else
---				LorePlay.LDL:Debug("Outfit change request canceled : same outfit usage category")
+				selectUsage = LW_USAGE_ID_COMBAT	-- keep turning off hide helm
 			end
-			return
+		end
+	end
 
 	-- determine outfit category based on location
-		elseif LorePlay.IsPlayerInHouse() then
+	if selectUsage == nil then
+		if LorePlay.IsPlayerInHouse() then
 			selectUsage = LW_USAGE_ID_HOUSING	-- housing
 		elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() or LorePlay.IsPlayerInAbyssalGeyser() then
 			selectUsage = LW_USAGE_ID_DUNGEON	-- dungeon
@@ -656,10 +679,7 @@ local function OnPlayerIsActivated(eventCode, initial)
 
 	CorrectMapMismatch()
 	if initial then
-		if isFirstTimePlayerActivated then		-- --- after login
---			LorePlay.LDL:Info("after login!")
-			isFirstTimePlayerActivated = false
-		else		-- ------------------------------- after fast travel
+		if isFirstTimePlayerActivated == false then		-- after fast travel
 			local zoneIndexAfterLoading = GetUnitZoneIndex("player")
 			local mapNameAfterLoading = GetMapName()
 			local isInSpecificPOI, _, id = LorePlay.IsPlayerInSpecificPOI(mapNameAfterLoading)
@@ -689,20 +709,22 @@ local function OnPlayerIsActivated(eventCode, initial)
 --				RequestChangeOutfits(eventCode) -- "", 0
 --				return
 			end
+
+			if countEventZoneChangedDuringLoading == 0 then
+				local location = GetPlayerLocationName()
+				if location ~= LorePlay.db.savedSubZoneName then
+					LorePlay.db.savedSubZoneId = nil
+				end
+				LorePlay.db.savedSubZoneName = location
+				RequestChangeOutfits(eventCode)
+			end
+		else		-- --------------------------------- after login
+--			LorePlay.LDL:Info("after login!")
+			isFirstTimePlayerActivated = false
 		end
-	else		-- ----------------------------------- after reloadui
+	else		-- ------------------------------------- after reloadui
 --		LorePlay.LDL:Info("after reloadui")
 		isFirstTimePlayerActivated = false
-	end
-
-	if countEventZoneChangedDuringLoading == 0 then
-		local location = GetPlayerLocationName()
---		LorePlay.LDL:Info("Update Location by EVENT_PLAYER_ACTIVATED")
-		if location ~= LorePlay.db.savedSubZoneName then
-			LorePlay.db.savedSubZoneId = nil
-		end
-		LorePlay.db.savedSubZoneName = location
-		RequestChangeOutfits(eventCode)
 	end
 end
 
