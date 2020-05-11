@@ -5,6 +5,8 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+- Russian language support
+
 Version 1.6.73 : by Calamath
 [LoreWear]small optimizations for some unnatural movements in automatic wearing.
 -- no longer changes outfits right after login.

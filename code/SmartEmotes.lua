@@ -264,6 +264,7 @@ local poiDatabase = {
 	[2224387413] = { id = 15336, emoteKey = "Other", 	}, 		-- DE:Senchal
 	[3482854427] = { id = 15336, emoteKey = "Other", 	}, 		-- FR:Senchal
 	[3754689769] = { id = 15336, emoteKey = "Other", 	}, 		-- JP:Senchal
+	[824842596]	 = { id = 15336, emoteKey = "Other", 	}, 		-- RU:Senchal
 }
 -- ---------
 local titleIdToMaleTitleName = {	------------------ titleId to male titleName table, converted from languageTable.playerTitles
