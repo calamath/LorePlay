@@ -35,7 +35,7 @@ local LPUtilities = LorePlay.LPUtilities
 
 local IdleEmotes = LorePlay
 
-local idleTime = 10000 -- time period in miliseconds to check whether player is idle
+local idleTime = 20000 -- time period in miliseconds to check whether player is idle
 local isPlayerStealthed
 local currentPlayerX, currentPlayerY
 local emoteFromEvent
@@ -399,6 +399,7 @@ function IdleEmotes.OnChatterEvent(eventCode)
 	if eventCode == EVENT_CHATTER_BEGIN then
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	else
+		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
 	end
 end
@@ -484,7 +485,7 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ALIVE, OnPlayerDeathStateChanged)
 	LPEventHandler:RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
-	EVENT_MANAGER:RegisterForUpdate("IdleEmotesMoveTimer", idleTime, IdleEmotes.UpdateIfMoved)
+	EVENT_MANAGER:RegisterForUpdate("IdleEmotesMoveTimer", 10000, IdleEmotes.UpdateIfMoved)
 end
 
 
