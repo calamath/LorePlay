@@ -237,7 +237,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[10941]	= { emoteKey = "DC", 			}, 		-- Elinhir
 --	[8006]	= { emoteKey = "DC", 			}, 		-- Elinhir Wayshrine
 --	[11004]	= { emoteKey = "DC", 			}, 		-- Elinhir Wayshrine
---	[4730]	= { emoteKey = "Other", 		}, 		-- The Hollow City
+	[4730]	= { emoteKey = "Other", 		}, 		-- The Hollow City
 	[2955]	= { emoteKey = "AD", 			}, 		-- Silvenar
 	[9348]	= { emoteKey = "AD", 			}, 		-- Silvenar Treetops
 	[3370]	= { emoteKey = "AD", 			}, 		-- Silvenar's Audience Hall
@@ -249,6 +249,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 --	[11549]	= { emoteKey = "EP", 			}, 		-- Seyda Neen Wayshrine
 	[12386]	= { emoteKey = "EP", 			}, 		-- Illumination Academy (in Summerset)
 	[14317]	= { emoteKey = "Other", 		}, 		-- Riverhold (in Northern Elsweyr)
+	[15239]	= { emoteKey = "Other", 		},		-- Black Heights (in Southern Elsweyr)
 	[15336]	= { emoteKey = "Other", 		},		-- Senchal (in Southern Elsweyr)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
