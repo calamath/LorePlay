@@ -14,12 +14,22 @@ YOU NEED TO INSTALL THE FOLLOWING LIBRARY SEPARATELY.
 ### Modification details:
 - Forked from Justinon's standard version 1.5.1
 - Removed embedded LibStub and LibAddonMenu-2.0 libraries, you now need to have LibAddonMenu-2.0 separately.
-- LoreWear now support for three non-English language modes: DE, FR, and JP
+- Major Revamp of LoreWear Feature
+- LoreWear now support for four non-English language modes: DE, FR, JP, and RU
 - Support for following DLCs and Chapters: Clockwork City, Summerset, Murkmire, Elsweyr, and Dragonhold.
 
 - **[COMPATIBILITY-BREAKING CHANGE]**  
   The various zone and city recognitions have been rewritten to a brand-new identifier based approach by Calamath, and are no longer language mode dependent.
   As the result, the boundaries of whether the add-on recognizes cities may be slightly different from the standard version.
+
+
+### [LoreWear 2.0]
+  * Complete transition to Calamath's new outfit change algorithm.
+  * Five optional outfit preset slots with versatility, in addition to the existing four basic slots.
+  * Option to register as an alternative preset for your favorite outfits.
+  * New shortcut key to switch today's prefered clothes from your multiple outfit presets.
+  * Optional support for changing costumes according to riding, fighting and swimming.
+  * Support for outfit system introduced by Dragonbone DLC.
 
 ### Instruction:
 - If you want to run this modified version, you'll need to replace the standard version of LorePlay by Justinon. 

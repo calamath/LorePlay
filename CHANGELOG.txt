@@ -6,8 +6,9 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 NOTE : this modified version is still under the Artistic License 2.0
 
 
-
+Version 1.6.74 : by Calamath
 - Russian language support
+- optional LibDebugLogger V2.x support
 [IdleEmotes]:Fixed an unintended behavior of IdleEmotes. This is a known issue inherited from the LorePlay standard version.
 - Addressed an issue that could cause the idle emote to play shortly after the player interaction ended.
 - Changed the waiting time before playing the idle emote from 10 seconds to 20 seconds. You will be able to adjust the waiting time in future versions.

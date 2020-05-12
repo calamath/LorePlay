@@ -1,11 +1,11 @@
 ## Title: LorePlay
 ## Description: Adds immersion through intelligent, contextual emotes and outfits.
-## Version: 1.6.73
-## APIVersion: 100029 100030
+## Version: 1.6.74
+## APIVersion: 100030
 ## Author: Justinon, modified by Calamath
 ## SavedVariables: LorePlaySavedVars
 ## DependsOn: LibAddonMenu-2.0 LibEventHandler
-## OptionalDependsOn: LibDebugLogger
+## OptionalDependsOn: LibDebugLogger>=180
 
 code\locales\en.lua
 code\locales\$(language).lua

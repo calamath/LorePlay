@@ -1,7 +1,7 @@
 LorePlay = LorePlay or {}
 LorePlay.majorVersion = 1
 LorePlay.minorVersion = 6
-LorePlay.bugVersion = 73
+LorePlay.bugVersion = 74
 LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LorePlay.bugVersion
 LorePlay.name = "LorePlay"
 LorePlay.savedVars = "LorePlaySavedVars"
@@ -22,7 +22,7 @@ local function loreplayConfigDebug(arg)
 	if debugMode then
 		LorePlay.LDL = LibDebugLogger(LorePlay.name)
 	else
-		LorePlay.LDL = { Debug = dummy, Info = dummy, Warn = dummy, Error = dummy, }
+		LorePlay.LDL = { Verbose = dummy, Debug = dummy, Info = dummy, Warn = dummy, Error = dummy, }
 	end
 end
 
