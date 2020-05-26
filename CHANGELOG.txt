@@ -5,6 +5,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+- Updated embedded LibEventHandler version to 1.2.91 (AddOnVersion: 1291).
 
 Version 1.6.74 : by Calamath
 - Russian language support
