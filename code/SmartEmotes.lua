@@ -147,6 +147,8 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[1011]	= { emoteKey = "ad1", 	},		-- Summerset
 	[1086]	= { emoteKey = "other", },		-- Northern Elsweyr
 	[1133]	= { emoteKey = "other", },		-- Southern Elsweyr
+	[1160]	= { emoteKey = "ep1", 	},		-- Western Skyrim
+	[1161]	= { emoteKey = "other", },		-- Blackreach: Greymoor Caverns
 
 }
 -- ---------
@@ -224,6 +226,7 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1675]	= { emoteKey = "Other",	 		}, 		-- Senchal
 	[1690]	= { emoteKey = "Other", useMapBorder = true, 	}, 		-- Senchal Palace
 	[1762]	= { emoteKey = "Other", 		}, 		-- Senchal
+	[1773]	= { emoteKey = "EP", useMapBorder = true, 	}, 		-- Solitude
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -251,6 +254,11 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[14317]	= { emoteKey = "Other", 		}, 		-- Riverhold (in Northern Elsweyr)
 	[15239]	= { emoteKey = "Other", 		},		-- Black Heights (in Southern Elsweyr)
 	[15336]	= { emoteKey = "Other", 		},		-- Senchal (in Southern Elsweyr)
+	[15545]	= { emoteKey = "EP", 			},		-- Solitude
+	[15547]	= { emoteKey = "EP", 			},		-- Morthal (in Western Skyrim)
+--	[15550]	= { emoteKey = "EP", 			},		-- Dragon Bridge (in Western Skyrim)				--> If you want to add Dragon Bridge as a city, change this line manually.
+--	[15754]	= { emoteKey = "EP", 			},		-- Dragon Bridge Wayshrine (in Western Skyrim)		--> If you want to add Dragon Bridge as a city, change this line manually.
+	[15625]	= { emoteKey = "Other", 		},		-- Dusktown (in Blackreach Cavern)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
@@ -266,6 +274,19 @@ local poiDatabase = {
 	[3482854427] = { id = 15336, emoteKey = "Other", 	}, 		-- FR:Senchal
 	[3754689769] = { id = 15336, emoteKey = "Other", 	}, 		-- JP:Senchal
 	[824842596]	 = { id = 15336, emoteKey = "Other", 	}, 		-- RU:Senchal
+}
+-- ---------
+local harrowstormRitualSiteDatabase = {
+	[15935] = true, 		-- Old Karth Ritual Site
+	[15936] = true, 		-- Black Morass Ritual Site
+	[15937] = true, 		-- Giant's Coast Ritual Site
+	[15939] = true, 		-- Chilblain Peak Ritual Site
+	[16003] = true, 		-- Hailstone Valley Ritual Site
+	[16004] = true, 		-- Northern Watch Ritual Site
+	[16086] = true, 		-- Gloomforest Ritual Site
+	[16123] = true, 		-- Dwarf's Bane Ritual Site
+	[16124] = true, 		-- Miner's Lament Ritual Site
+	[16125] = true, 		-- Nightstone Ritual Site
 }
 -- ---------
 local titleIdToMaleTitleName = {	------------------ titleId to male titleName table, converted from languageTable.playerTitles
@@ -1436,6 +1457,16 @@ function SmartEmotes.IsPlayerInAbyssalGeyser()
 end
 
 
+function SmartEmotes.IsPlayerInHarrowstormRitualSite()
+	local subzoneId = LorePlay.db.savedSubZoneId
+	if harrowstormRitualSiteDatabase[subzoneId] then
+		return true
+	else
+		return false
+	end
+end
+
+
 -- Here we pass in event codes
 function SmartEmotes.DoesEmoteFromTTLEqualEvent(...)
 	if not eventTTLEmotes["isEnabled"] then return false end
@@ -1490,6 +1521,10 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 		return
 	end
 	if SmartEmotes.IsPlayerInAbyssalGeyser() then
+		defaultEmotes = defaultEmotesForDolmens		-- same as Dolens
+		return
+	end
+	if SmartEmotes.IsPlayerInHarrowstormRitualSite() then
 		defaultEmotes = defaultEmotesForDolmens		-- same as Dolens
 		return
 	end

@@ -567,7 +567,7 @@ local function RequestChangeOutfits(eventCode)
 	if selectUsage == nil then
 		if LorePlay.IsPlayerInHouse() then
 			selectUsage = LW_USAGE_ID_HOUSING	-- housing
-		elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() or LorePlay.IsPlayerInAbyssalGeyser() then
+		elseif LorePlay.IsPlayerInDungeon() or LorePlay.IsPlayerInDolmen() or LorePlay.IsPlayerInAbyssalGeyser() or LorePlay.IsPlayerInHarrowstormRitualSite() then
 			selectUsage = LW_USAGE_ID_DUNGEON	-- dungeon
 		elseif LorePlay.IsPlayerInCity() then
 			selectUsage = LW_USAGE_ID_CITY		-- city

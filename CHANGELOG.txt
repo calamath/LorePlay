@@ -5,6 +5,11 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+[LorePlay]:Greymoor support
+- In the wilderness of Western Skyrim and the vast underworld, the add-on automatically recognizes you are in the adventure zone.
+- Updated location database for Greymoor Chapter. Solitude, Morthal and Dusktown are now recognized as cities.
+- Harrowstorm ritual sites are now recognized as same as Dolmens.
+- Updated API version to 100031 (ESO 6.0.x : Greymoor)
 - Updated embedded LibEventHandler version to 1.2.91 (AddOnVersion: 1291).
 
 Version 1.6.74 : by Calamath
