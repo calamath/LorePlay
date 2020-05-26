@@ -1,6 +1,6 @@
 ## Title: LorePlay
 ## Description: Adds immersion through intelligent, contextual emotes and outfits.
-## Version: 1.6.74
+## Version: 1.6.75
 ## APIVersion: 100031
 ## Author: Calamath, Justinon
 ## SavedVariables: LorePlaySavedVars
