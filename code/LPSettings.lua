@@ -90,6 +90,16 @@ if not LAM2 then d("[LorePlay] Error : 'LibAddonMenu' not found.") return end
 local L = GetString
 local Settings = LorePlay
 
+
+-- default account-wide savedata table for [LorePlay Forever]
+local default_adb = {
+	dataVersion = 1, 
+	-- ------------------------------------------------------------
+	suppressStartupMessage = false, 
+	ieIdleTime = 20000,  -- time period in miliseconds to check whether player is idle
+}
+
+
 -- default savedata table for [LorePlay Forever]
 local default_db = {
 	migrated = false, 
@@ -715,6 +725,23 @@ local function LoadMenuSettings()
 	}
 	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "slider",
+		name = L(SI_LOREPLAY_PANEL_IE_IDLE_TIME_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_IDLE_TIME_TIPS),
+		min = 10,
+		max = 120,
+		step = 1,
+		getFunc = function() 
+			return LorePlay.adb.ieIdleTime / 1000 -- Converting ms to s
+		end, 
+		setFunc = function(value)
+			LorePlay.adb.ieIdleTime = (value * 1000) -- Converting seconds to ms
+		end, 
+		width = "full",
+		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
+		default = 20,
+	}
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
+		type = "slider",
 		name = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_TIPS),
 		min = 10,
@@ -1034,6 +1061,14 @@ local function LoadMenuSettings()
 		name = L(SI_LOREPLAY_PANEL_LW_HEADER), 
 		controls = uiMenuLoreWear, 
 	}
+	optionsTable[#optionsTable + 1] = {
+		type = "checkbox",
+		name =  L(SI_LOREPLAY_PANEL_SUPPRESS_STARTUP_MESSAGE_NAME),
+		tooltip =  L(SI_LOREPLAY_PANEL_SUPPRESS_STARTUP_MESSAGE_TIPS),
+		getFunc = function() return LorePlay.adb.suppressStartupMessage end,
+		setFunc = function(value) LorePlay.adb.suppressStartupMessage = value end, 
+		width = "full",
+	}
 
 	uiPanel = LAM2:RegisterAddonPanel("LorePlayOptions", panelData)
 	LAM2:RegisterOptionControls("LorePlayOptions", optionsTable)
@@ -1057,6 +1092,7 @@ LorePlay.ReconvertLorePlaySavedata = ReconvertLorePlaySavedata
 
 
 local function InitializeSettings()
+	LorePlay.adb = ZO_SavedVars:NewAccountWide(LorePlay.savedVars, LorePlay.savedVarsVersion, nil, default_adb, "ForeverADB")
 	LorePlay.db = ZO_SavedVars:NewCharacterIdSettings(LorePlay.savedVars, LorePlay.savedVarsVersion, nil, default_db, "ForeverDB")
 	if LorePlay.db.migrated == false then
 		Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", 1, nil, {})	-- save data of LorePlay standard version

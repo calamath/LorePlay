@@ -84,6 +84,10 @@ local function OnPlayEmoteByIndex(index)
 		UpdateIsEmoting(index)
 		LPEventHandler:FireEvent(EVENT_ACTIVE_EMOTE, 10, true)
 	end
+--	DEBUG sta
+	local slashName, category, emoteId, displayName = GetEmoteInfo(index)
+	LorePlay.LDL:Debug("PlayEmote: Idx=%d, Id=%s, cmd=%s, name=%s", index, tostring(emoteId), slashName, displayName)
+--	DEBUG end
 	return false
 end
 

@@ -7,6 +7,10 @@ NOTE : this modified version is still under the Artistic License 2.0
 
 
 - Updated embedded LibEventHandler version to 1.2.92 (AddOnVersion: 1292).
+[UI]:addon setting UI improvements
+- Added a slider to adjust the idle time (wait time) until IdleEmotes will be performed.
+- Added a checkbox to suppress startup message.
+- Added account-wide save data table for those new setting items.
 
 Version 1.6.75 : by Calamath
 [LorePlay]:Greymoor support

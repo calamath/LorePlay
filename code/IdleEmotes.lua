@@ -35,7 +35,6 @@ local LPUtilities = LorePlay.LPUtilities
 
 local IdleEmotes = LorePlay
 
-local idleTime = 20000 -- time period in miliseconds to check whether player is idle
 local isPlayerStealthed
 local currentPlayerX, currentPlayerY
 local emoteFromEvent
@@ -352,7 +351,7 @@ function IdleEmotes.UpdateIfMoved()
 			didIdleEmote = false
 		end
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
-		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime , IdleEmotes.CheckToPerformIdleEmote)
 	end
 	return didMove
 end
@@ -374,7 +373,7 @@ end
 function IdleEmotes.OnPlayerCombatStateEvent(eventCode, inCombat)
 	if not inCombat then
 		if LorePlay.db.isIdleEmotesOn then
-			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
 	else
 		if LorePlay.db.isIdleEmotesOn then
@@ -387,7 +386,7 @@ end
 function IdleEmotes.OnMountedEvent(eventCode, mounted)
 	if not mounted then
 		if LorePlay.db.isIdleEmotesOn then
-			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
 	else
 		if LorePlay.db.isIdleEmotesOn then
@@ -402,7 +401,7 @@ function IdleEmotes.OnChatterEvent(eventCode)
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	else
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
-		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime, IdleEmotes.CheckToPerformIdleEmote)
 	end
 end
 
@@ -415,7 +414,7 @@ local function OnActiveEmote(eventCode, isEmotingNow)
 	else
 		isActiveEmoting = false
 		if not IsMounted() then
-			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+			EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime, IdleEmotes.CheckToPerformIdleEmote)
 		end
 	end
 end
@@ -434,7 +433,7 @@ function IdleEmotes.OnCraftingStationInteract(eventCode)
 	if eventCode == EVENT_CRAFTING_STATION_INTERACT then
 		EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	elseif eventCode == EVENT_END_CRAFTING_STATION_INTERACT then
-		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+		EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime, IdleEmotes.CheckToPerformIdleEmote)
 	end
 end
 
@@ -486,7 +485,7 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_DEAD, OnPlayerDeathStateChanged)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ALIVE, OnPlayerDeathStateChanged)
 	LPEventHandler:RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
-	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", idleTime, IdleEmotes.CheckToPerformIdleEmote)
+	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime, IdleEmotes.CheckToPerformIdleEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotesMoveTimer", 10000, IdleEmotes.UpdateIfMoved)
 end
 

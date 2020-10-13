@@ -43,7 +43,9 @@ end
 
 
 function LorePlay.OnPlayerActivated(event)
-	zo_callLater(function() CHAT_SYSTEM:AddMessage(L(SI_LOREPLAY_UI_WELCOME)) end, 50)
+	if not LorePlay.adb.suppressStartupMessage then
+		zo_callLater(function() CHAT_SYSTEM:AddMessage(L(SI_LOREPLAY_UI_WELCOME)) end, 50)
+	end
 	LPEventHandler:UnregisterForEvent(LorePlay.name, event, LorePlay.OnPlayerActivated)
 end
 

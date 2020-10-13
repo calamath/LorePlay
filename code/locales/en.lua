@@ -34,6 +34,8 @@ local strings = {
 	SI_BINDING_NAME_LP_TOGGLE_ALTERNATIVE_OUTFIT	= "Toggle Prefered Outfits", 
 
 	SI_LOREPLAY_UI_WELCOME							= "[LorePlay] Welcome to LorePlay, Soulless One!", 
+	SI_LOREPLAY_PANEL_SUPPRESS_STARTUP_MESSAGE_NAME = "Suppress Startup Message", 
+	SI_LOREPLAY_PANEL_SUPPRESS_STARTUP_MESSAGE_TIPS = "Suppresses startup message.\n[account-wide settings]", 
 	SI_LOREPLAY_PANEL_SE_HEADER						= "Smart Emotes", 
 	SI_LOREPLAY_PANEL_SE_DESCRIPTION				= "Contextual, appropriate emotes to perform at the touch of a button.\nBy default, pressing performs an emote based on location. However, it adapts and conforms to many different special environmental situations along your travels as well.\n|cFF0000Don't forget to bind your SmartEmotes button!|r", 
 	SI_LOREPLAY_PANEL_SE_EDIT_SIGNIFICANT_CHAR_NAME	= "Significant Other's Character Name", 
@@ -46,6 +48,8 @@ local strings = {
 	SI_LOREPLAY_PANEL_IE_DESCRIPTION				= "Contextual, automatic emotes that occur when you go idle or AFK (Not moving, not fighting, not stealthing).\n|cFF0000Don't forget to bind your IdleEmotes keypress for quick toggling!|r", 
 	SI_LOREPLAY_PANEL_IE_SW_NAME					= "Toggle IdleEmotes On/Off", 
 	SI_LOREPLAY_PANEL_IE_SW_TIPS					= "Turns on/off the automatic, contextual emotes that occur when you go idle or AFK.\n(Note: Disabling IdleEmotes displays all its settings as off, but will persist after re-enabling.)", 
+	SI_LOREPLAY_PANEL_IE_IDLE_TIME_NAME				= "Idle Time", 
+	SI_LOREPLAY_PANEL_IE_IDLE_TIME_TIPS				= "Determines the wait time in seconds, until a given idle emote will be performed.\nDefault is 20 seconds.\n[account-wide settings]", 
 	SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_NAME		= "Emote Duration", 
 	SI_LOREPLAY_PANEL_IE_EMOTE_DURATION_TIPS		= "Determines how long in seconds a given idle emote will be performed before switching to a new one.\nDefault is 30 seconds.", 
 	SI_LOREPLAY_PANEL_IE_PLAY_INST_IN_CITY_SW_NAME	= "Can Play Instruments In Cities", 
