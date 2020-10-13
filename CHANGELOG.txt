@@ -5,6 +5,9 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+
+- Updated embedded LibEventHandler version to 1.2.92 (AddOnVersion: 1292).
+
 Version 1.6.75 : by Calamath
 [LorePlay]:Greymoor support
 - In the wilderness of Western Skyrim and the vast underworld, the add-on automatically recognizes you are in the adventure zone.
