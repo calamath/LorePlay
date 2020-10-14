@@ -689,7 +689,7 @@ local function LoadMenuSettings()
 		type = "panel",
 		name = LorePlay.name,
 		displayName = "|c8c7037LorePlay Forever|r",
-		author = "Justinon, modified by Calamath",
+		author = "Justinon, Calamath",
 		version = LorePlay.version,
 		slashCommand = "/loreplay",
 		registerForRefresh = true,
