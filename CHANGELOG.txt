@@ -9,6 +9,15 @@ NOTE : this modified version is still under the Artistic License 2.0
 - Updated location database to support several zones. Grayhome and Blackreach Mzark Cavern are now recongnized as adventure zone.
 - Updated API version to 100032 (ESO 6.1.x : Stonethorn)
 - Updated embedded LibEventHandler version to 1.2.92 (AddOnVersion: 1292).
+[IdleEmotes] Reworked the Camera Spin Disabler feature.
+- The Camera Spin Disabler feature now supports gamepad mode. (but as-is basis)
+- Addressed unintended behavior that occurred in various situations, including the recent issue of not being able to manually switch Outfit styles on the status screen.
+- Special thanks to Baertram for his contributions to above issue!
+--
+-- NOTE : Camera Spin Disabler
+-- The original author Justinon probably created this feature long ago, inspired by Garkin's 'No, thank you!' add-on.
+-- Therefore, you can use updated version of that add-on instead, but NEVER turn on both at the same time.
+--
 [UI]:addon setting UI improvements
 - Added a slider to adjust the idle time (wait time) until IdleEmotes will be performed.
 - Added a checkbox to suppress startup message.

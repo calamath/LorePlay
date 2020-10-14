@@ -555,22 +555,74 @@ end
 LorePlay.ToggleIdleEmotes = Settings.ToggleIdleEmotes
 
 
--- Fixes "Cannot play emote at this time" in most circumstances
+-- ------------------------------------------------------------------------------------------
+-- LorePlay Camera Spin Disabler
+-- ------------------------------------------------------------------------------------------
+-- This feature removes only FRAME_PLAYER_FRAGMENT from various scenes in the game UI.
+-- As a result, the camera will not spin to the front of the player character in various situations.
+-- Fixes "Cannot play emote at this time" in most situations, but not perfect.
+--
+		-- NOTE : by Calamath
+		-- The original author Justinon probably created this feature long ago, inspired by Garkin's 'No, thank you!' add-on.
+		-- Therefore, you can use updated version of that add-on instead, but NEVER turn on both at the same time.
+		-- This feature is problematic and should be turned off if something goes wrong.
+
 local scenes = {}
-local function noCameraSpin()
-	if LorePlay.db.isCameraSpinDisabled then
-		for name, scene in pairs(SCENE_MANAGER.scenes) do
-		  if not name:find("market") and not name:find("store") and not name:find("crownCrate") and not name:find("housing") and not name:find("collectionsBook") and not name:find("outfitStylesBook") and scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
-			scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
-			scenes[name] = scene
-		  end
+local isFramePlayerFragmentRemoved = false
+local blacklistedScenes = {
+	market = true, 
+	gamepad_market = true, 
+	gamepad_market_bundle_contents = true, 
+	gamepad_market_content_list = true, 
+	gamepad_market_locked = true, 
+	gamepad_market_pre_scene = true, 
+	gamepad_market_preview = true, 
+	gamepad_market_purchase = true, 
+	store = true, 
+	gamepad_store = true, 
+	crownCrateKeyboard = true, 
+	crownCrateGamepad = true, 
+	keyboard_housing_furniture_scene = true, 
+	gamepad_housing_furniture_scene = true, 
+	keyboard_housing_path_settings_scene = true, 
+	gamepad_housing_path_settings = true, 
+	dyeStampConfirmationKeyboard = true, 
+	dyeStampConfirmationGamepad = true, 
+	restyle_station_keyboard = true, 
+	gamepad_restyle_root = true, 
+	gamepad_restyle_station = true, 
+	collectionsBook = true, 
+	outfitStylesBook = true, 
+	gamepadCollectionsBook = true, 
+	stats = true, 
+	gamepad_stats_root = true, 
+}
+local function noCameraSpin(doRemoveFragment)
+	doRemoveFragment = doRemoveFragment or LorePlay.db.isCameraSpinDisabled
+	if doRemoveFragment then
+		if not isFramePlayerFragmentRemoved then
+			for name, scene in pairs(SCENE_MANAGER.scenes) do
+				if not blacklistedScenes[name] then
+					if scene:HasFragment(FRAME_PLAYER_FRAGMENT) then
+						scene:RemoveFragment(FRAME_PLAYER_FRAGMENT)
+						scenes[name] = scene
+					end
+				end
+			end
+			isFramePlayerFragmentRemoved = true
 		end
 	else
-		for name, scene in pairs(scenes) do
-			scene:AddFragment(FRAME_PLAYER_FRAGMENT)
+		if isFramePlayerFragmentRemoved then
+			for name, scene in pairs(scenes) do
+				scene:AddFragment(FRAME_PLAYER_FRAGMENT)
+			end
+			ZO_ClearTable(scenes)
+			isFramePlayerFragmentRemoved = false
 		end
 	end
 end
+
+-- ------------------------------------------------------------------------------------------
 
 local function OnPlayerMaraResult(eventCode, isGettingMarried, playerMarriedTo)
 	if eventCode ~= EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE then return end
