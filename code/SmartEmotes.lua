@@ -256,6 +256,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[15336]	= { emoteKey = "Other", 		},		-- Senchal (in Southern Elsweyr)
 	[15545]	= { emoteKey = "EP", 			},		-- Solitude
 	[15547]	= { emoteKey = "EP", 			},		-- Morthal (in Western Skyrim)
+	[15744]	= { emoteKey = "EP", 			},		-- Morthal Wayshrine (in Western Skyrim)
 --	[15550]	= { emoteKey = "EP", 			},		-- Dragon Bridge (in Western Skyrim)				--> If you want to add Dragon Bridge as a city, change this line manually.
 --	[15754]	= { emoteKey = "EP", 			},		-- Dragon Bridge Wayshrine (in Western Skyrim)		--> If you want to add Dragon Bridge as a city, change this line manually.
 	[15625]	= { emoteKey = "Other", 		},		-- Dusktown (in Blackreach Cavern)
@@ -274,6 +275,15 @@ local poiDatabase = {
 	[3482854427] = { id = 15336, emoteKey = "Other", 	}, 		-- FR:Senchal
 	[3754689769] = { id = 15336, emoteKey = "Other", 	}, 		-- JP:Senchal
 	[824842596]	 = { id = 15336, emoteKey = "Other", 	}, 		-- RU:Senchal
+}
+-- ---------
+local blacklistedDungeonDatabase = {
+		-- NOTE : by Calamath
+		--	 Basically, this table should not be used.
+		--	 IsUnitInDungeon API returns TRUE in the dungeons, but zones registered in this table will be treated as FALSE. 
+		--   In other words, register only the zone ID of the dungeon that you absolutely want to recognize as a region area (adventure zone).	
+	[1191] = true, 			-- Blackreach Mzark Cavern (in Eastmarch)
+	[1205] = true, 			-- Grayhome (in Rivenspire)
 }
 -- ---------
 local harrowstormRitualSiteDatabase = {
@@ -1435,7 +1445,7 @@ function SmartEmotes.IsPlayerInDungeon(POI, zoneName)
 end
 ]]
 function SmartEmotes.IsPlayerInDungeon()
-	return IsUnitInDungeon("player")
+	return IsUnitInDungeon("player") and not blacklistedDungeonDatabase[GetUnitWorldPosition("player")]
 end
 
 

@@ -5,7 +5,9 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
-
+[LorePlay]:Stonethorn support
+- Updated location database to support several zones. Grayhome and Blackreach Mzark Cavern are now recongnized as adventure zone.
+- Updated API version to 100032 (ESO 6.1.x : Stonethorn)
 - Updated embedded LibEventHandler version to 1.2.92 (AddOnVersion: 1292).
 [UI]:addon setting UI improvements
 - Added a slider to adjust the idle time (wait time) until IdleEmotes will be performed.
