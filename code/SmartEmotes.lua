@@ -149,6 +149,8 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[1133]	= { emoteKey = "other", },		-- Southern Elsweyr
 	[1160]	= { emoteKey = "ep1", 	},		-- Western Skyrim
 	[1161]	= { emoteKey = "other", },		-- Blackreach: Greymoor Caverns
+	[1207]	= { emoteKey = "ep1", 	},		-- The Reach
+	[1208]	= { emoteKey = "other", },		-- Blackreach: Arkthzand Cavern
 
 }
 -- ---------
@@ -227,6 +229,8 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1690]	= { emoteKey = "Other", useMapBorder = true, 	}, 		-- Senchal Palace
 	[1762]	= { emoteKey = "Other", 		}, 		-- Senchal
 	[1773]	= { emoteKey = "EP", useMapBorder = true, 	}, 		-- Solitude
+	[1858]	= { emoteKey = "EP", 			}, 		-- Markarth
+	[1888]	= { emoteKey = "EP", 			}, 		-- Understone Keep
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -260,6 +264,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 --	[15550]	= { emoteKey = "EP", 			},		-- Dragon Bridge (in Western Skyrim)				--> If you want to add Dragon Bridge as a city, change this line manually.
 --	[15754]	= { emoteKey = "EP", 			},		-- Dragon Bridge Wayshrine (in Western Skyrim)		--> If you want to add Dragon Bridge as a city, change this line manually.
 	[15625]	= { emoteKey = "Other", 		},		-- Dusktown (in Blackreach Cavern)
+	[16357]	= { emoteKey = "EP", 			},		-- Karthwasten (in the Reach)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
@@ -297,6 +302,11 @@ local harrowstormRitualSiteDatabase = {
 	[16123] = true, 		-- Dwarf's Bane Ritual Site
 	[16124] = true, 		-- Miner's Lament Ritual Site
 	[16125] = true, 		-- Nightstone Ritual Site
+--	----------------------------------------------------
+	[16363] = true, 		-- Ragnvald Ritual Site
+	[16364] = true, 		-- Witchborne Ritual Site
+	[16368] = true, 		-- Harrowed Haunt Ritual Site
+	[16369] = true, 		-- Reachwind Ritual Site
 }
 -- ---------
 local titleIdToMaleTitleName = {	------------------ titleId to male titleName table, converted from languageTable.playerTitles

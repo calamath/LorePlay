@@ -2,10 +2,10 @@
 ## Description: Adds immersion through intelligent, contextual emotes and outfits.
 ## Version: 1.6.76
 ## AddOnVersion: 10676
-## APIVersion: 100032
+## APIVersion: 100032 100033
 ## Author: Justinon, Calamath
 ## SavedVariables: LorePlaySavedVars
-## DependsOn: LibAddonMenu-2.0 LibEventHandler
+## DependsOn: LibAddonMenu-2.0>=31 LibEventHandler>=1292
 ## OptionalDependsOn: LibDebugLogger>=180
 
 code\locales\en.lua

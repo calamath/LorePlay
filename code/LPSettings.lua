@@ -596,6 +596,8 @@ local blacklistedScenes = {
 	gamepadCollectionsBook = true, 
 	stats = true, 
 	gamepad_stats_root = true, 
+--	itemSetsBook = true, 			-- Not needed at this time as there is no preview mode.
+--	gamepadItemSetsBook = true, 	-- Not needed at this time as there is no preview mode.
 }
 local function noCameraSpin(doRemoveFragment)
 	doRemoveFragment = doRemoveFragment or LorePlay.db.isCameraSpinDisabled

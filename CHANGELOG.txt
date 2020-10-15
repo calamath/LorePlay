@@ -5,7 +5,10 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
-
+[LorePlay]:Markarth support
+- In the wilderness of the Reach and the vast underworld, the add-on automatically recognizes you are in the adventure zone.
+- Updated location database for Markarth DLC. Markarth and Karthwasten are now recognized as cities. Harrowstorm ritual sites in the Reach are now recognized.
+- Updated API version to 100033 (ESO 6.2.x : Markarth)
 - Updated embedded LibEventHandler version to 1.2.93 (AddOnVersion: 1293).
 
 Version 1.6.76 : by Calamath
