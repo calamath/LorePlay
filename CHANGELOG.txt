@@ -10,6 +10,8 @@ NOTE : this modified version is still under the Artistic License 2.0
 - Updated location database for Markarth DLC. Markarth and Karthwasten are now recognized as cities. Harrowstorm ritual sites in the Reach are now recognized.
 - Updated API version to 100033 (ESO 6.2.x : Markarth)
 - Updated embedded LibEventHandler version to 1.2.93 (AddOnVersion: 1293).
+[LoreWear]:improvement of location recognition engine.
+- Addressed an issue that could not be correctly recognized when entering Hollow City in Coldharbour from the West Gate.
 
 Version 1.6.76 : by Calamath
 [LorePlay]:Stonethorn support
