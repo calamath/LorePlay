@@ -1,7 +1,7 @@
-## Title: LorePlay Forever V1.6.77
+## Title: LorePlay Forever V1.6.78
 ## Description: Adds immersion through intelligent, contextual emotes and outfits.
-## Version: 1.6.77
-## AddOnVersion: 10677
+## Version: 1.6.78
+## AddOnVersion: 10678
 ## APIVersion: 100032 100033
 ## Author: Justinon, Calamath
 ## SavedVariables: LorePlaySavedVars
