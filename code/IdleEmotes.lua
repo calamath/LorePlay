@@ -43,7 +43,6 @@ local eventIdleTable
 local didIdleEmote = false
 local isActiveEmoting = false
 local isFastTraveling = false
-local isDead = false
 
 
 
@@ -315,7 +314,7 @@ end
 
 
 function IdleEmotes.IsCharacterIdle()
-	if IsMounted() or isFastTraveling then return end
+	if IsMounted() or isFastTraveling or IsUnitSwimming("player") or IsBlockActive() or not ArePlayerWeaponsSheathed() or IsUnitDeadOrReincarnating("player") then return end
 	if not isActiveEmoting then
 		local didMove = IdleEmotes.UpdateIfMoved() 
 		if not didMove then
@@ -345,11 +344,15 @@ function IdleEmotes.IsBlacklistedScene()
 --		LorePlay.LDL:Debug("[SCENE]IdleEmoteNG : currentScene = ", currentSceneName)
 		return true
 	end
+	if currentScene:HasFragment(FRAME_PLAYER_FRAGMENT) then
+--		LorePlay.LDL:Debug("[SCENE]IdleEmoteNG : detect FRAME_PLAYER_FRAGMENT")
+		return true
+	end
 	return false
 end
 
 function IdleEmotes.CheckToPerformIdleEmote()
-	if IdleEmotes.IsCharacterIdle() and not isDead and not IdleEmotes.IsBlacklistedScene() then
+	if IdleEmotes.IsCharacterIdle() and not IdleEmotes.IsBlacklistedScene() then
 		IdleEmotes.PerformIdleEmote()
 	end
 end
@@ -452,16 +455,6 @@ function IdleEmotes.OnCraftingStationInteract(eventCode)
 end
 
 
-local function OnPlayerDeathStateChanged(eventCode)
-	if eventCode ~= EVENT_PLAYER_DEAD and eventCode ~= EVENT_PLAYER_ALIVE then return end
-	if eventCode == EVENT_PLAYER_DEAD then
-		isDead = true
-	else
-		isDead = false
-	end
-end
-
-
 local function OnHousingEditorModeChanged(eventCode, oldMode, newMode)
 	if oldMode == HOUSING_EDITOR_MODE_DISABLED then
 		if not LorePlay.adb.ieAllowedInHousingEditor then
@@ -487,8 +480,6 @@ function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
-	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_DEAD, OnPlayerDeathStateChanged)
-	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_ALIVE, OnPlayerDeathStateChanged)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_HOUSING_EDITOR_MODE_CHANGED, OnHousingEditorModeChanged)
 	LPEventHandler:UnregisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
@@ -509,8 +500,6 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_CRAFTING_STATION_INTERACT, IdleEmotes.OnCraftingStationInteract)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_END_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
-	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_DEAD, OnPlayerDeathStateChanged)
-	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ALIVE, OnPlayerDeathStateChanged)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_HOUSING_EDITOR_MODE_CHANGED, OnHousingEditorModeChanged)
 	LPEventHandler:RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime, IdleEmotes.CheckToPerformIdleEmote)
@@ -520,7 +509,6 @@ end
 
 function IdleEmotes.InitializeIdle()
 	if not LorePlay.db.isIdleEmotesOn then return end
-	isDead = IsUnitDead(player)
 	IdleEmotes.CreateDefaultIdleEmotesTable()
 	IdleEmotes.CreateEventIdleEmotesTable()
 	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
