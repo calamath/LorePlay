@@ -97,6 +97,7 @@ local default_adb = {
 	-- ------------------------------------------------------------
 	suppressStartupMessage = false, 
 	ieIdleTime = 20000,  -- time period in miliseconds to check whether player is idle
+	ieAllowedInHousingEditor = false, 
 }
 
 
@@ -509,6 +510,13 @@ end
 LorePlay.FixSavedata1670 = FixSavedata1670
 
 
+local function ComplementAccountWideSaveData()
+	if LorePlay.adb.suppressStartupMessage == nil	 		then LorePlay.adb.suppressStartupMessage 			= default_adb.suppressStartupMessage			 end
+	if LorePlay.adb.ieIdleTime == nil 						then LorePlay.adb.ieIdleTime 						= default_adb.ieIdleTime						 end
+	if LorePlay.adb.ieAllowedInHousingEditor == nil 		then LorePlay.adb.ieAllowedInHousingEditor			= default_adb.ieAllowedInHousingEditor			 end
+end
+
+
 local function updateSpouseName(newMaraSpouseName)
 	LorePlay.db.maraSpouseName = newMaraSpouseName
 end
@@ -869,6 +877,15 @@ local function LoadMenuSettings()
 	}
 	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
 		type = "checkbox",
+		name = L(SI_LOREPLAY_PANEL_IE_ALLOWED_IN_HOUSING_NAME),
+		tooltip = L(SI_LOREPLAY_PANEL_IE_ALLOWED_IN_HOUSING_TIPS),
+		getFunc = function() return LorePlay.adb.ieAllowedInHousingEditor end, 
+		setFunc = function(value) LorePlay.adb.ieAllowedInHousingEditor = value end, 
+		width = "full",
+		disabled = function() return not LorePlay.db.isIdleEmotesOn end, 
+	}
+	uiMenuIdleEmote[#uiMenuIdleEmote + 1] = {
+		type = "checkbox",
 		name = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME),
 		tooltip = L(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS),
 		getFunc = function() return LorePlay.db.isCameraSpinDisabled end, 
@@ -1143,6 +1160,8 @@ LorePlay.ReconvertLorePlaySavedata = ReconvertLorePlaySavedata
 
 local function InitializeSettings()
 	LorePlay.adb = ZO_SavedVars:NewAccountWide(LorePlay.savedVars, LorePlay.savedVarsVersion, nil, default_adb, "ForeverADB")
+	ComplementAccountWideSaveData()
+
 	LorePlay.db = ZO_SavedVars:NewCharacterIdSettings(LorePlay.savedVars, LorePlay.savedVarsVersion, nil, default_db, "ForeverDB")
 	if LorePlay.db.migrated == false then
 		Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", 1, nil, {})	-- save data of LorePlay standard version

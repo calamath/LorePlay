@@ -63,6 +63,8 @@ SafeAddString(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_NAME, 	"Can Exercise Outs
 SafeAddString(SI_LOREPLAY_PANEL_IE_EXERCISE_IN_ZONE_SW_TIPS, 	"Determines whether or not your character can perform exercise emotes when idle outside of cities.", 1)
 SafeAddString(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_NAME, 			"Can Worship/Pray", 1)
 SafeAddString(SI_LOREPLAY_PANEL_IE_WORSHIP_SW_TIPS, 			"Determines whether or not your character can perform prayer and worship emotes when idle in general.", 1)
+SafeAddString(SI_LOREPLAY_PANEL_IE_ALLOWED_IN_HOUSING_NAME, 	"Allow emotes in Housing Editor", 1)
+SafeAddString(SI_LOREPLAY_PANEL_IE_ALLOWED_IN_HOUSING_TIPS, 	"Allows for idle emotes to be performed while in housing editor mode.", 1)
 SafeAddString(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_NAME, 	"Camera Spin Disabler", 1)
 SafeAddString(SI_LOREPLAY_PANEL_IE_CAMERA_SPIN_DISABLER_TIPS, 	"Allows for emotes to be performed while in menus. Disables camera spin in menus. Removes '" .. GetString(SI_PLAYEREMOTEPLAYFAILURE0) .. "' message.", 1)
 SafeAddString(SI_LOREPLAY_PANEL_LE_SET_OUTFIT_CITY_NAME, 		"Set City Outfit", 1)

@@ -334,8 +334,22 @@ function IdleEmotes.IsCharacterIdle()
 end
 
 
+local housingEditorScenes = {
+	housingEditorHud = true, 
+	housingEditorHudUI = true, 
+}
+function IdleEmotes.IsBlacklistedScene()
+	local currentScene = SCENE_MANAGER:GetCurrentScene()
+	local currentSceneName = currentScene:GetName()
+	if not LorePlay.adb.ieAllowedInHousingEditor and housingEditorScenes[currentSceneName] then
+--		LorePlay.LDL:Debug("[SCENE]IdleEmoteNG : currentScene = ", currentSceneName)
+		return true
+	end
+	return false
+end
+
 function IdleEmotes.CheckToPerformIdleEmote()
-	if IdleEmotes.IsCharacterIdle() and not isDead then
+	if IdleEmotes.IsCharacterIdle() and not isDead and not IdleEmotes.IsBlacklistedScene() then
 		IdleEmotes.PerformIdleEmote()
 	end
 end
@@ -448,6 +462,18 @@ local function OnPlayerDeathStateChanged(eventCode)
 end
 
 
+local function OnHousingEditorModeChanged(eventCode, oldMode, newMode)
+	if oldMode == HOUSING_EDITOR_MODE_DISABLED then
+		if not LorePlay.adb.ieAllowedInHousingEditor then
+			if didIdleEmote then
+				-- Stop performing the IdleEmotes.
+				PlayEmoteByIndex(GetEmoteIndex(267))	-- "/idle"
+			end
+		end
+	end
+end
+
+
 function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, IdleEmotes.OnMountedEvent)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, IdleEmotes.OnPlayerCombatStateEvent)
@@ -463,6 +489,7 @@ function IdleEmotes.UnregisterIdleEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_DEAD, OnPlayerDeathStateChanged)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_ALIVE, OnPlayerDeathStateChanged)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_HOUSING_EDITOR_MODE_CHANGED, OnHousingEditorModeChanged)
 	LPEventHandler:UnregisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotes")
 	EVENT_MANAGER:UnregisterForUpdate("IdleEmotesMoveTimer")
@@ -484,6 +511,7 @@ function IdleEmotes.RegisterIdleEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_START_FAST_TRAVEL_INTERACTION, OnFastTravelInteraction)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_DEAD, OnPlayerDeathStateChanged)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ALIVE, OnPlayerDeathStateChanged)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_HOUSING_EDITOR_MODE_CHANGED, OnHousingEditorModeChanged)
 	LPEventHandler:RegisterForLocalEvent(EVENT_ACTIVE_EMOTE, OnActiveEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotes", LorePlay.adb.ieIdleTime, IdleEmotes.CheckToPerformIdleEmote)
 	EVENT_MANAGER:RegisterForUpdate("IdleEmotesMoveTimer", 10000, IdleEmotes.UpdateIfMoved)
