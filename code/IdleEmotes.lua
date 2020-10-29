@@ -1,32 +1,8 @@
 LorePlay = LorePlay or {}
--- --- definitions : LPCategoryStrings.lua
-local Appearance = LorePlay.Appearance
-local Hats = LorePlay.Hats
-local Costumes = LorePlay.Costumes
-local Skins = LorePlay.Skins
-local Polymorphs = LorePlay.Polymorphs
-local Hair = LorePlay.Hair
-local FacialAcc = LorePlay.FacialAcc
-local FacialHair = LorePlay.FacialHair
-local BodyMarkings = LorePlay.BodyMarkings
-local HeadMarkings = LorePlay.HeadMarkings
-local Jewelry = LorePlay.Jewelry
-local Personalities = LorePlay.Personalities
-local VanityPets = LorePlay.VanityPets
-local City = LorePlay.City
-local Housing = LorePlay.Housing
-local Dungeon = LorePlay.Dungeon
-local Adventure = LorePlay.Adventure
-local Total = LorePlay.Total
-local player = LorePlay.player
-local stringToColTypeTable = LorePlay.stringToColTypeTable
--- ---
+-- --- definitions : local event codes for LibEventHandler
+local EVENT_ACTIVE_EMOTE = "EVENT_ACTIVE_EMOTE"
+local EVENT_ON_IDLE_EMOTE = "EVENT_ON_IDLE_EMOTE"
 -- --- definitions : LPUtilities.lua
-local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
-local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
-local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
-local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = LorePlay.EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE
-local EVENT_INDICATOR_MOVED = LorePlay.EVENT_INDICATOR_MOVED
 local LPUtilities = LorePlay.LPUtilities
 
 -- ------------------------------------------------------------
@@ -192,7 +168,7 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 			[10] = 38,
 			[11] = 191
 		},
-		[City] = {
+		["City"] = {
 			[1] = 202,
 			[2] = 107,
 			[3] = 195,
@@ -205,7 +181,7 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 			[10] = 191,
 			[11] = 199
 		},
-		[Dungeon] = {
+		["Dungeon"] = {
 			[1] = 195,
 			[2] = 1,
 			[3] = 154,
@@ -214,7 +190,7 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 			[6] = 122,
 			[7] = 101
 		},
-		[Housing] = {
+		["Housing"] = {
 			[1] = 10,
 			[2] = 10,
 			[3] = 99,
@@ -256,21 +232,21 @@ end
 
 function IdleEmotes.GetLocation()
 	if LorePlay.IsPlayerInHouse() then
-		return Housing
+		return "Housing"
 	elseif LorePlay.IsPlayerInDungeon() then
-		return Dungeon
+		return "Dungeon"
 	elseif LorePlay.IsPlayerInDolmen() then
-		return Dungeon		-- use dungeon table for dolmen
+		return "Dungeon"		-- use dungeon table for dolmen
 	elseif LorePlay.IsPlayerInAbyssalGeyser() then
-		return Dungeon		-- use dungeon table for AbyssalGeyser
+		return "Dungeon"		-- use dungeon table for AbyssalGeyser
 	elseif LorePlay.IsPlayerInHarrowstormRitualSite() then
-		return Dungeon		-- use dungeon table for HarrowstormRitualSite
+		return "Dungeon"		-- use dungeon table for HarrowstormRitualSite
 	elseif LorePlay.IsPlayerInCity() then
-		return City
+		return "City"
 	elseif LorePlay.IsPlayerInParentZone() then
 		return "Zone"
 	else
-		return Dungeon		-- unregistered region case
+		return "Dungeon"		-- unregistered region case
 	end
 end
 
@@ -304,7 +280,7 @@ end
 
 
 function IdleEmotes.UpdateStealthState(eventCode, unitTag, stealthState)
-	if unitTag ~= LorePlay.player then return end
+	if unitTag ~= "player" then return end
 	if stealthState ~= STEALTH_STATE_NONE then
 		isPlayerStealthed = true
 	else
@@ -319,7 +295,7 @@ function IdleEmotes.IsCharacterIdle()
 		local didMove = IdleEmotes.UpdateIfMoved() 
 		if not didMove then
 			if isPlayerStealthed == nil then
-				IdleEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, LorePlay.player, GetUnitStealthState(LorePlay.player))
+				IdleEmotes.UpdateStealthState(EVENT_STEALTH_STATE_CHANGED, "player", GetUnitStealthState("player"))
 			end
 			if not isPlayerStealthed then
 				local interactionType = GetInteractionType()
@@ -511,7 +487,7 @@ function IdleEmotes.InitializeIdle()
 	if not LorePlay.db.isIdleEmotesOn then return end
 	IdleEmotes.CreateDefaultIdleEmotesTable()
 	IdleEmotes.CreateEventIdleEmotesTable()
-	currentPlayerX, currentPlayerY = GetMapPlayerPosition(LorePlay.player)
+	currentPlayerX, currentPlayerY = GetMapPlayerPosition("player")
 	IdleEmotes.RegisterIdleEvents()
 end
 

@@ -1,33 +1,7 @@
 LorePlay = LorePlay or {}
--- --- definitions : LPCategoryStrings.lua
-local Appearance = LorePlay.Appearance
-local Hats = LorePlay.Hats
-local Costumes = LorePlay.Costumes
-local Skins = LorePlay.Skins
-local Polymorphs = LorePlay.Polymorphs
-local Hair = LorePlay.Hair
-local FacialAcc = LorePlay.FacialAcc
-local FacialHair = LorePlay.FacialHair
-local BodyMarkings = LorePlay.BodyMarkings
-local HeadMarkings = LorePlay.HeadMarkings
-local Jewelry = LorePlay.Jewelry
-local Personalities = LorePlay.Personalities
-local VanityPets = LorePlay.VanityPets
-local City = LorePlay.City
-local Housing = LorePlay.Housing
-local Dungeon = LorePlay.Dungeon
-local Adventure = LorePlay.Adventure
-local Total = LorePlay.Total
-local player = LorePlay.player
-local stringToColTypeTable = LorePlay.stringToColTypeTable
--- ---
--- --- definitions : LPUtilities.lua
-local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
-local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
-local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
-local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = LorePlay.EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE
-local EVENT_INDICATOR_MOVED = LorePlay.EVENT_INDICATOR_MOVED
-local LPUtilities = LorePlay.LPUtilities
+-- --- definitions : local event codes for LibEventHandler
+local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = "EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE"
+local EVENT_INDICATOR_MOVED = "EVENT_INDICATOR_MOVED"
 
 -- ------------------------------------------------------------
 
@@ -348,76 +322,76 @@ local defaultSettingsTable = {
 	isCameraSpinDisabled = true,
 
 	isUsingFavorite = {
-		[Costumes] = false,
-		[Hats] = false,
-		[Skins] = false,
-		[Hair] = false,
-		[Polymorphs] = false,
-		[FacialAcc] = false,
-		[FacialHair] = false,
-		[BodyMarkings] = false,
-		[HeadMarkings] = false,
-		[Jewelry] = false,
-		[Personalities] = false,
-		[VanityPets] = false,
+		["Costume"] = false,
+		["Hat"] = false,
+		["Skin"] = false,
+		["Hair"] = false,
+		["Polymorph"] = false,
+		["Facial Accessory"] = false,
+		["Facial Hair"] = false,
+		["Body Marking"] = false,
+		["Head Marking"] = false,
+		["Jewelry"] = false,
+		["Personality"] = false,
+		["Vanity Pet"] = false,
 	},
 
 	outfitTable = {
-		[City] = {
-			[Costumes] = 0,
-			[Hats] = 0,
-			[Hair] = 0,
-			[Skins] = 0,
-			[Polymorphs] = 0,
-			[FacialAcc] = 0,
-			[FacialHair] = 0,
-			[BodyMarkings] = 0,
-			[HeadMarkings] = 0,
-			[Jewelry] = 0,
-			[Personalities] = 0,
-			[VanityPets] = 0,
+		["City"] = {
+			["Costume"] = 0,
+			["Hat"] = 0,
+			["Hair"] = 0,
+			["Skin"] = 0,
+			["Polymorph"] = 0,
+			["Facial Accessory"] = 0,
+			["Facial Hair"] = 0,
+			["Body Marking"] = 0,
+			["Head Marking"] = 0,
+			["Jewelry"] = 0,
+			["Personality"] = 0,
+			["Vanity Pet"] = 0,
 		},
-		[Housing] = {
-			[Costumes] = 0,
-			[Hats] = 0,
-			[Hair] = 0,
-			[Skins] = 0,
-			[Polymorphs] = 0,
-			[FacialAcc] = 0,
-			[FacialHair] = 0,
-			[BodyMarkings] = 0,
-			[HeadMarkings] = 0,
-			[Jewelry] = 0,
-			[Personalities] = 0,
-			[VanityPets] = 0,
+		["Housing"] = {
+			["Costume"] = 0,
+			["Hat"] = 0,
+			["Hair"] = 0,
+			["Skin"] = 0,
+			["Polymorph"] = 0,
+			["Facial Accessory"] = 0,
+			["Facial Hair"] = 0,
+			["Body Marking"] = 0,
+			["Head Marking"] = 0,
+			["Jewelry"] = 0,
+			["Personality"] = 0,
+			["Vanity Pet"] = 0,
 		},
-		[Dungeon] = {
-			[Costumes] = 0,
-			[Hats] = 0,
-			[Hair] = 0,
-			[Skins] = 0,
-			[Polymorphs] = 0,
-			[FacialAcc] = 0,
-			[FacialHair] = 0,
-			[BodyMarkings] = 0,
-			[HeadMarkings] = 0,
-			[Jewelry] = 0,
-			[Personalities] = 0,
-			[VanityPets] = 0,
+		["Dungeon"] = {
+			["Costume"] = 0,
+			["Hat"] = 0,
+			["Hair"] = 0,
+			["Skin"] = 0,
+			["Polymorph"] = 0,
+			["Facial Accessory"] = 0,
+			["Facial Hair"] = 0,
+			["Body Marking"] = 0,
+			["Head Marking"] = 0,
+			["Jewelry"] = 0,
+			["Personality"] = 0,
+			["Vanity Pet"] = 0,
 		},
-		[Adventure] = {
-			[Costumes] = 0,
-			[Hats] = 0,
-			[Hair] = 0,
-			[Skins] = 0,
-			[Polymorphs] = 0,
-			[FacialAcc] = 0,
-			[FacialHair] = 0,
-			[BodyMarkings] = 0,
-			[HeadMarkings] = 0,
-			[Jewelry] = 0,
-			[Personalities] = 0,
-			[VanityPets] = 0,
+		["Adventure"] = {
+			["Costume"] = 0,
+			["Hat"] = 0,
+			["Hair"] = 0,
+			["Skin"] = 0,
+			["Polymorph"] = 0,
+			["Facial Accessory"] = 0,
+			["Facial Hair"] = 0,
+			["Body Marking"] = 0,
+			["Head Marking"] = 0,
+			["Jewelry"] = 0,
+			["Personality"] = 0,
+			["Vanity Pet"] = 0,
 		}
 	},
 
@@ -438,6 +412,21 @@ local defaultSettingsTable = {
 
 
 local function ConvertToForeverSavedata()
+	local stringToColTypeTable = {
+		["Hat"] = COLLECTIBLE_CATEGORY_TYPE_HAT, 
+		["Costume"] = COLLECTIBLE_CATEGORY_TYPE_COSTUME, 
+		["Skin"] = COLLECTIBLE_CATEGORY_TYPE_SKIN, 
+		["Hair"] = COLLECTIBLE_CATEGORY_TYPE_HAIR, 
+		["Polymorph"] = COLLECTIBLE_CATEGORY_TYPE_POLYMORPH, 
+		["Facial Accessory"] = COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY, 
+		["Facial Hair"] = COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS, 
+		["Body Marking"] = COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING, 
+		["Head Marking"] = COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING, 
+		["Jewelry"] = COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY, 
+		["Personality"] = COLLECTIBLE_CATEGORY_TYPE_PERSONALITY, 
+		["Vanity Pet"] = COLLECTIBLE_CATEGORY_TYPE_VANITY_PET, 
+	}
+
 	local sv = Settings.savedVariables
 
 	if sv.isSmartEmotesIndicatorOn			~= nil then LorePlay.db.isSmartEmotesIndicatorOn			= sv.isSmartEmotesIndicatorOn				end
@@ -488,7 +477,7 @@ local function ConvertToForeverSavedata()
 	if sv.specificPOINameNearby ~= nil then Settings.savedVariables.specificPOINameNearby = nil end
 end
 
-
+--[[
 -- [HotFix] correct savedata conversion mistakes in Version 1.6.70
 local function FixSavedata1670()
 	if LorePlay.db.migrated == true and Settings.savedVariables == nil then
@@ -508,7 +497,7 @@ local function FixSavedata1670()
 	end
 end
 LorePlay.FixSavedata1670 = FixSavedata1670
-
+]]
 
 local function ComplementAccountWideSaveData()
 	if LorePlay.adb.suppressStartupMessage == nil	 		then LorePlay.adb.suppressStartupMessage 			= default_adb.suppressStartupMessage			 end

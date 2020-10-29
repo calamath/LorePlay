@@ -1,7 +1,7 @@
 LorePlay = LorePlay or {}
 LorePlay.majorVersion = 1
 LorePlay.minorVersion = 6
-LorePlay.bugVersion = 78
+LorePlay.bugVersion = 79
 LorePlay.version = LorePlay.majorVersion.."."..LorePlay.minorVersion.."."..LorePlay.bugVersion
 LorePlay.name = "LorePlay"
 LorePlay.savedVars = "LorePlaySavedVars"
@@ -44,7 +44,7 @@ end
 
 function LorePlay.OnPlayerActivated(event)
 	if not LorePlay.adb.suppressStartupMessage then
-		zo_callLater(function() CHAT_SYSTEM:AddMessage(L(SI_LOREPLAY_UI_WELCOME)) end, 50)
+		zo_callLater(function() CHAT_ROUTER:AddSystemMessage(L(SI_LOREPLAY_UI_WELCOME)) end, 50)
 	end
 	LPEventHandler:UnregisterForEvent(LorePlay.name, event, LorePlay.OnPlayerActivated)
 end
@@ -54,4 +54,4 @@ EVENT_MANAGER:RegisterForEvent(LorePlay.name, EVENT_ADD_ON_LOADED, LorePlay.OnAd
 
 SLASH_COMMANDS["/loreplay.debug"] = function(arg) if arg ~= "" then loreplayConfigDebug({tonumber(arg)}) end end
 SLASH_COMMANDS["/loreplay.reload"] = function(arg) LorePlay.ReconvertLorePlaySavedata() end
-SLASH_COMMANDS["/loreplay.fixdata1670"] = function(arg) LorePlay.FixSavedata1670() end
+--SLASH_COMMANDS["/loreplay.fixdata1670"] = function(arg) LorePlay.FixSavedata1670() end

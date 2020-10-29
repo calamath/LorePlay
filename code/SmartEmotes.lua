@@ -1,33 +1,7 @@
 LorePlay = LorePlay or {}
--- --- definitions : LPCategoryStrings.lua
-local Appearance = LorePlay.Appearance
-local Hats = LorePlay.Hats
-local Costumes = LorePlay.Costumes
-local Skins = LorePlay.Skins
-local Polymorphs = LorePlay.Polymorphs
-local Hair = LorePlay.Hair
-local FacialAcc = LorePlay.FacialAcc
-local FacialHair = LorePlay.FacialHair
-local BodyMarkings = LorePlay.BodyMarkings
-local HeadMarkings = LorePlay.HeadMarkings
-local Jewelry = LorePlay.Jewelry
-local Personalities = LorePlay.Personalities
-local VanityPets = LorePlay.VanityPets
-local City = LorePlay.City
-local Housing = LorePlay.Housing
-local Dungeon = LorePlay.Dungeon
-local Adventure = LorePlay.Adventure
-local Total = LorePlay.Total
-local player = LorePlay.player
-local stringToColTypeTable = LorePlay.stringToColTypeTable
--- ---
--- --- definitions : LPUtilities.lua
-local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
-local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
-local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
-local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = LorePlay.EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE
-local EVENT_INDICATOR_MOVED = LorePlay.EVENT_INDICATOR_MOVED
-local LPUtilities = LorePlay.LPUtilities
+-- --- definitions : local event codes for LibEventHandler
+local EVENT_ON_SMART_EMOTE = "EVENT_ON_SMART_EMOTE"
+local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = "EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE"
 
 -- ------------------------------------------------------------
 
@@ -1005,7 +979,7 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 				[1] = 114
 			},
 			["Switch"] = function() 
-				local currentStam, _, effectiveMaxStam = GetUnitPower(LorePlay.player, POWERTYPE_STAMINA)
+				local currentStam, _, effectiveMaxStam = GetUnitPower("player", POWERTYPE_STAMINA)
 				if currentStam < effectiveMaxStam*(.60) then
 					return true
 				end
@@ -1579,7 +1553,7 @@ end
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_COMBAT_EVENT(eventCode, result, sourceName)
-	if sourceName ~= GetUnitName(LorePlay.player).."^Fx" or isInCombat then return end
+	if sourceName ~= GetUnitName("player").."^Fx" or isInCombat then return end
 	if result == ACTION_RESULT_DIED_XP or result == ACTION_RESULT_DIED or 
 	result == ACTION_RESULT_KILLING_BLOW or result == ACTION_RESULT_TARGET_DEAD then
 		if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE, EVENT_KILLED_BOSS) then return end
@@ -1701,7 +1675,7 @@ end
 
 -- Stamina bar
 function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE(eventCode, unitTag, powerIndex, powerType, powerValue, powerMax, powerEffectiveMax)
-	if unitTag ~= LorePlay.player then return end
+	if unitTag ~= "player" then return end
 	if powerType == POWERTYPE_STAMINA then
 		local lowerThreshold = powerEffectiveMax*(.20)
 		local upperThreshold = powerEffectiveMax*(.60)
@@ -1716,7 +1690,7 @@ end
 
 
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_EXPERIENCE_UPDATE(eventCode, unitTag, currentExp, maxExp, reason)
-	if unitTag ~= LorePlay.player then return end
+	if unitTag ~= "player" then return end
 	if SmartEmotes.DoesEmoteFromTTLEqualEvent(EVENT_LEVEL_UPDATE) then return end
 	if reason == PROGRESS_REASON_OVERLAND_BOSS_KILL then
 		SmartEmotes.UpdateTTLEmoteTable(EVENT_KILLED_BOSS)
@@ -1771,7 +1745,7 @@ end
 function SmartEmotes.UpdateTTLEmoteTable_For_EVENT_CAPTURE_FLAG_STATE_CHANGED(eventCode, objectiveKeepId, objectiveObjectiveId, battlegroundContext, objectiveName, objectiveControlEvent, objectiveControlState, originalOwnerAlliance, holderAlliance, lastHolderAlliance, pinType)
 	if eventCode ~= EVENT_CAPTURE_FLAG_STATE_CHANGED then return end
 
-	local playerAlliance = GetUnitBattlegroundAlliance(player)
+	local playerAlliance = GetUnitBattlegroundAlliance("player")
 	if objectiveControlEvent == OBJECTIVE_CONTROL_EVENT_FLAG_TAKEN then
 		if originalOwnerAlliance == playerAlliance and holderAlliance ~= playerAlliance then 
 			SmartEmotes.UpdateTTLEmoteTable(EVENT_CAPTURE_FLAG_STATE_CHANGED_LOST_FLAG)

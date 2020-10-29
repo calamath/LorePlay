@@ -1,33 +1,6 @@
 LorePlay = LorePlay or {}
--- --- definitions : LPCategoryStrings.lua
-local Appearance = LorePlay.Appearance
-local Hats = LorePlay.Hats
-local Costumes = LorePlay.Costumes
-local Skins = LorePlay.Skins
-local Polymorphs = LorePlay.Polymorphs
-local Hair = LorePlay.Hair
-local FacialAcc = LorePlay.FacialAcc
-local FacialHair = LorePlay.FacialHair
-local BodyMarkings = LorePlay.BodyMarkings
-local HeadMarkings = LorePlay.HeadMarkings
-local Jewelry = LorePlay.Jewelry
-local Personalities = LorePlay.Personalities
-local VanityPets = LorePlay.VanityPets
-local City = LorePlay.City
-local Housing = LorePlay.Housing
-local Dungeon = LorePlay.Dungeon
-local Adventure = LorePlay.Adventure
-local Total = LorePlay.Total
-local player = LorePlay.player
-local stringToColTypeTable = LorePlay.stringToColTypeTable
--- ---
--- --- definitions : LPUtilities.lua
-local EVENT_ACTIVE_EMOTE = LorePlay.EVENT_ACTIVE_EMOTE
-local EVENT_ON_SMART_EMOTE = LorePlay.EVENT_ON_SMART_EMOTE
-local EVENT_ON_IDLE_EMOTE = LorePlay.EVENT_ON_IDLE_EMOTE
-local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = LorePlay.EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE
-local EVENT_INDICATOR_MOVED = LorePlay.EVENT_INDICATOR_MOVED
-local LPUtilities = LorePlay.LPUtilities
+-- --- definitions : local event codes for LibEventHandler
+local EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE = "EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE"
 
 -- ------------------------------------------------------------
 
@@ -188,7 +161,7 @@ local function EquipWeddingClothes()
 	}
 	local currCostume = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
 	local desiredCollectibleId
-	local gender = GetUnitGender(player)
+	local gender = GetUnitGender("player")
 	if LorePlay.db.isUsingCollectible[COLLECTIBLE_CATEGORY_TYPE_COSTUME] then
 		if gender == GENDER_MALE then
 			for _, v in pairs(maleWeddingCostumes) do
@@ -464,7 +437,6 @@ local function RequestChangeOutfits(eventCode)
 	local isPlayerMounted
 	local isPlayerSwimming
 	local isPlayerInCombat
-	local IsUnitInAir = IsUnitInAir or function() return false end
 
 --	LorePlay.LDL:Debug("[RequestChangeOutfits] : eventCode=", eventCode)
 
