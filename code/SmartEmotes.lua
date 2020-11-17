@@ -396,10 +396,14 @@ end
 
 
 local function GetNonRepeatEmoteIndex(emoteTable)
+	-- Attempts to randomly select a different emote from the table than last time.
+	-- However, after the maximum number of attempts, the same emotes as last time may be selected.
 	local smartEmoteIndex
-	repeat
+	local maximumAttempts = 4 + #emoteTable["Emotes"]			-- Number of emotes registered + 4 times
+	for i = 1, maximumAttempts do
 		smartEmoteIndex = GetSmartEmoteIndex(emoteTable)
-	until lastEmoteUsed ~= smartEmoteIndex
+		if lastEmoteUsed ~= smartEmoteIndex then break end
+	end
 	return smartEmoteIndex
 end
 

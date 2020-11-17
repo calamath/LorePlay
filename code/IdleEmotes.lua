@@ -315,9 +315,13 @@ local housingEditorScenes = {
 }
 function IdleEmotes.IsBlacklistedScene()
 	local currentScene = SCENE_MANAGER:GetCurrentScene()
+	if currentScene == nil then
+--		LorePlay.LDL:Debug("[SCENE]IdleEmoteNG : currentScene = nil (not initialized yet)"
+		return true
+	end
 	local currentSceneName = currentScene:GetName()
 	if not LorePlay.adb.ieAllowedInHousingEditor and housingEditorScenes[currentSceneName] then
---		LorePlay.LDL:Debug("[SCENE]IdleEmoteNG : currentScene = ", currentSceneName)
+--		LorePlay.LDL:Debug("[SCENE]IdleEmoteNG : currentScene = %s", currentSceneName)
 		return true
 	end
 	if currentScene:HasFragment(FRAME_PLAYER_FRAGMENT) then

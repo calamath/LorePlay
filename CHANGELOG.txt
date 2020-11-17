@@ -6,6 +6,12 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 NOTE : this modified version is still under the Artistic License 2.0
 
 
+Version 1.6.80 : by Calamath
+[SmartEmotes]
+- Addressed an issue inherited from the original version where the game would hang up when performing SmartEmote twice in a row just after swimming or running out of stamina.
+[IdleEmotes]
+- Addressed an issue that could cause a UI error when performing IdleEmotes immediately after login.
+
 Version 1.6.79 : by Calamath
 - code cleanup and refactoring
 
