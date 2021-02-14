@@ -593,6 +593,8 @@ local blacklistedScenes = {
 	gamepad_stats_root = true, 
 --	itemSetsBook = true, 			-- Not needed at this time as there is no preview mode.
 --	gamepadItemSetsBook = true, 	-- Not needed at this time as there is no preview mode.
+	inventory = true, 				-- added for inventory furniture preview feature introduced in update 29
+	gamepad_inventory_root = true,	-- added for inventory furniture preview feature introduced in update 29
 }
 local function noCameraSpin(doRemoveFragment)
 	doRemoveFragment = doRemoveFragment or LorePlay.db.isCameraSpinDisabled

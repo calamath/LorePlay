@@ -7,6 +7,8 @@ NOTE : this modified version is still under the Artistic License 2.0
 
 
 - Updated embedded LibEventHandler version to 1.2.94 (AddOnVersion: 1294).
+[IdleEmotes]
+-Optimized the Camera Spin Disabler feature for compatibility with the inventory furniture preview introduced in update 29.
 
 Version 1.6.81 : by Calamath
 [HotFix]
