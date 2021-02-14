@@ -6,6 +6,8 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 NOTE : this modified version is still under the Artistic License 2.0
 
 
+- Updated embedded LibEventHandler version to 1.2.94 (AddOnVersion: 1294).
+
 Version 1.6.81 : by Calamath
 [HotFix]
 - Fixed a bug that the in-game furniture preview feature did not work when using the Camera Spin Disabler.
