@@ -191,10 +191,15 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[545]	= { emoteKey = "AD", 			}, 		-- Skywatch
 	[529]	= { emoteKey = "AD", 			}, 		-- Woodhearth
 	[1287]	= { emoteKey = "EP", 			}, 		-- Vivec City
+	[1220]	= { emoteKey = "EP", 			}, 		-- Vivec City (Palace Receiving Room)
+	[1221]	= { emoteKey = "EP", 			}, 		-- Vivec City (Lord Vivec's Chambers)
+	[1222]	= { emoteKey = "EP", 			}, 		-- Vivec City (Library of Vivec)
+	[1224]	= { emoteKey = "EP", 			}, 		-- Vivec City (Archcanon's Office)
 --			= { emoteKey = "EP", 			}, 		-- Seyda Neen
 	[1290]	= { emoteKey = "EP", 			}, 		-- Balmora
 	[1288]	= { emoteKey = "EP", 			}, 		-- Sadrith Mora
 	[1430]	= { emoteKey = "AD", 			}, 		-- Alinor
+	[1445]	= { emoteKey = "AD", 			}, 		-- Alinor (Alinor Royal Palace)    note: Dungeon
 	[1431]	= { emoteKey = "AD", 			}, 		-- Shimmerene
 	[1455]	= { emoteKey = "AD", 			}, 		-- Lillandril
 	[1560]	= { emoteKey = "EP", 			}, 		-- Lilmoth
@@ -223,6 +228,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[9348]	= { emoteKey = "AD", 			}, 		-- Silvenar Treetops
 	[3370]	= { emoteKey = "AD", 			}, 		-- Silvenar's Audience Hall
 	[933]	= { emoteKey = "DC", 			}, 		-- Tava's Blessing
+	[11558]	= { emoteKey = "EP", 			}, 		-- Vivec City Wayshrine
 	[11580]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
 	[11659]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
 	[11851]	= { emoteKey = "EP", 			}, 		-- Seyda Neen
@@ -261,6 +267,7 @@ local blacklistedDungeonDatabase = {
 		--	 Basically, this table should not be used.
 		--	 IsUnitInDungeon API returns TRUE in the dungeons, but zones registered in this table will be treated as FALSE. 
 		--   In other words, register only the zone ID of the dungeon that you absolutely want to recognize as a region area (adventure zone).	
+	[1048] = true, 			-- Alinor Royal Palace (in Summerset)
 	[1191] = true, 			-- Blackreach Mzark Cavern (in Eastmarch)
 	[1205] = true, 			-- Grayhome (in Rivenspire)
 }
