@@ -6,7 +6,10 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 NOTE : this modified version is still under the Artistic License 2.0
 
 
+Version 1.6.82 : by Calamath
+[LorePlay]:Flames of Ambition support
 - Adjusted location database of Vivec City and Alinor Royal Palace.
+- Updated API version to 100034 (ESO 6.3.x : Flames of Ambition)
 - Updated embedded LibEventHandler version to 1.2.94 (AddOnVersion: 1294).
 [IdleEmotes]
 -Optimized the Camera Spin Disabler feature for compatibility with the inventory furniture preview introduced in update 29.
