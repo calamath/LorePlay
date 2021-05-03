@@ -6,6 +6,10 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 NOTE : this modified version is still under the Artistic License 2.0
 
 
+Version 1.6.83 : by Calamath
+[HotFix]
+- Fixed a bug that the in-game outfit preview feature did not work in daily login reward scene and eso plus offer scene when using the Camera Spin Disabler.
+
 Version 1.6.82 : by Calamath
 [LorePlay]:Flames of Ambition support
 - Adjusted location database of Vivec City and Alinor Royal Palace.
