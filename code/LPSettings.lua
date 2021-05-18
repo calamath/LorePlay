@@ -598,6 +598,7 @@ local blacklistedScenes = {
 --	gamepadItemSetsBook = true, 	-- Not needed at this time as there is no preview mode.
 	inventory = true, 				-- added for inventory furniture preview feature introduced in update 29
 	gamepad_inventory_root = true,	-- added for inventory furniture preview feature introduced in update 29
+	endeavorSealStoreSceneKeyboard = true, 	-- for outfit preview feature in endeavor seal store scene
 }
 local function noCameraSpin(doRemoveFragment)
 	doRemoveFragment = doRemoveFragment or LorePlay.db.isCameraSpinDisabled

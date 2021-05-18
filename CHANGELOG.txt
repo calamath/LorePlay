@@ -8,6 +8,8 @@ NOTE : this modified version is still under the Artistic License 2.0
 - Improved location recognition engine for Senchal type cities where no city subzones are defined.
 - In the wilderness of Blackwood, the add-on automatically recognizes you are in the adventure zone.
 - Updated location database for Blackwood Chapter. Leyawiin and Gideon are now recognized as cities.
+[IdleEmotes]
+- Adjusted the Camera Spin Disabler feature to enable the preview button in the endeavor seal store introduced in Update 30.
 
 Version 1.6.83 : by Calamath
 [HotFix]
@@ -19,7 +21,7 @@ Version 1.6.82 : by Calamath
 - Updated API version to 100034 (ESO 6.3.x : Flames of Ambition)
 - Updated embedded LibEventHandler version to 1.2.94 (AddOnVersion: 1294).
 [IdleEmotes]
--Optimized the Camera Spin Disabler feature for compatibility with the inventory furniture preview introduced in update 29.
+- Optimized the Camera Spin Disabler feature for compatibility with the inventory furniture preview introduced in update 29.
 
 Version 1.6.81 : by Calamath
 [HotFix]
