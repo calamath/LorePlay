@@ -587,9 +587,13 @@ local function OnZoneChangedBehindSchedule(eventCode, subZoneName, subZoneId)
 --	LorePlay.LDL:Info("Update Location by EVENT_ZONE_CHANGED")
 	LorePlay.db.savedSubZoneName = subZoneName
 	LorePlay.db.savedSubZoneId = subZoneId
---	if countEventLWPChangedDuringDelayTime == 0 then		-- stop changing outfits when detecting the player entering or exiting the building
-	if subZoneId ~= 0 or countEventLWPChangedDuringDelayTime == 0 then		-- stop changing outfits when detecting the player entering the building
+	if subZoneId ~= 0 then
 		RequestChangeOutfits(eventCode)
+	else
+		if countEventLWPChangedDuringDelayTime == 0 and LorePlay.HasCitySubZone(GetCurrentMapId()) then		-- stop changing outfits when detecting the player entering the building
+																											-- stop changing outfits on maps without city subzones
+			RequestChangeOutfits(eventCode)
+		end
 	end
 end
 

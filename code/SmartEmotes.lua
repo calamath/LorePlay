@@ -134,6 +134,7 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 		--	 The word 'mapId' here means the mapId not mapIndex.
 		--	 emoteKey indicates which region the map belongs to. SmartEmote feature uses this data to select the emote table.
 		--	 useMapBorder indicates a special map that uses map borders instead of subzone borders for city recognition.  Set this flag only on special indoor maps.
+		--	 noSubZone indicates a special map where no city subzones are defined.
 		--
 	[445]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
 	[446]	= { emoteKey = "Elden Root", 	}, 		-- Elden Root
@@ -204,10 +205,10 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1455]	= { emoteKey = "AD", 			}, 		-- Lillandril
 	[1560]	= { emoteKey = "EP", 			}, 		-- Lilmoth
 	[1576]	= { emoteKey = "Other", 		}, 		-- Rimmen
-	[1675]	= { emoteKey = "Other",	 		}, 		-- Senchal
+	[1675]	= { emoteKey = "Other", noSubZone = true, 		}, 		-- Senchal
 	[1690]	= { emoteKey = "Other", useMapBorder = true, 	}, 		-- Senchal Palace
 	[1762]	= { emoteKey = "Other", 		}, 		-- Senchal
-	[1773]	= { emoteKey = "EP", useMapBorder = true, 	}, 		-- Solitude
+	[1773]	= { emoteKey = "EP", 			}, 		-- Solitude
 	[1858]	= { emoteKey = "EP", 			}, 		-- Markarth
 	[1888]	= { emoteKey = "EP", 			}, 		-- Understone Keep
 }
@@ -330,6 +331,15 @@ local function DoesUseMapBorder(mapId)
 		end
 	end
 	return false
+end
+
+function SmartEmotes.HasCitySubZone(mapId)
+	if mapIdDatabase[mapId] then
+		if mapIdDatabase[mapId].noSubZone == true then
+			return false
+		end
+	end
+	return true
 end
 
 local function GetCityKeyBySubZoneId(subZoneId)
@@ -1406,11 +1416,9 @@ function SmartEmotes.IsPlayerInCity()
 	local mapId = GetCurrentMapId()
 	local key
 	if subZoneId ~= 0 then
-		if location == LorePlay.db.savedSubZoneName then
-			key = GetCityKeyBySubZoneId(subZoneId)
-			if key then
-				return true, key
-			end
+		key = GetCityKeyBySubZoneId(subZoneId)
+		if key then
+			return true, key
 		end
 	else
 		if not DoesUseMapBorder(mapId) then

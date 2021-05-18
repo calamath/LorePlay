@@ -5,6 +5,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+- Improved location recognition engine for Senchal type cities where no city subzones are defined.
 
 Version 1.6.83 : by Calamath
 [HotFix]
