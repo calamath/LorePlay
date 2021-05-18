@@ -125,6 +125,7 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[1161]	= { emoteKey = "other", },		-- Blackreach: Greymoor Caverns
 	[1207]	= { emoteKey = "ep1", 	},		-- The Reach
 	[1208]	= { emoteKey = "other", },		-- Blackreach: Arkthzand Cavern
+	[1261]	= { emoteKey = "ep3", 	}, 		-- Blackwood
 
 }
 -- ---------
@@ -211,6 +212,8 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1773]	= { emoteKey = "EP", 			}, 		-- Solitude
 	[1858]	= { emoteKey = "EP", 			}, 		-- Markarth
 	[1888]	= { emoteKey = "EP", 			}, 		-- Understone Keep
+	[1940]	= { emoteKey = "EP", noSubZone = true, 			}, 		-- Leyawiin
+	[2018]	= { emoteKey = "EP", 			}, 		-- Gideon
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -246,6 +249,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 --	[15754]	= { emoteKey = "EP", 			},		-- Dragon Bridge Wayshrine (in Western Skyrim)		--> If you want to add Dragon Bridge as a city, change this line manually.
 	[15625]	= { emoteKey = "Other", 		},		-- Dusktown (in Blackreach Cavern)
 	[16357]	= { emoteKey = "EP", 			},		-- Karthwasten (in the Reach)
+	[17280]	= { emoteKey = "EP", 			}, 		-- Leyawiin (in Blackwood)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
@@ -261,6 +265,11 @@ local poiDatabase = {
 	[3482854427] = { id = 15336, emoteKey = "Other", 	}, 		-- FR:Senchal
 	[3754689769] = { id = 15336, emoteKey = "Other", 	}, 		-- JP:Senchal
 	[824842596]	 = { id = 15336, emoteKey = "Other", 	}, 		-- RU:Senchal
+	[4102247096] = { id = 17280, emoteKey = "EP", 		}, 		-- EN:Leyawiin
+	[708531273]	 = { id = 17280, emoteKey = "EP", 		}, 		-- DE:Leyawiin
+	[2666761760] = { id = 17280, emoteKey = "EP", 		}, 		-- FR:Leyawiin
+	[1970724318] = { id = 17280, emoteKey = "EP", 		}, 		-- JP:Leyawiin
+	[3595650480] = { id = 17280, emoteKey = "EP", 		}, 		-- RU:Leyawiin
 }
 -- ---------
 local blacklistedDungeonDatabase = {
@@ -271,6 +280,7 @@ local blacklistedDungeonDatabase = {
 	[1048] = true, 			-- Alinor Royal Palace (in Summerset)
 	[1191] = true, 			-- Blackreach Mzark Cavern (in Eastmarch)
 	[1205] = true, 			-- Grayhome (in Rivenspire)
+	[1245] = true, 			-- Borderwatch Ruins (in Blackwood)
 }
 -- ---------
 local harrowstormRitualSiteDatabase = {
