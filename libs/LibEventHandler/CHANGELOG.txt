@@ -1,0 +1,42 @@
+======================================================================
+This is a modified version of LibEventHandler, originally by Justinon.
+======================================================================
+https://www.esoui.com/downloads/info1452-LibEventHandler.html
+
+NOTE : this modified version is still under the Artistic License 2.0
+
+Version 1.2.95: (Calamath)
+- Updated API version to 100035 (ESO 7.0.x : Blackwood)
+
+Version 1.2.94: (Calamath)
+- Updated API version to 100034 (ESO 6.3.x : Flames of Ambition)
+
+Version 1.2.93: (Calamath)
+- Updated API version to 100033 (ESO 6.2.x : Markarth)
+
+Version 1.2.92: (Calamath)
+- Updated API version to 100032 (ESO 6.1.x : Stonethorn)
+
+Version 1.2.91: (Calamath)
+- Updated API version to 100031 (ESO 6.0.x : Greymoor)
+
+Version 1.2.90: (Calamath)
+- LibEventHandler library now has its own manifest file and a global variable LibEventHandler for direct access.
+- Updated API version to 100029 (ESO 5.2.5 : Dragonhold)
+- LibDebugLogger has been newly added to OptionalDependsOn in the add-on manifest file.
+- Moved debug message output from UI chat to LibDebugLogger. From now on, we add-on authors and contributers will look at the debug log with the DebugLogViewer add-on.
+
+------------------------------------------------------------------------------
+The following are changes to the standard version by original author Justinon.
+------------------------------------------------------------------------------
+
+Version 1.2:
+
+- Removed a print statement
+
+
+Version 1.1:
+
+- Changed async to allow for user input for the delay time as opposed to hard codes half a second. Still accepts boolean values
+
+
