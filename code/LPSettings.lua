@@ -527,9 +527,9 @@ end
 
 local function SetFavoriteStylePreset(presetIndex)
 	local collectibleId = 0
-	LorePlay.db.stylePreset[presetIndex].outfitIndex = GetEquippedOutfitIndex() or 0
+	LorePlay.db.stylePreset[presetIndex].outfitIndex = GetEquippedOutfitIndex(GAMEPLAY_ACTOR_CATEGORY_PLAYER) or 0
 	for k, v in pairs(Settings.collectibleType) do
-		collectibleId = GetActiveCollectibleByType(v)
+		collectibleId = GetActiveCollectibleByType(v, GAMEPLAY_ACTOR_CATEGORY_PLAYER)
 		if collectibleId == 0 then		-- no active collectible
 		end
 		LorePlay.db.stylePreset[presetIndex].collectible[v] = collectibleId

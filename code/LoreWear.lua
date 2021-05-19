@@ -125,7 +125,7 @@ local function SafeUseCollectible(collectibleId)
 	--
 	local cooldownDuration = select(2, GetCollectibleCooldownAndDuration(collectibleId))
 	if cooldownDuration == 0 then
-		UseCollectible(collectibleId)
+		UseCollectible(collectibleId, GAMEPLAY_ACTOR_CATEGORY_PLAYER)
 		return true
 	else
 		LorePlay.LDL:Warn("collectible cooldown remain : type=%d, id=%d, cdDuration=%d, name=%s", GetCollectibleCategoryType(collectibleId), collectibleId, cooldownDuration, GetCollectibleName(collectibleId))
@@ -139,7 +139,7 @@ local function TurnOffHideHelm()
 	local hideYourHelmId = 5002
 	local currentCollectibleId
 	if LorePlay.db.isUsingCollectible[COLLECTIBLE_CATEGORY_TYPE_HAT] then
-		currentCollectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAT)
+		currentCollectibleId = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_HAT, GAMEPLAY_ACTOR_CATEGORY_PLAYER)
 		if currentCollectibleId == hideYourHelmId and GetCollectibleBlockReason(hideYourHelmId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 			noErr = SafeUseCollectible(hideYourHelmId) and noErr
 		end
@@ -159,7 +159,7 @@ local function EquipWeddingClothes()
 		79, 	-- weddingGown
 		76, 	-- eveningDress
 	}
-	local currCostume = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME)
+	local currCostume = GetActiveCollectibleByType(COLLECTIBLE_CATEGORY_TYPE_COSTUME, GAMEPLAY_ACTOR_CATEGORY_PLAYER)
 	local desiredCollectibleId
 	local gender = GetUnitGender("player")
 	if LorePlay.db.isUsingCollectible[COLLECTIBLE_CATEGORY_TYPE_COSTUME] then
@@ -198,7 +198,7 @@ local function ForceShowOrHideClothes()
 	if IsCollectibleCooldown() then return false end
 	for k, desiredCollectibleId in pairs(toggleTable) do
 		if LorePlay.db.isUsingCollectible[k] then
-			currentCollectibleId = GetActiveCollectibleByType(k)
+			currentCollectibleId = GetActiveCollectibleByType(k, GAMEPLAY_ACTOR_CATEGORY_PLAYER)
 			if desiredCollectibleId ~= 0 and GetCollectibleBlockReason(desiredCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 				noErr = SafeUseCollectible(desiredCollectibleId) and noErr
 			elseif currentCollectibleId ~= 0 and GetCollectibleBlockReason(currentCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
@@ -229,7 +229,7 @@ local function ToggleTakeOffCostumeOnly()
 	if IsCollectibleCooldown(costumeCollectibleType) then return false end
 	for k, v in pairs(costumeCollectibleType) do
 		if LorePlay.db.isUsingCollectible[v] then
-			currentCollectibleId = GetActiveCollectibleByType(v)
+			currentCollectibleId = GetActiveCollectibleByType(v, GAMEPLAY_ACTOR_CATEGORY_PLAYER)
 			desiredCollectibleId = toggleTable[v]
 			if desiredCollectibleId ~= 0 and desiredCollectibleId ~= hideYourHelmId and GetCollectibleBlockReason(desiredCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
 				noErr = SafeUseCollectible(desiredCollectibleId) and noErr
@@ -287,14 +287,14 @@ local function EquipUserStylePreset(presetIndex)
 		if outfixIndex == -1 then
 			-- [-1 : don't care]
 		elseif outfitIndex == 0 or outfitIndex == nil then
-			UnequipOutfit()
+			UnequipOutfit(GAMEPLAY_ACTOR_CATEGORY_PLAYER)
 		else
-			EquipOutfit(outfitIndex)
+			EquipOutfit(GAMEPLAY_ACTOR_CATEGORY_PLAYER, outfitIndex)
 		end
 	end
 	for k, v in pairs(LorePlay.collectibleType) do
 		if LorePlay.db.isUsingCollectible[v] then
-			currentCollectibleId = GetActiveCollectibleByType(v)
+			currentCollectibleId = GetActiveCollectibleByType(v, GAMEPLAY_ACTOR_CATEGORY_PLAYER)
 			desiredCollectibleId = LorePlay.db.stylePreset[presetIndex].collectible[v]
 			if desiredCollectibleId == -1 then
 				-- [-1 : don't care]
