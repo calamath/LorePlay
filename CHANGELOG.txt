@@ -8,6 +8,7 @@ NOTE : this modified version is still under the Artistic License 2.0
 - Improved location recognition engine for Senchal type cities where no city subzones are defined.
 - In the wilderness of Blackwood, the add-on automatically recognizes you are in the adventure zone.
 - Updated location database for Blackwood Chapter. Leyawiin and Gideon are now recognized as cities.
+- Adjusted location database of Understone Keep in Markarth.
 - Updated bundled LibEventHandler version to 1.2.95 (AddOnVersion: 1295).
 - Backward compatibility support for Update 29
 [LoreWear]

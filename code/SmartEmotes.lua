@@ -211,7 +211,7 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1762]	= { emoteKey = "Other", 		}, 		-- Senchal
 	[1773]	= { emoteKey = "EP", 			}, 		-- Solitude
 	[1858]	= { emoteKey = "EP", 			}, 		-- Markarth
-	[1888]	= { emoteKey = "EP", 			}, 		-- Understone Keep
+	[1888]	= { emoteKey = "EP", useMapBorder = true,		}, 		-- Understone Keep
 	[1940]	= { emoteKey = "EP", noSubZone = true, 			}, 		-- Leyawiin
 	[2018]	= { emoteKey = "EP", 			}, 		-- Gideon
 }
