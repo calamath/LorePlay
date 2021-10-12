@@ -64,22 +64,6 @@ if not LAM2 then d("[LorePlay] Error : 'LibAddonMenu' not found.") return end
 local L = GetString
 local Settings = LorePlay
 
--- -------------------------------------------------
--- backward compatibility support code for Update 29
--- -------------------------------------------------
-if GetAPIVersion() < 100035 then
-	local cached_EquipOutfit = EquipOutfit
-	local function EquipOutfit(actorCategory, outfitIndex, ...) return cached_EquipOutfit(outfitIndex) end
-	local cached_UnequipOutfit = UnequipOutfit
-	local function UnequipOutfit(actorCategory, ...) return cached_UnequipOutfit() end
-	local cached_GetEquippedOutfitIndex = GetEquippedOutfitIndex
-	local function GetEquippedOutfitIndex(actorCategory, ...) return cached_GetEquippedOutfitIndex() end
-	local cached_UseCollectible = UseCollectible
-	local function UseCollectible(collectibleId, actorCategory, ...) return cached_UseCollectible(collectibleId) end
-	local cached_GetActiveCollectibleByType = GetActiveCollectibleByType
-	local function GetActiveCollectibleByType(categoryType, actorCategory, ...) return cached_GetActiveCollectibleByType(categoryType) end
-end
--- -------------------------------------------------
 
 -- default account-wide savedata table for [LorePlay Forever]
 local default_adb = {

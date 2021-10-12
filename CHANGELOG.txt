@@ -6,6 +6,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 NOTE : this modified version is still under the Artistic License 2.0
 
 - Updated bundled LibEventHandler version to 1.2.97 (AddOnVersion: 1297).
+- Deleted backward compatibility support for Update 29
 
 Version 1.6.84 : by Calamath
 [LorePlay]:Blackwood support
