@@ -5,9 +5,11 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.85 : by Calamath
 [LorePlay]:Deadlands support
 - Fargrave and the deadlands in the realm of Oblivion, the add-on automatically recognizes you are in the adventure zone.
 - Updated location database for Deadlands DLC. Fargrave City District is now recognized as a city.
+- Updated API version to 101032 (ESO 7.2.x : Deadlands)
 - Updated bundled LibEventHandler version to 1.2.97 (AddOnVersion: 1297).
 - Deleted backward compatibility support for Update 29
 
