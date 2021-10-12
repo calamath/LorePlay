@@ -126,6 +126,8 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[1207]	= { emoteKey = "ep1", 	},		-- The Reach
 	[1208]	= { emoteKey = "other", },		-- Blackreach: Arkthzand Cavern
 	[1261]	= { emoteKey = "ep3", 	}, 		-- Blackwood
+	[1282]	= { emoteKey = "other", },		-- Fargrave
+	[1286]	= { emoteKey = "other", },		-- The Deadlands
 
 }
 -- ---------
@@ -214,6 +216,9 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1888]	= { emoteKey = "EP", useMapBorder = true,		}, 		-- Understone Keep
 	[1940]	= { emoteKey = "EP", noSubZone = true, 			}, 		-- Leyawiin
 	[2018]	= { emoteKey = "EP", 			}, 		-- Gideon
+	[2035]	= { emoteKey = "Other", useMapBorder = true, 	}, 		-- Fargrave City District
+	[2080]	= { emoteKey = "Other", useMapBorder = true		}, 		-- Fargrave City District (1st floor of the Collector's Villa)
+	[2136]	= { emoteKey = "Other", useMapBorder = true, 	}, 		-- Fargrave City District (The Bazaar)
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -281,6 +286,7 @@ local blacklistedDungeonDatabase = {
 	[1191] = true, 			-- Blackreach Mzark Cavern (in Eastmarch)
 	[1205] = true, 			-- Grayhome (in Rivenspire)
 	[1245] = true, 			-- Borderwatch Ruins (in Blackwood)
+	[1284] = true, 			-- The Collector's Villa (in Fargrave)
 }
 -- ---------
 local harrowstormRitualSiteDatabase = {
