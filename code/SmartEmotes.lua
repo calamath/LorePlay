@@ -267,12 +267,12 @@ local poiDatabase = {
 		--	 Basically, this table should not be used, but for cities where subzones are not detectable.
 	[2428019372] = { id = 15336, emoteKey = "Other", 	}, 		-- EN:Senchal
 	[2224387413] = { id = 15336, emoteKey = "Other", 	}, 		-- DE:Senchal
-	[3482854427] = { id = 15336, emoteKey = "Other", 	}, 		-- FR:Senchal
+	[3482854427] = { id = 15336, emoteKey = "Other", 	}, 		-- FR:Senchal, ES:Senchal
 	[3754689769] = { id = 15336, emoteKey = "Other", 	}, 		-- JP:Senchal
 	[824842596]	 = { id = 15336, emoteKey = "Other", 	}, 		-- RU:Senchal
 	[4102247096] = { id = 17280, emoteKey = "EP", 		}, 		-- EN:Leyawiin
 	[708531273]	 = { id = 17280, emoteKey = "EP", 		}, 		-- DE:Leyawiin
-	[2666761760] = { id = 17280, emoteKey = "EP", 		}, 		-- FR:Leyawiin
+	[2666761760] = { id = 17280, emoteKey = "EP", 		}, 		-- FR:Leyawiin, ES:Leyawiin
 	[1970724318] = { id = 17280, emoteKey = "EP", 		}, 		-- JP:Leyawiin
 	[3595650480] = { id = 17280, emoteKey = "EP", 		}, 		-- RU:Leyawiin
 }
