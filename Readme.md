@@ -15,7 +15,7 @@ YOU NEED TO INSTALL THE FOLLOWING LIBRARY SEPARATELY.
 - Forked from Justinon's standard version 1.5.1
 - Removed embedded LibStub and LibAddonMenu-2.0 libraries, you now need to have LibAddonMenu-2.0 separately.
 - Major Revamp of LoreWear Feature
-- LoreWear now support for four non-English language modes: DE, FR, JP, and RU
+- LoreWear now support for five non-English language modes: DE, FR, JP, RU and ES
 - Support for following DLCs and Chapters: Clockwork City, Summerset, Murkmire, Elsweyr, Dragonhold, Greymoor, Markarth, Blackwood, and Deadlands.
 
 - **[COMPATIBILITY-BREAKING CHANGE]**  
