@@ -5,6 +5,9 @@ https://www.esoui.com/downloads/info1452-LibEventHandler.html
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.2.98: (Calamath)
+- Updated API version to 101033 (ESO 7.3.x : Ascending Tide)
+
 Version 1.2.97: (Calamath)
 - Updated API version to 101032 (ESO 7.2.x : Deadlands)
 
