@@ -5,6 +5,8 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+- Updated bundled LibEventHandler version to 1.2.99 (AddOnVersion: 1299).
+
 Version 1.6.86 : by Calamath
 - Spanish language support
 - Updated API version to 101033 (ESO 7.3.x : Ascending Tide)
