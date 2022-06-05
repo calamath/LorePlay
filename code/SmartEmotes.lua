@@ -128,6 +128,7 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[1261]	= { emoteKey = "ep3", 	}, 		-- Blackwood
 	[1282]	= { emoteKey = "other", },		-- Fargrave
 	[1286]	= { emoteKey = "other", },		-- The Deadlands
+	[1318]	= { emoteKey = "dc2", 	},		-- High Isle
 
 }
 -- ---------
@@ -219,6 +220,9 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[2035]	= { emoteKey = "Other", useMapBorder = true, 	}, 		-- Fargrave City District
 	[2080]	= { emoteKey = "Other", useMapBorder = true		}, 		-- Fargrave City District (1st floor of the Collector's Villa)
 	[2136]	= { emoteKey = "Other", useMapBorder = true, 	}, 		-- Fargrave City District (The Bazaar)
+	[2163]	= { emoteKey = "DC", noSubZone = true,			}, 		-- Gonfalon Bay
+	[2214]	= { emoteKey = "DC", 			}, 		-- Amenos Station
+
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
