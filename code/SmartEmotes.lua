@@ -537,81 +537,81 @@ function SmartEmotes.CreateEmotesByRegionTable()
 	defaultEmotesByRegionKeys = {
 		["ad1"] = { --Summerset
 			["Emotes"] = {
-				[1] = 191,
-				[2] = 191,
-				[3] = 210,
-				[4] = 174,
-				[5] = 174,
+				[1] = 190,
+				[2] = 190,
+				[3] = 209,
+				[4] = 173,
+				[5] = 173,
 				[6] = 11,
 				[7] = 121,
 				[8] = 38,
 				[9] = 52,
 				[10] = 9,
 				[11] = 91,
-				[12] = 210
+				[12] = 209,
 			}
 		},
 		["ad2"] = { --Valenwood
 			["Emotes"] = {
-				[1] = 210,
+				[1] = 209,
 				[2] = 119,
 				[3] = 102,
-				[4] = 201,
-				[5] = 202,
+				[4] = 200,
+				[5] = 201,
 				[6] = 99,
 				[7] = 121,
 				[8] = 38,
 				[9] = 52,
 				[10] = 104,
 				[11] = 91,
-				[12] = 210,
+				[12] = 209,
 				[13] = 123,
-				[14] = 104
+				[14] = 104,
 			}
 		},
 		["ep1"] = { --Skyrim
 			["Emotes"] = {
 				[1] = 8,
-				[2] = 169,
+				[2] = 168,
 				[3] = 64,
-				[4] = 214,
+				[4] = 213,
 				[5] = 52,
 				[6] = 38,
 				[7] = 104,
 				[8] = 64,
-				[9] = 214,
-				[10] = 169
+				[9] = 213,
+				[10] = 168,
 			}
 		},
 		["ep2"] = { --Morrowind
 			["Emotes"] = {
 				[1] = 52,
-				[2] = 201,
-				[3] = 169,
-				[4] = 178,
+				[2] = 200,
+				[3] = 168,
+				[4] = 177,
 				[5] = 120,
 				[6] = 91,
 				[7] = 9,
-				[8] = 110
+				[8] = 110,
 			}
 		},
 		["ep3"] = { --Shadowfen
 			["Emotes"] = {
 				[1] = 52,
-				[2] = 201,
-				[3] = 169,
-				[4] = 178,
-				[5] = 202,
+				[2] = 200,
+				[3] = 168,
+				[4] = 177,
+				[5] = 201,
 				[6] = 38,
 				[7] = 9,
 				[8] = 91,
-				[9] = 104
+				[9] = 104,
 			}
 		},
 		["dc1"] = { --deserty
 			["Emotes"] = {
 				[1] = 52,
-				[2] = 201,
+				[2] = 200,
 				[3] = 11,
 				[4] = 110,
 				[5] = 122,
@@ -621,21 +621,21 @@ function SmartEmotes.CreateEmotesByRegionTable()
 				[9] = 91,
 				[10] = 95,
 				[11] = 95,
-				[12] = 110
+				[12] = 110,
 			}
 		},
 		["dc2"] = { --foresty
 			["Emotes"] = {
 				[1] = 52,
 				[2] = 119,
-				[3] = 201,
+				[3] = 200,
 				[4] = 99,
 				[5] = 121,
 				[6] = 38,
 				[7] = 9,
 				[8] = 91,
 				[9] = 123,
-				[10] = 104
+				[10] = 104,
 			}
 		},
 		["ch"] = { --Coldharbour
@@ -645,7 +645,7 @@ function SmartEmotes.CreateEmotesByRegionTable()
 				[3] = 122,
 				[4] = 52,
 				[5] = 102,
-				[6] = 104
+				[6] = 104,
 			}
 		},
 		["ip"] = { --imperial
@@ -656,27 +656,27 @@ function SmartEmotes.CreateEmotesByRegionTable()
 				[4] = 110,
 				[5] = 38,
 				[6] = 9,
-				[7] = 91
+				[7] = 91,
 			}
 		},
 		["other"] = { --other
 			["Emotes"] = {
-				[1] = 203,
+				[1] = 202,
 				[2] = 54,
 				[3] = 83,
 				[4] = 91,
-				[5] = 191,
+				[5] = 190,
 				[6] = 40,
 				[7] = 110,
-				[8] = 177,
-				[9] = 178,
-				[10] = 174,
-				[11] = 201,
+				[8] = 176,
+				[9] = 177,
+				[10] = 173,
+				[11] = 200,
 				[12] = 138,
 				[13] = 99,
 				[14] = 121,
 				[15] = 52,
-				[16] = 9
+				[16] = 9,
 			}
 		}
 	}
@@ -689,37 +689,37 @@ function SmartEmotes.CreateEmotesByCityTable()
 		-- these unique emote tables with special city name dentifiers were imported from table languageTable.defaultEmotesByCity.
 		["Elden Root"] = {
 			["Emotes"] = {
-				[1] = 203,
-				[2] = 203,
-				[3] = 203,
-				[4] = 203,
-				[5] = 177,
-				[6] = 174,
-				[7] = 202,
+				[1] = 202,
+				[2] = 202,
+				[3] = 202,
+				[4] = 202,
+				[5] = 176,
+				[6] = 173,
+				[7] = 201,
 				[8] = 99,
 				[9] = 8,
 				[10] = 52,
-				[11] = 184,
+				[11] = 183,
 				[12] = 5,
 				[13] = 6,
 				[14] = 7,
 				[15] = 79,
-				[16] = 8
+				[16] = 8,
 			}
 		},
 		["Vulkhel Guard"] = { 
 			["Emotes"] = {
-				[1] = 174,
+				[1] = 173,
 				[2] = 8,
 				[3] = 38,
-				[4] = 191,
-				[5] = 210,
+				[4] = 190,
+				[5] = 209,
 				[6] = 11,
 				[7] = 121,
 				[8] = 52,
 				[9] = 9,
 				[10] = 91,
-				[11] = 182,
+				[11] = 181,
 				[12] = 5,
 				[13] = 6,
 				[14] = 7,
@@ -729,61 +729,61 @@ function SmartEmotes.CreateEmotesByCityTable()
 		},
 		["Mournhold"] = {
 			["Emotes"] = {
-				[1] = 174,
+				[1] = 173,
 				[2] = 8,
 				[3] = 52,
 				[4] = 52,
-				[5] = 203,
-				[6] = 203,
+				[5] = 202,
+				[6] = 202,
 				[7] = 121,
-				[8] = 185,
+				[8] = 184,
 				[9] = 5,
 				[10] = 6,
 				[11] = 7,
 				[12] = 79,
-				[13] = 8
+				[13] = 8,
 			}
 		},
 		["Windhelm"] = { 
 			["Emotes"] = {
 				[1] = 8,
 				[2] = 139,
-				[3] = 163,
-				[4] = 169,
+				[3] = 162,
+				[4] = 168,
 				[5] = 5,
 				[6] = 79,
-				[7] = 209,
+				[7] = 208,
 				[8] = 64,
-				[9] = 174,
+				[9] = 173,
 				[10] = 52,
-				[11] = 188,
+				[11] = 187,
 				[12] = 6,
 				[13] = 7,
-				[14] = 8
+				[14] = 8,
 			}
 		},
 		["Riften"] = { 
 			["Emotes"] = {
 				[1] = 8,
 				[2] = 139,
-				[3] = 163,
-				[4] = 169,
+				[3] = 162,
+				[4] = 168,
 				[5] = 5,
 				[6] = 79,
-				[7] = 209,
+				[7] = 208,
 				[8] = 64,
 				[10] = 52,
-				[11] = 188,
+				[11] = 187,
 				[12] = 6,
 				[13] = 7,
-				[14] = 8
+				[14] = 8,
 			}
 		},
 		["Wayrest"] = {
 			["Emotes"] = {
 				[1] = 25,
 				[2] = 52,
-				[3] = 201,
+				[3] = 200,
 				[4] = 11,
 				[5] = 110,
 				[6] = 122,
@@ -793,14 +793,14 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[10] = 91,
 				[11] = 95,
 				[12] = 95,
-				[13] = 203,
-				[14] = 203,
-				[15] = 181,
+				[13] = 202,
+				[14] = 202,
+				[15] = 180,
 				[16] = 5,
 				[17] = 6,
 				[18] = 7,
 				[19] = 8,
-				[20] = 79
+				[20] = 79,
 			}
 		},
 		-- NOTE : by Calamath
@@ -808,51 +808,51 @@ function SmartEmotes.CreateEmotesByCityTable()
 		-- they were imported from local table defaultCityToRegionEmotes defined in the function 'languageTable.CreateEmotesByCityTable()'
 		["AD"] = {
 			["Emotes"] = {
-			[1] = 177,
-			[2] = 174,
-			[3] = 202,
+			[1] = 176,
+			[2] = 173,
+			[3] = 201,
 			[4] = 99,
 			[5] = 8,
 			[6] = 52,
-			[7] = 184,
+			[7] = 183,
 			[8] = 5,
 			[9] = 6,
 			[10] = 7,
 			[11] = 72,
 			[12] = 72,
-			[13] = 182,
-			[14] = 187,
+			[13] = 181,
+			[14] = 186,
 			[15] = 52,
 			[16] = 8,
-			[17] = 79
+			[17] = 79,
 			}
 		},
 		["EP"] = {
 			["Emotes"] = {
-				[1] = 174,
+				[1] = 173,
 				[2] = 8,
 				[3] = 52,
 				[4] = 7,
-				[5] = 203,
-				[6] = 169,
+				[5] = 202,
+				[6] = 168,
 				[7] = 121,
-				[8] = 185,
+				[8] = 184,
 				[9] = 5,
 				[10] = 6,
 				[11] = 72,
 				[12] = 72,
-				[13] = 188,
-				[14] = 183,
+				[13] = 187,
+				[14] = 182,
 				[15] = 100,
 				[16] = 8,
-				[17] = 79
+				[17] = 79,
 			}
 		},
 		["DC"] = {
 			["Emotes"] = {
 				[1] = 25,
 				[2] = 52,
-				[3] = 201,
+				[3] = 200,
 				[4] = 11,
 				[5] = 6,
 				[6] = 122,
@@ -862,17 +862,17 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[10] = 72,
 				[11] = 95,
 				[12] = 7,
-				[13] = 181,
+				[13] = 180,
 				[14] = 5,
-				[15] = 189,
-				[16] = 190,
+				[15] = 188,
+				[16] = 189,
 				[17] = 8,
-				[18] = 79
+				[18] = 79,
 			},
 		},
 		["Other"] = {
 			["Emotes"] = {
-				[1] = 177,
+				[1] = 176,
 				[2] = 8,
 				[3] = 72,
 				[4] = 72,
@@ -880,10 +880,10 @@ function SmartEmotes.CreateEmotesByCityTable()
 				[6] = 5,
 				[7] = 6,
 				[8] = 7,
-				[9] = 211,
+				[9] = 210,
 				[10] = 100,
 				[11] = 8,
-				[12] = 79
+				[12] = 79,
 			},
 		},
 	}
@@ -899,9 +899,9 @@ function SmartEmotes.CreateDungeonTable()
 			[4] = 102,
 			[5] = 52,
 			[6] = 22,
-			[7] = 171,
+			[7] = 170,
 			[8] = 1,
-			[9] = 22
+			[9] = 22,
 		}
 	}
 end
@@ -916,11 +916,11 @@ function SmartEmotes.CreateDolmenTable()
 			[4] = 102,
 			[5] = 52,
 			[6] = 22,
-			[7] = 171,
+			[7] = 170,
 			[8] = 63,
 			[9] = 22,
 			[10] = 110,
-			[11] = 152
+			[11] = 151,
 		}
 	}
 end
@@ -931,8 +931,8 @@ function SmartEmotes.CreateHousingTable()
 		["Emotes"] = {
 			[1] = 10,
 			[2] = 138,
-			[3] = 192,
-			[4] = 193,
+			[3] = 191,
+			[4] = 192,
 			[5] = 125,
 			[6] = 113,
 			[7] = 100,
@@ -960,7 +960,7 @@ function SmartEmotes.CreateReticleEmoteTable()
 				[2] = 72,
 				[3] = 8,
 				[4] = 137,
-				[5] = 94
+				[5] = 94,
 			}
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_SPOUSE] = {
@@ -971,11 +971,11 @@ function SmartEmotes.CreateReticleEmoteTable()
 				[3] = 8,
 				[4] = 137,
 				[5] = 21,
-				[6] = 147,
+				[6] = 146,
 				[7] = 39,
-				[8] = 213,
-				[9] = 166,
-				[10] = 21
+				[8] = 212,
+				[9] = 165,
+				[10] = 21,
 			}
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC] = {
@@ -983,10 +983,10 @@ function SmartEmotes.CreateReticleEmoteTable()
 			["Emotes"] = {
 				[1] = 142,
 				[2] = 67,
-				[3] = 213,
+				[3] = 212,
 				[4] = 24,
-				[5] = 175,
-				[6] = 142
+				[5] = 174,
+				[6] = 142,
 			}
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_EPIC_SAME] = {
@@ -994,7 +994,7 @@ function SmartEmotes.CreateReticleEmoteTable()
 			["Emotes"] = {
 				[2] = 56,
 				[3] = 57,
-				[4] = 58
+				[4] = 58,
 			}
 		},
 		[EVENT_RETICLE_TARGET_CHANGED_TO_NORMAL] = {
@@ -1003,7 +1003,7 @@ function SmartEmotes.CreateReticleEmoteTable()
 				[1] = 56,
 				[2] = 136,
 				[3] = 137,
-				[4] = 17
+				[4] = 17,
 			}
 		}
 	}
@@ -1017,7 +1017,7 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 		[EVENT_POWER_UPDATE_STAMINA] = {
 			["EventName"] = EVENT_POWER_UPDATE_STAMINA,
 			["Emotes"] = {
-				[1] = 114
+				[1] = 114,
 			},
 			["Switch"] = function() 
 				local currentStam, _, effectiveMaxStam = GetUnitPower("player", POWERTYPE_STAMINA)
@@ -1041,12 +1041,12 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[1] = 52,
 				[2] = 8,
 				[3] = 82,
-				[4] = 165,
+				[4] = 164,
 				[5] = 25,
 				[6] = 129,
 				[7] = 97,
 				[8] = 97,
-				[9] = 97
+				[9] = 97,
 			},
 			["Duration"] = defaultDuration*4
 		},
@@ -1070,8 +1070,8 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Emotes"] = {
 				[1] = 10,
 				[2] = 125,
-				[3] = 212
-				--[4] = 213
+				[3] = 211,
+				--[4] = 212,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1079,13 +1079,13 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["EventName"] = EVENT_HIGH_FALL_DAMAGE,
 			["Emotes"] = {
 				[1] = 115,
-				[2] = 149,
+				[2] = 148,
 				[3] = 12,
-				[4] = 168,
+				[4] = 167,
 				[5] = 133,
 				[6] = 80,
-				[7] = 173,
-				[8] = 71
+				[7] = 172,
+				[8] = 71,
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -1094,11 +1094,11 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Emotes"] = {
 				[1] = 32,
 				[2] = 32,
-				[3] = 155,
+				[3] = 154,
 				[4] = 12,
-				[5] = 167,
+				[5] = 166,
 				[6] = 109,
-				[7] = 109
+				[7] = 109,
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -1109,7 +1109,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[2] = 42,
 				[3] = 36,
 				[4] = 78,
-				[5] = 41
+				[5] = 41,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1121,7 +1121,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[3] = 36,
 				[4] = 91,
 				[5] = 95,
-				[6] = 95
+				[6] = 95,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1133,10 +1133,10 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[3] = 25,
 				[4] = 25,
 				[5] = 82,
-				[6] = 150,
+				[6] = 149,
 				[7] = 36,
 				[8] = 26,
-				[9] = 66
+				[9] = 66,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1150,7 +1150,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[5] = 134,
 				[6] = 40,
 				[7] = 133,
-				[8] = 23
+				[8] = 23,
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -1162,7 +1162,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[3] = 42,
 				[4] = 81,
 				[5] = 129,
-				[6] = 26
+				[6] = 26,
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -1173,10 +1173,10 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[2] = 13,
 				[3] = 66,
 				[4] = 25,
-				[5] = 163,
+				[5] = 162,
 				[6] = 72,
-				[7] = 150,
-				[8] = 26
+				[7] = 149,
+				[8] = 26,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1187,10 +1187,10 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[2] = 13,
 				[3] = 66,
 				[4] = 25,
-				[5] = 163,
+				[5] = 162,
 				[6] = 72,
-				[7] = 150,
-				[8] = 26
+				[7] = 149,
+				[8] = 26,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1201,10 +1201,10 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[2] = 25,
 				[3] = 39,
 				[4] = 14,
-				[5] = 151,
+				[5] = 150,
 				[6] = 54,
-				[7] = 164,
-				[8] = 130
+				[7] = 163,
+				[8] = 130,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1214,7 +1214,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[1] = 133,
 				[2] = 80,
 				[3] = 33,
-				[4] = 149
+				[4] = 148,
 			},
 			["Duration"] = defaultDuration/2
 		},
@@ -1223,7 +1223,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["Emotes"] = {
 				[1] = 91,
 				[2] = 110,
-				[3] = 80
+				[3] = 80,
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
@@ -1231,12 +1231,12 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["EventName"] = EVENT_PLAYER_COMBAT_STATE_NOT_INCOMBAT,
 			["Emotes"] = {
 				[1] = 78,
-				[2] = 162,
+				[2] = 161,
 				[3] = 39,
-				[4] = 179,
+				[4] = 178,
 				[5] = 52,
 				[6] = 119,
-				[7] = 200
+				[7] = 199,
 			},
 			["Duration"] = defaultDuration*(1/2)
 		},
@@ -1249,7 +1249,7 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[4] = 73,
 				[5] = 93,
 				[6] = 109,
-				[7] = 78
+				[7] = 78,
 			},
 			["Duration"] = defaultDuration*(1/2)
 		},
@@ -1257,55 +1257,55 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["EventName"] = EVENT_PLAYER_COMBAT_STATE_INCOMBAT,
 			["Emotes"] = {
 				[1] = 27,
-				[2] = 160,
-				[3] = 164,
+				[2] = 159,
+				[3] = 163,
 				[4] = 106,
-				[5] = 159,
-				[6] = 159
+				[5] = 158,
+				[6] = 158,
 			},
 			["Duration"] = defaultDuration*(2/3)
 		},
 		[EVENT_KILLED_BOSS] = {
 			["EventName"] = EVENT_KILLED_BOSS,
 			["Emotes"] = {
-				[1] = 200,
-				[2] = 162,
+				[1] = 199,
+				[2] = 161,
 				[3] = 119,
-				[4] = 179,
+				[4] = 178,
 				[5] = 25,
-				[6] = 152,
+				[6] = 151,
 				[7] = 145,
 				[8] = 62,
 				[9] = 13,
 				[10] = 22,
 				[11] = 97,
-				[12] = 8
+				[12] = 8,
 			},
 			["Duration"] = defaultDuration
 		},
 		[EVENT_TRADE_SUCCEEDED] = {
 			["EventName"] = EVENT_TRADE_SUCCEEDED,
 			["Emotes"] = {
-				[1] = 151,
-				[2] = 130
+				[1] = 150,
+				[2] = 130,
 			},
 			["Duration"] = defaultDuration/2
 		},
 		[EVENT_TRADE_CANCELED] = {
 			["EventName"] = EVENT_TRADE_CANCELED,
 			["Emotes"] = {
-				[1] = 149,
-				[2] = 153,
-				[3] = 170,
+				[1] = 148,
+				[2] = 152,
+				[3] = 169,
 				[4] = 54,
 				[5] = 81,
-				[6] = 156,
+				[6] = 155,
 				[7] = 32,
 				[8] = 62,
 				[9] = 44,
 				[10] = 44,
 				[11] = 44,
-				[12] = 152
+				[12] = 151,
 			},
 			["Duration"] = defaultDuration/2
 		},
@@ -1315,18 +1315,18 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[1] = 104,
 				[2] = 52,
 				[3] = 98,
-				[4] = 165
+				[4] = 164,
 			},
 			["Duration"] = defaultDuration
 		},
 		[EVENT_BANKED_MONEY_UPDATE_GROWTH] = {
 			["EventName"] = EVENT_BANKED_MONEY_UPDATE_GROWTH,
 			["Emotes"] = {
-				[1] = 194,
-				[2] = 194,
-				[3] = 174,
-				[4] = 199,
-				[5] = 54
+				[1] = 193,
+				[2] = 193,
+				[3] = 173,
+				[4] = 198,
+				[5] = 54,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1334,10 +1334,10 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 			["EventName"] = EVENT_BANKED_MONEY_UPDATE_DOUBLE,
 			["Emotes"] = {
 				[1] = 25,
-				[2] = 194,
+				[2] = 193,
 				[3] = 78,
 				[4] = 82,
-				[5] = 97
+				[5] = 97,
 			},
 			["Duration"] = defaultDuration
 		},
@@ -1347,8 +1347,8 @@ function SmartEmotes.CreateTTLEmoteEventTable()
 				[1] = 115,
 				[2] = 62,
 				[3] = 22,
-				[4] = 149,
-				[5] = 134
+				[4] = 148,
+				[5] = 134,
 			},
 			["Duration"] = defaultDuration/6
 		},

@@ -32,9 +32,9 @@ function IdleEmotes.CreateEventIdleEmotesTable()
 			[4] = 36,
 			[5] = 50,
 			[6] = 41,
-			[7] = 153,
+			[7] = 152,
 			[8] = 15,
-			[9] = 154
+			[9] = 153,
 		}
 	}
 end
@@ -47,12 +47,12 @@ local function AddDrunkToCities()
 		[2] = 8,
 		[3] = 139,
 		[4] = 139,
-		[5] = 163,
-		[6] = 163,
+		[5] = 162,
+		[6] = 162,
 		[7] = 79,
 		[8] = 79,
 		[9] = 115,
-		[10] = 90
+		[10] = 90,
 	}
 	local numOfDrunks = #drunkTable
 	for i = 1, numOfDrunks, 1 do
@@ -66,7 +66,7 @@ local function AddWorshipToDungeons()
 	local worshipTable = {
 		[1] = 104,
 		[2] = 52,
-		[3] = 172
+		[3] = 171,
 	}
 	local numOfWorships = #worshipTable
 	for i = 1, numOfWorships, 1 do
@@ -80,7 +80,7 @@ local function AddWorshipToCities()
 	local worshipTable = {
 		[1] = 104,
 		[2] = 52,
-		[3] = 172
+		[3] = 171,
 	}
 	local numOfWorships = #worshipTable
 	for i = 1, numOfWorships, 1 do
@@ -94,7 +94,7 @@ local function AddWorshipToZone()
 	local worshipTable = {
 		[1] = 104,
 		[2] = 52,
-		[3] = 172
+		[3] = 171,
 	}
 	local numOfWorships = #worshipTable
 	for i = 1, numOfWorships, 1 do
@@ -108,7 +108,7 @@ local function AddExercisesToZone()
 	local exerciseTable = {
 		[1] = 84,
 		[2] = 85,
-		[3] = 113
+		[3] = 113,
 	}
 	local numOfExercises = #exerciseTable
 	for i = 1, numOfExercises, 1 do
@@ -121,16 +121,16 @@ local function AddDancesToCities()
 	local numOfEmotes = #defaultIdleTable["City"]
 	local danceTable = {
 		[1] = 72,
-		[2] = 190,
-		[3] = 182,
-		[4] = 183,
-		[5] = 184,
-		[6] = 181,
-		[7] = 207,
-		[8] = 186,
-		[9] = 187,
-		[10] = 188,
-		[11] = 189
+		[2] = 189,
+		[3] = 181,
+		[4] = 182,
+		[5] = 183,
+		[6] = 180,
+		[7] = 206,
+		[8] = 185,
+		[9] = 186,
+		[10] = 187,
+		[11] = 188,
 	}
 	local numOfDances = #danceTable
 	for i = 1, numOfDances, 1 do
@@ -144,7 +144,7 @@ local function AddInstrumentsToCities()
 	local instrumentsTable = {
 		[1] = 5,
 		[2] = 6,
-		[3] = 7
+		[3] = 7,
 	}
 	local numOfInstruments = #instrumentsTable
 	for i = 1, numOfInstruments, 1 do
@@ -162,47 +162,47 @@ function IdleEmotes.CreateDefaultIdleEmotesTable()
 			[4] = 121,
 			[5] = 123,
 			[6] = 102,
-			[7] = 201,
+			[7] = 200,
 			[8] = 15,
 			[9] = 10,
 			[10] = 38,
-			[11] = 191
+			[11] = 190,
 		},
 		["City"] = {
-			[1] = 202,
+			[1] = 201,
 			[2] = 107,
-			[3] = 195,
+			[3] = 194,
 			[4] = 8,
-			[5] = 174,
+			[5] = 173,
 			[6] = 100,
 			[7] = 38,
-			[8] = 169,
+			[8] = 168,
 			[9] = 9,
-			[10] = 191,
-			[11] = 199
+			[10] = 190,
+			[11] = 198,
 		},
 		["Dungeon"] = {
-			[1] = 195,
+			[1] = 194,
 			[2] = 1,
-			[3] = 154,
+			[3] = 153,
 			[4] = 1,
 			[5] = 1,
 			[6] = 122,
-			[7] = 101
+			[7] = 101,
 		},
 		["Housing"] = {
 			[1] = 10,
 			[2] = 10,
 			[3] = 99,
 			[4] = 119,
-			[5] = 192,
-			[6] = 192,
-			[7] = 193,
-			[8] = 193,
+			[5] = 191,
+			[6] = 191,
+			[7] = 192,
+			[8] = 192,
 			[9] = 9,
-			[10] = 178,
-			[11] = 208,
-			[12] = 209,
+			[10] = 177,
+			[11] = 207,
+			[12] = 208,
 			[13] = 125,
 			[14] = 125,
 			[15] = 118,

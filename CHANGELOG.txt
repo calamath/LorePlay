@@ -8,6 +8,10 @@ NOTE : this modified version is still under the Artistic License 2.0
 - High Isle and Amenos, the add-on automatically recognizes you are in the adventure zone.
 - Updated location database for High Isle Chapter. Gonfalon Bay and Amenos Station are now recognized as cities.
 - Updated bundled LibEventHandler version to 1.2.99 (AddOnVersion: 1299).
+[IdleEmotes]
+- Adjusted emote tables due to changes in the numbering after the emoteIndex147.
+[SmartEmotes]
+- Adjusted emote tables due to changes in the numbering after the emoteIndex147.
 
 Version 1.6.86 : by Calamath
 - Spanish language support
