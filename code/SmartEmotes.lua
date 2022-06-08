@@ -1020,7 +1020,7 @@ function SmartEmotes.CreateLatchedEmoteEventTable()
 				[1] = 114,
 			},
 			["Switch"] = function() 
-				local currentStam, _, effectiveMaxStam = GetUnitPower("player", POWERTYPE_STAMINA)
+				local currentStam, _, effectiveMaxStam = GetUnitPower("player", COMBAT_MECHANIC_FLAGS_STAMINA)
 				if currentStam < effectiveMaxStam*(.60) then
 					return true
 				end
@@ -1715,7 +1715,7 @@ end
 -- Stamina bar
 function SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE(eventCode, unitTag, powerIndex, powerType, powerValue, powerMax, powerEffectiveMax)
 	if unitTag ~= "player" then return end
-	if powerType == POWERTYPE_STAMINA then
+	if powerType == COMBAT_MECHANIC_FLAGS_STAMINA then
 		local lowerThreshold = powerEffectiveMax*(.20)
 		local upperThreshold = powerEffectiveMax*(.60)
 		if powerValue <= lowerThreshold then 
@@ -1820,7 +1820,7 @@ function SmartEmotes.RegisterSmartEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_LEVEL_UPDATE, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_LEVEL_UPDATE)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_NOT_SWIMMING, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_PLAYER_NOT_SWIMMING)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_POWER_UPDATE, SmartEmotes.UpdateLatchedEmoteTable_For_EVENT_POWER_UPDATE)
-	EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_POWER_UPDATE, REGISTER_FILTER_POWER_TYPE, POWERTYPE_STAMINA)
+	EVENT_MANAGER:AddFilterForEvent(LorePlay.name, EVENT_POWER_UPDATE, REGISTER_FILTER_POWER_TYPE, COMBAT_MECHANIC_FLAGS_STAMINA)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_TRADE_CANCELED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_CANCELED)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_TRADE_SUCCEEDED, SmartEmotes.UpdateTTLEmoteTable_For_EVENT_TRADE_SUCCEEDED)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_HIGH_FALL_DAMAGE, SmartEmotes.UpdateTTLEmoteTable_For_FALL_DAMAGE)

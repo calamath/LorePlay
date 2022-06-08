@@ -16,7 +16,7 @@ YOU NEED TO INSTALL THE FOLLOWING LIBRARY SEPARATELY.
 - Removed embedded LibStub and LibAddonMenu-2.0 libraries, you now need to have LibAddonMenu-2.0 separately.
 - Major Revamp of LoreWear Feature
 - LoreWear now support for five non-English language modes: DE, FR, JP, RU and ES
-- Support for following DLCs and Chapters: Clockwork City, Summerset, Murkmire, Elsweyr, Dragonhold, Greymoor, Markarth, Blackwood, and Deadlands.
+- Support for following DLCs and Chapters: Clockwork City, Summerset, Murkmire, Elsweyr, Dragonhold, Greymoor, Markarth, Blackwood, Deadlands, and High Isle.
 
 - **[COMPATIBILITY-BREAKING CHANGE]**  
   The various zone and city recognitions have been rewritten to a brand-new identifier based approach by Calamath, and are no longer language mode dependent.
