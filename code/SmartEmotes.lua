@@ -200,6 +200,16 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[1221]	= { emoteKey = "EP", 			}, 		-- Vivec City (Lord Vivec's Chambers)
 	[1222]	= { emoteKey = "EP", 			}, 		-- Vivec City (Library of Vivec)
 	[1224]	= { emoteKey = "EP", 			}, 		-- Vivec City (Archcanon's Office)
+	[1225]	= { emoteKey = "EP", 			}, 		-- Vivec City (Hall of Justice)
+	[1230]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saint Olms Plaza)
+	[1231]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saint Olms Waistworks)
+	[1232]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saint Olms Square)
+	[1233]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saint Olms Guild Halls)
+	[1234]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saint Delyn Plaza)
+	[1235]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saint Delyn Waistworks)
+	[1236]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saing Delyn Square)
+	[1237]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saint Delyn Guild Halls)
+	[1238]	= { emoteKey = "EP", 			}, 		-- Vivec City (Saint Delyn's Inn)
 --			= { emoteKey = "EP", 			}, 		-- Seyda Neen
 	[1290]	= { emoteKey = "EP", 			}, 		-- Balmora
 	[1288]	= { emoteKey = "EP", 			}, 		-- Sadrith Mora
