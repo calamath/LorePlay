@@ -1391,7 +1391,7 @@ function SmartEmotes.ThisZoneIsParentZone(zoneId)
 	end
 	return false
 end
-
+]]
 
 function SmartEmotes.IsPlayerInAnySubZone()
 	local _, poiIndex = GetCurrentSubZonePOIIndices()
@@ -1400,7 +1400,6 @@ function SmartEmotes.IsPlayerInAnySubZone()
 	end
 	return false
 end
-]]
 
 function SmartEmotes.IsPlayerInSpecificPOI(poiName)
 	local key, id = GetCityKeyByPOIName(poiName)
@@ -1410,7 +1409,6 @@ function SmartEmotes.IsPlayerInSpecificPOI(poiName)
 	return false
 end
 
-
 function SmartEmotes.IsPlayerInParentZone()
 	local key = GetRegionKeyByZoneId(GetParentZoneId(GetUnitWorldPosition("player")))
 	if key ~= nil then
@@ -1419,13 +1417,22 @@ function SmartEmotes.IsPlayerInParentZone()
 	return false
 end
 
-
 function SmartEmotes.IsPlayerInZone()
 	local key = GetRegionKeyByZoneId(GetUnitWorldPosition("player"))
 	if key ~= nil then
 		return true, key
 	end
 	return false
+end
+
+function SmartEmotes.IsPlayerInSeparatedArea()
+	local _, x, y, z = GetUnitWorldPosition("player")
+	local _, rx, ry, rz = GetUnitRawWorldPosition("player")
+	if x == rx and y == ry and z == rz then
+		return false
+	else
+		return true
+	end
 end
 
 
@@ -1441,7 +1448,7 @@ function SmartEmotes.IsPlayerInCity()
 			return true, key
 		end
 	else
-		if not DoesUseMapBorder(mapId) then
+		if not DoesUseMapBorder(mapId) and not SmartEmotes.IsPlayerInSeparatedArea() then
 			if location == GetPlayerActiveZoneName() then
 				if LorePlay.db.specificPOINameNearby == nil then
 					return false
@@ -1457,16 +1464,6 @@ function SmartEmotes.IsPlayerInCity()
 end
 
 
---[[
-function SmartEmotes.IsPlayerInDungeon(POI, zoneName)
-	if languageTable.defaultEmotesByCity[POI] == nil then
-		if languageTable.zoneToRegionEmotes[zoneName] == nil then 
-			return true
-		end
-	end
-	return false
-end
-]]
 function SmartEmotes.IsPlayerInDungeon()
 	return IsUnitInDungeon("player") and not blacklistedDungeonDatabase[GetUnitWorldPosition("player")]
 end
