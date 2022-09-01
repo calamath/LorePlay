@@ -1,6 +1,3 @@
---local MAJOR, MINOR = "LibEventHandler-1.2", "LibEventHandler-1.1"
---local LEH, LEHminor = LibStub:NewLibrary(MAJOR, MINOR)
---if not LEH then return end
 if LibEventHandler then d("Warning : 'LibEventHandler' has always been loaded.") return end
 local LEH = {}
 if LibDebugLogger then LEH.LDL = LibDebugLogger("LibEventHandler") end
