@@ -52,7 +52,7 @@ end
 
 local function UpdateIsEmoting(index)
 	local slashName = GetEmoteSlashNameByIndex(index)
-	if LPEmotesTable.allEmotesTable[slashName]["doesLoop"] then
+	if LPEmotesTable.allEmotesTable[slashName] and LPEmotesTable.allEmotesTable[slashName]["doesLoop"] then
 		ResolveLoopingEmote()
 	else
 		ResolveEmote()
