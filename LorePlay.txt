@@ -1,11 +1,11 @@
 ## Title: LorePlay Forever
 ## Description: Adds immersion through intelligent, contextual emotes and outfits.
-## Version: 1.6.87
-## AddOnVersion: 10687
-## APIVersion: 101034
+## Version: 1.6.88
+## AddOnVersion: 10688
+## APIVersion: 101035
 ## Author: Justinon, Calamath
 ## SavedVariables: LorePlaySavedVars
-## DependsOn: LibAddonMenu-2.0>=34 LibEventHandler>=1299
+## DependsOn: LibAddonMenu-2.0>=34 LibEventHandler>=1300
 ## OptionalDependsOn: LibDebugLogger>=220
 
 code\locales\en.lua

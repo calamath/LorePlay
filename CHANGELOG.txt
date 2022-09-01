@@ -5,10 +5,13 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.88 : by Calamath
+[LorePlay]:Lost Depths support
 - Overhauled the location recognition engine to accommodate the in-game mechanics of Update 35.
 - Adjusted location database of Vivec City.
 - Added nil check to LPEmoteHandler in case there is no slash command corresponding to the emoteIndex.
 - Updated bundled LibEventHandler version to 1.3.0 (AddOnVersion: 1300).
+- Updated API version to 101035 (ESO 8.1.x : Lost Depths)
 
 Version 1.6.87 : by Calamath
 [LorePlay]:High Isle support
