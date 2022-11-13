@@ -1,3 +1,7 @@
+------------------------------------------------
+-- LorePlay
+-- English localization
+------------------------------------------------
 LorePlay = LorePlay or {}
 
 local strings = {

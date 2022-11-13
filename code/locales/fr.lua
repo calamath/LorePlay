@@ -1,5 +1,7 @@
--- LorePlay FR localization
-
+------------------------------------------------
+-- LorePlay
+-- French localization
+------------------------------------------------
 LorePlay = LorePlay or {}
 
 SafeAddString(SI_LOREPLAY_LOCATION_KEYWORD_DOLMEN,  	"dolmen", 1)										-- "Dolmen"
