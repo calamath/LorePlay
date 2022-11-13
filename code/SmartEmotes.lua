@@ -289,11 +289,13 @@ local poiDatabase = {
 	[3482854427] = { id = 15336, emoteKey = "Other", 	}, 		-- FR:Senchal, ES:Senchal
 	[3754689769] = { id = 15336, emoteKey = "Other", 	}, 		-- JP:Senchal
 	[824842596]	 = { id = 15336, emoteKey = "Other", 	}, 		-- RU:Senchal
+	[2560225998] = { id = 15336, emoteKey = "Other", 	}, 		-- ZH:Senchal
 	[4102247096] = { id = 17280, emoteKey = "EP", 		}, 		-- EN:Leyawiin
 	[708531273]	 = { id = 17280, emoteKey = "EP", 		}, 		-- DE:Leyawiin
 	[2666761760] = { id = 17280, emoteKey = "EP", 		}, 		-- FR:Leyawiin, ES:Leyawiin
 	[1970724318] = { id = 17280, emoteKey = "EP", 		}, 		-- JP:Leyawiin
 	[3595650480] = { id = 17280, emoteKey = "EP", 		}, 		-- RU:Leyawiin
+	[1061249791] = { id = 17280, emoteKey = "EP", 		}, 		-- ZH:Leyawiin
 }
 -- ---------
 local blacklistedDungeonDatabase = {

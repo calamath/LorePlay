@@ -5,6 +5,7 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+- Simplified Chinese language support
 - In the wilderness of Galen and Y'ffelon, the add-on automatically recognizes you are in the adventure zone.
 - Updated location database for Firesong DLC. Vastyr is now recognized as a city.
 - Updated bundled LibEventHandler version to 1.3.1 (AddOnVersion: 1301).
