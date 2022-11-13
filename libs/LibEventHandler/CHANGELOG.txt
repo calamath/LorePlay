@@ -5,6 +5,9 @@ https://www.esoui.com/downloads/info1452-LibEventHandler.html
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.3.1: (Calamath)
+- Updated API version to 101036 (ESO 8.2.x : Firesong)
+
 Version 1.3.0: (Calamath)
 - Updated API version to 101035 (ESO 8.1.x : Lost Depths)
 
