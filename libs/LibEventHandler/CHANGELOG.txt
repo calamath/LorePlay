@@ -5,6 +5,12 @@ https://www.esoui.com/downloads/info1452-LibEventHandler.html
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.3.3: (Calamath)
+- Updated API version to 101038 (ESO 9.0.x : Necrom)
+
+Version 1.3.2: (Calamath)
+- Updated API version to 101037 (ESO 8.3.x : Scribes of Fate)
+
 Version 1.3.1: (Calamath)
 - Updated API version to 101036 (ESO 8.2.x : Firesong)
 
