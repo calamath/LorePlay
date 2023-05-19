@@ -115,7 +115,7 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[816]	= { emoteKey = "other", }, 		-- Hew's Bane
 	[726]	= { emoteKey = "ep3", 	}, 		-- Murkmire
 	[684]	= { emoteKey = "other", }, 		-- Wrothgar
-	[849]	= { emoteKey = "ep1", 	}, 		-- Vvardenfell
+	[849]	= { emoteKey = "ep2", 	}, 		-- Vvardenfell
 	[980]	= { emoteKey = "other", }, 		-- Clockwork City
 	[267]	= { emoteKey = "ad1", 	}, 		-- Eyevea
 	[1011]	= { emoteKey = "ad1", 	},		-- Summerset
@@ -130,6 +130,7 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[1286]	= { emoteKey = "other", },		-- The Deadlands
 	[1318]	= { emoteKey = "dc2", 	},		-- High Isle
 	[1383]	= { emoteKey = "dc2", 	},		-- Galen
+	[1414]	= { emoteKey = "ep2", 	},		-- Telvanni Peninsula
 
 }
 -- ---------
@@ -237,6 +238,8 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[2279]	= { emoteKey = "DC", useMapBorder = true, 	}, 		-- Castle Mornard (Vastyr)
 	[2280]	= { emoteKey = "DC", useMapBorder = true, 	}, 		-- Castle Mornard (Vastyr)
 	[2281]	= { emoteKey = "DC", useMapBorder = true, 	}, 		-- Castle Mornard (Vastyr)
+	[2343]	= { emoteKey = "EP", 			}, 		-- Necrom
+	[2385]	= { emoteKey = "EP", 			}, 		-- Necrom Underways
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -274,6 +277,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[16357]	= { emoteKey = "EP", 			},		-- Karthwasten (in the Reach)
 	[17280]	= { emoteKey = "EP", 			}, 		-- Leyawiin (in Blackwood)
 	[19422]	= { emoteKey = "DC", 			}, 		-- Vastyr (in Galen)
+	[19942]	= { emoteKey = "EP", 			}, 		-- Necrom (in Telvanni Peninsula)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
