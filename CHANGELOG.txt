@@ -5,6 +5,10 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.91 : by Calamath
+[LoreWear]
+- Fixed an issue where the player character would not change clothes after dismounting since Necrom.
+
 Version 1.6.90 : by Calamath
 [LorePlay]:Necrom support
 - In the wilderness of Telvanni Peninsula, the add-on automatically recognizes you are in the adventure zone.

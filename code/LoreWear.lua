@@ -474,7 +474,7 @@ local function RequestChangeOutfits(eventCode)
 	if not LorePlay.db.isLoreWearOn then return end
 	
 	isPlayerDead = IsUnitDeadOrReincarnating("player")
-	isPlayerMounted = IsMounted()
+	isPlayerMounted = GetTargetMountedStateInfo(GetDisplayName()) ~= MOUNTED_STATE_NOT_MOUNTED and true or false
 	isPlayerSwimming = IsUnitSwimming("player")
 	isPlayerInCombat = IsUnitInCombat("player")
 	local controlTable = LorePlay.db.lwControlTable
