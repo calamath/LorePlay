@@ -131,6 +131,8 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[1318]	= { emoteKey = "dc2", 	},		-- High Isle
 	[1383]	= { emoteKey = "dc2", 	},		-- Galen
 	[1414]	= { emoteKey = "ep2", 	},		-- Telvanni Peninsula
+	[1443]	= { emoteKey = "other",	},		-- West Weald
+	[1463]	= { emoteKey = "ad1",	},		-- The Scholarium
 
 }
 -- ---------
@@ -240,6 +242,8 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[2281]	= { emoteKey = "DC", useMapBorder = true, 	}, 		-- Castle Mornard (Vastyr)
 	[2343]	= { emoteKey = "EP", 			}, 		-- Necrom
 	[2385]	= { emoteKey = "EP", 			}, 		-- Necrom Underways
+	[2514]	= { emoteKey = "Other", 		}, 		-- Skingrad
+
 }
 -- ---------
 local subZoneIdDatabase = {	---------------------- subZoneId database table for CityKeys, converted from languageTable.defaultEmotesByCity
@@ -278,6 +282,10 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 	[17280]	= { emoteKey = "EP", 			}, 		-- Leyawiin (in Blackwood)
 	[19422]	= { emoteKey = "DC", 			}, 		-- Vastyr (in Galen)
 	[19942]	= { emoteKey = "EP", 			}, 		-- Necrom (in Telvanni Peninsula)
+	[20988]	= { emoteKey = "Other",			}, 		-- Skingrad (in West Weald)
+	[21008]	= { emoteKey = "Other",			}, 		-- Ontus (in West Weald)
+	[20999]	= { emoteKey = "AD",			}, 		-- Vashabar (in West Weald)
+	[21204]	= { emoteKey = "AD",			}, 		-- Vashabar Wayshrine (in West Weald)
 
 --	[2092]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Plaza of the Gods	--> no longer needed
 --	[2094]	= { emoteKey = "Mournhold", 	}, 		-- Mournhold Banking District	--> no longer needed
@@ -330,6 +338,13 @@ local harrowstormRitualSiteDatabase = {
 	[16364] = true, 		-- Witchborne Ritual Site
 	[16368] = true, 		-- Harrowed Haunt Ritual Site
 	[16369] = true, 		-- Reachwind Ritual Site
+}
+-- ---------
+local mirrormoorMosaicDatabase = {
+	[21298] = true, 		-- Ostumir Mirrormoor Mosaic
+	[21302] = true, 		-- Sutch Mirrormoor Mosaic
+	[21539] = true, 		-- Colovia Mirrormoor Mosaic
+	[21540] = true, 		-- Silorn Mirrormoor Mosaic
 }
 -- ---------
 local titleIdToMaleTitleName = {	------------------ titleId to male titleName table, converted from languageTable.playerTitles
@@ -1518,6 +1533,16 @@ function SmartEmotes.IsPlayerInHarrowstormRitualSite()
 end
 
 
+function SmartEmotes.IsPlayerInMirrormoorMosaic()
+	local subzoneId = LorePlay.db.savedSubZoneId
+	if mirrormoorMosaicDatabase[subzoneId] then
+		return true
+	else
+		return false
+	end
+end
+
+
 -- Here we pass in event codes
 function SmartEmotes.DoesEmoteFromTTLEqualEvent(...)
 	if not eventTTLEmotes["isEnabled"] then return false end
@@ -1576,6 +1601,10 @@ function SmartEmotes.UpdateDefaultEmotesTable()
 		return
 	end
 	if SmartEmotes.IsPlayerInHarrowstormRitualSite() then
+		defaultEmotes = defaultEmotesForDolmens		-- same as Dolens
+		return
+	end
+	if SmartEmotes.IsPlayerInMirrormoorMosaic() then
 		defaultEmotes = defaultEmotesForDolmens		-- same as Dolens
 		return
 	end
