@@ -5,11 +5,14 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.92 : by Calamath
+[LorePlay]:Gold Road support
 - In the wilderness of West Weald, the add-on automatically recognizes you are in the adventure zone.
 - In the Scholarium, the add-on automatically recognizes you are in the adventure zone.
 - Updated location database for Gold Road Chapter. Skingrad, Ontus and Vashabar are now recognized as cities.
 - Mirrormoor Mosaic sites are now recognized as same as Dolmens.
 - Updated bundled LibEventHandler version to 1.3.5 (AddOnVersion: 1305).
+- Updated API version to 101042 (ESO 10.0.x : Gold Road)
 
 [LoreWear]
 - Added a failsafe to prevent deactivating all costume collectibles if costume presets are not yet registered.
