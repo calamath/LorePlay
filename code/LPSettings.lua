@@ -78,7 +78,7 @@ local default_adb = {
 -- default savedata table for [LorePlay Forever]
 local default_db = {
 	migrated = false, 
-	dataVersion = 1, 
+	dataVersion = 2, 
 	-- ------------------------------------------------------------
 	isSmartEmotesIndicatorOn = true, 
 	indicatorLeft = nil, 
@@ -139,6 +139,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 		[2] = {
 			displayName = "Housing", 
@@ -159,6 +160,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 		[3] = {
 			displayName = "Dungeon", 
@@ -179,6 +181,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 		[4] = {
 			displayName = "Adventure", 
@@ -199,6 +202,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 		[5] = {
 			displayName = "Option1", 
@@ -219,6 +223,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 		[6] = {
 			displayName = "Option2", 
@@ -239,6 +244,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 		[7] = {
 			displayName = "Option3", 
@@ -259,6 +265,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 		[8] = {
 			displayName = "Option4", 
@@ -279,6 +286,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 		[9] = {
 			displayName = "Option5", 
@@ -299,6 +307,7 @@ local default_db = {
 				[COLLECTIBLE_CATEGORY_TYPE_ASSISTANT] = 0, 
 			}, 
 			outfitIndex = 0, 
+			unregistered = true, 
 		}, 
 	},
 	-- variables for location recognize engine -----
@@ -463,6 +472,8 @@ local function ConvertToForeverSavedata()
 			for k, v in pairs(sv.outfitTable[j]) do
 				LorePlay.db.stylePreset[i].collectible[stringToColTypeTable[k]] = v
 			end
+			LorePlay.db.stylePreset[i].outfitIndex = 0
+			LorePlay.db.stylePreset[i].unregistered = false
 		end
 	end
 	-- ------------------------------------------------------------
@@ -505,6 +516,43 @@ local function ComplementAccountWideSaveData()
 	if LorePlay.adb.ieAllowedInHousingEditor == nil 		then LorePlay.adb.ieAllowedInHousingEditor			= default_adb.ieAllowedInHousingEditor			 end
 end
 
+local function ValidateCharacterIdSaveData()
+	if LorePlay.db.dataVersion == 1 then
+		-- Convert data version 1 to 2
+		for presetIndex = 1, #default_db.stylePreset do
+			local stylePreset = LorePlay.db.stylePreset[presetIndex]
+			if not stylePreset then
+				stylePreset = ZO_DeepTableCopy(default_db.stylePreset[presetIndex])
+				LorePlay.LDL:Debug("initialize style presetIndex[%s]", tostring(presetIndex))
+			else
+				-- Estimate whether the user has registered in the past.
+				local unregistered = true
+				for k, v in pairs(stylePreset.collectible) do
+					if v ~= default_db.stylePreset[presetIndex].collectible[k] then
+						unregistered = false
+						break
+					end
+				end
+				if stylePreset.outfitIndex ~= default_db.stylePreset[presetIndex].outfitIndex then
+					unregistered = false
+				end
+--				LorePlay.LDL:Debug("unregistered flag estimation : presetIndex[%s] -> %s ", tostring(presetIndex), tostring(unregistered))
+				stylePreset.unregistered = unregistered
+			end
+		end
+		-- If any of the special presets 1 through 4 are registered, all four are considered to be registered.
+		if LorePlay.db.isLoreWearOn then
+			if (LorePlay.db.stylePreset[1].unregistered and LorePlay.db.stylePreset[2].unregistered and LorePlay.db.stylePreset[3].unregistered and LorePlay.db.stylePreset[4].unregistered) == false then
+				LorePlay.db.stylePreset[1].unregistered = false
+				LorePlay.db.stylePreset[2].unregistered = false
+				LorePlay.db.stylePreset[3].unregistered = false
+				LorePlay.db.stylePreset[4].unregistered = false
+			end
+		end
+		LorePlay.db.dataVersion = 2
+	end
+end
+
 
 local function updateSpouseName(newMaraSpouseName)
 	LorePlay.db.maraSpouseName = newMaraSpouseName
@@ -535,6 +583,7 @@ local function SetFavoriteStylePreset(presetIndex)
 		LorePlay.db.stylePreset[presetIndex].collectible[v] = collectibleId
 		LorePlay.LDL:Debug("Preset[%d] collectible[%d] = %s", presetIndex, v, GetCollectibleName(collectibleId))
 	end
+	LorePlay.db.stylePreset[presetIndex].unregistered = false
 end
 
 
@@ -1164,6 +1213,8 @@ local function InitializeSettings()
 		Settings.savedVariables = ZO_SavedVars:New("LorePlaySavedVars", 1, nil, {})	-- save data of LorePlay standard version
 		ConvertToForeverSavedata()
 		LorePlay.db.migrated = true
+	else
+		ValidateCharacterIdSaveData()
 	end
 
 --	LAM2 = LibStub("LibAddonMenu-2.0")

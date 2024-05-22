@@ -290,6 +290,10 @@ local function EquipUserStylePreset(presetIndex)
 	local currentCollectibleId
 	local desiredCollectibleId
 	if not presetIndex then return noErr end
+	if LorePlay.db.stylePreset[presetIndex].unregistered then
+		LorePlay.LDL:Debug("EquipStylePreset : canceled due to unregistered (%d)", presetIndex)
+		return noErr
+	end
 	if LorePlay.db.isUsingOutfit then
 		outfitIndex = LorePlay.db.stylePreset[presetIndex].outfitIndex
 		if outfixIndex == -1 then
