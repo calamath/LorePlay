@@ -1,9 +1,9 @@
 ## Title: LibEventHandler
-## Version: 1.3.5
+## Version: 1.3.6
 ## Author: Justinon
 ## IsLibrary: true
-## APIVersion: 101041 101042
-## AddOnVersion: 1305
+## APIVersion: 101042 101043
+## AddOnVersion: 1306
 ## OptionalDependsOn: LibDebugLogger>=263
 
 LibEventHandler.lua
