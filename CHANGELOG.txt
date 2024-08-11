@@ -5,6 +5,11 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.93 : by Calamath
+- Minor adjustments for LoreWear features.
+- Updated bundled LibEventHandler version to 1.3.6 (AddOnVersion: 1306).
+- Updated API version to 101043 (ESO 10.1.x : Update 43)
+
 Version 1.6.92 : by Calamath
 [LorePlay]:Gold Road support
 - In the wilderness of West Weald, the add-on automatically recognizes you are in the adventure zone.

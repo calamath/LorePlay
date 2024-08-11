@@ -631,7 +631,7 @@ local function OnClientInteractResult(eventCode, result)
 				LorePlay.LDL:Debug("Player started the door interaction while swimming in the house.")
 				local behaviorId = LorePlay.db.lwControlTable.duringSwimming
 				if behaviorId == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
-					zo_callLater(OnWarpOutToSameHouseWhileSwimming, 2000)
+					zo_callLater(OnWarpOutToSameHouseWhileSwimming, 3000)
 				end
 			end
 		end
@@ -889,6 +889,8 @@ local recallAbility = {
 	215089, 
 	215092, 
 	218930, 
+	221093, 
+	221094, 
 }
 local function UnregisterLoreWearEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
