@@ -5,6 +5,9 @@ https://www.esoui.com/downloads/info1452-LibEventHandler.html
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.3.8: (Calamath)
+- Updated API version to 101045 (ESO 10.3.x : Fallen Banners)
+
 Version 1.3.7: (Calamath)
 - Updated API version to 101044 (ESO 10.2.x : Update 44)
 

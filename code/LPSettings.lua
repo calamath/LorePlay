@@ -650,6 +650,7 @@ local blacklistedScenes = {
 	endeavorSealStoreSceneKeyboard = true, 	-- for outfit preview feature in endeavor seal store scene
 	groupMenuKeyboard = true, 	-- for Golden Pursuits reward preview feature introduced in update 44
 	promotionalEventsPreview_Gamepad = true, -- for Golden Pursuits reward preview feature introduced in update 44
+	gameMenuInGame = true, -- Since V10.3.5, a code added in zo_options_keyboard to make SetFrameLocalPlayerInGameCamera true. If we do not go through FRAME_PLAYER_FRAGMENT:Hide(), it will remain true in HUD scene, causing a camera glitch.
 }
 local function noCameraSpin(doRemoveFragment)
 	doRemoveFragment = doRemoveFragment or LorePlay.db.isCameraSpinDisabled
