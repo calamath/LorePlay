@@ -17,6 +17,7 @@ YOU NEED TO INSTALL THE FOLLOWING LIBRARY SEPARATELY.
 - Major Revamp of LoreWear Feature
 - LoreWear now support for six non-English language modes: DE, FR, JP, RU, ES and ZH.
 - Support for following DLCs and Chapters: Clockwork City, Summerset, Murkmire, Elsweyr, Dragonhold, Greymoor, Markarth, Blackwood, Deadlands, High Isle, Firesong, Necrom and Gold Road.
+- Support for following Seasons: Seasons of the Worm Cult.
 
 - **[COMPATIBILITY-BREAKING CHANGE]**  
   The various zone and city recognitions have been rewritten to a brand-new identifier based approach by Calamath, and are no longer language mode dependent.

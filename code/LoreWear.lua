@@ -39,10 +39,6 @@ local preJumpPosition = {
 	rx = 0, 
 	ry = 0, 
 	rz = 0, 
-	-- ----------
-	recallCooldown = 0, 
-	zoneHouseId = 0, 
-	isPlayerSwimming = false, 
 }
 -- ---------------------------------------------
 
@@ -436,10 +432,6 @@ local function UpdatePreJumpPosition(eventId)
 	preJumpPosition.timeStamp = GetTimeStamp()
 	preJumpPosition.zoneId, preJumpPosition.x, preJumpPosition.y, preJumpPosition.z = GetUnitWorldPosition("player")
 	_, preJumpPosition.rx, preJumpPosition.ry, preJumpPosition.rz = GetUnitRawWorldPosition("player")
-	-- ----------
-	preJumpPosition.recallCooldown = GetRecallCooldown()
-	preJumpPosition.zoneHouseId = GetCurrentZoneHouseId()
-	preJumpPosition.isPlayerSwimming = IsUnitSwimming("player")
 end
 
 local function IsValidSubZoneChange()
@@ -606,34 +598,12 @@ local function RequestChangeOutfits(eventCode)
 	RegisterChangeStylePreset(stylePresetIndex)
 end
 
-local function OnWarpOutToSameHouseWhileSwimming()
-	local isPlayerSwimming = IsUnitSwimming("player")
-	local elapsedTime = GetTimeStamp() - preJumpPosition.timeStamp
---	LorePlay.LDL:Debug("elapsedTime = %s[sec]", tostring(elapsedTime))
-	if elapsedTime < 5 then
-		if isPlayerSwimming ~= preJumpPosition.isPlayerSwimming then
-			if GetCurrentZoneHouseId() == preJumpPosition.zoneHouseId then
-				LorePlay.LDL:Debug("Fail-safe in case of warp out to the same house while swimming")
-				RequestChangeOutfits(isPlayerSwimming and EVENT_PLAYER_SWIMMING or EVENT_PLAYER_NOT_SWIMMING)
-			end
-		end
-	end
-end
-
 local function OnClientInteractResult(eventCode, result)
 	if result == CLIENT_INTERACT_RESULT_SUCCESS then
 		local action, name, _, _, additionalInfo = GetGameCameraInteractableActionInfo()
 		if additionalInfo == ADDITIONAL_INTERACT_INFO_INSTANCE_TYPE then
 			LorePlay.LDL:Debug("EVENT_CLIENT_INTERACT_RESULT : %s (%s, %s, %s)", tostring(result), tostring(action), tostring(name), tostring(additionalInfo))
 			UpdatePreJumpPosition(eventCode)
-			-- Fail-safe in case of warp out to the same house while swimming
-			if preJumpPosition.isPlayerSwimming and preJumpPosition.zoneHouseId ~= 0 then
-				LorePlay.LDL:Debug("Player started the door interaction while swimming in the house.")
-				local behaviorId = LorePlay.db.lwControlTable.duringSwimming
-				if behaviorId == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
-					zo_callLater(OnWarpOutToSameHouseWhileSwimming, 3000)
-				end
-			end
 		end
 	end
 end
@@ -824,33 +794,13 @@ local function OnPlayerMaraPledge(eventCode, isGettingMarried)
 	end
 end
 
-local function OnRecallOutToSameHouseWhileSwimming()
+local function OnPlayerTeleportedLocally(eventCode)
 	local isPlayerSwimming = IsUnitSwimming("player")
-	local elapsedTime = GetTimeStamp() - preJumpPosition.timeStamp
---	LorePlay.LDL:Debug("elapsedTime = %s[sec]", tostring(elapsedTime))
-	if elapsedTime < 15 then
-		if isPlayerSwimming ~= preJumpPosition.isPlayerSwimming then
-			if GetCurrentZoneHouseId() == preJumpPosition.zoneHouseId then
-				if GetRecallCooldown() > preJumpPosition.recallCooldown then
-					LorePlay.LDL:Debug("Fail-safe in case of recall out to the same house while swimming")
-					RequestChangeOutfits(isPlayerSwimming and EVENT_PLAYER_SWIMMING or EVENT_PLAYER_NOT_SWIMMING)
-				end
-			end
-		end
-	end
-end
-
-local function OnCombatEvent_Recall(eventCode, _, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
---	LorePlay.LDL:Debug("EVENT_COMBAT_EVENT : (%s), id = %s", tostring(abilityName), tostring(abilityId))
-	UpdatePreJumpPosition(eventCode)
-	-- Fail-safe in case of recall out to the same house while swimming
-	if preJumpPosition.isPlayerSwimming and preJumpPosition.zoneHouseId ~= 0 then
-		LorePlay.LDL:Debug("Player started the recall while swimming in the house.")
-		local behaviorId = LorePlay.db.lwControlTable.duringSwimming
-		if behaviorId == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
-			local _, duration = GetAbilityCastInfo(abilityId, nil, "player")
-			zo_callLater(OnRecallOutToSameHouseWhileSwimming, duration or 8000)
-		end
+--	LorePlay.LDL:Debug("EVENT_PLAYER_TELEPORTED_LOCALLY :")
+	LorePlay.LDL:Debug("EVENT_PLAYER_TELEPORTED_LOCALLY : isSwimming=%s", tostring(isPlayerSwimming))
+	if GetCurrentZoneHouseId() ~= 0 then
+		LorePlay.LDL:Debug("Fail-safe in case of warp out to the same house while swimming")
+		RequestChangeOutfits(isPlayerSwimming and EVENT_PLAYER_SWIMMING or EVENT_PLAYER_NOT_SWIMMING)
 	end
 end
 
@@ -876,22 +826,6 @@ local function initializeIndicator()
 end
 ]]
 
-
-local recallAbility = {
-	6811, 
-	181388, 
-	187552, 
-	191859, 
-	199789, 
-	199791, 
-	200161, 
-	209299, 
-	215089, 
-	215092, 
-	218930, 
-	221093, 
-	221094, 
-}
 local function UnregisterLoreWearEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_MOUNTED_STATE_CHANGED, OnMountedStateChanged)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_SWIMMING, OnPlayerSwimming)
@@ -903,10 +837,7 @@ local function UnregisterLoreWearEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_REINCARNATED, OnPlayerReincarnated)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraPledge)
-	for _, abilityId in ipairs(recallAbility) do
-		local namespace = LorePlay.name .. "Recall" .. tostring(abilityId)
-		EVENT_MANAGER:UnregisterForEvent(namespace, EVENT_COMBAT_EVENT)
-	end
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_TELEPORTED_LOCALLY, OnPlayerTeleportedLocally)
 end
 LorePlay.UnregisterLoreWearEvents = UnregisterLoreWearEvents
 
@@ -922,13 +853,7 @@ local function RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_COMBAT_STATE, OnPlayerCombatState)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_REINCARNATED, OnPlayerReincarnated)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraPledge)
-	for _, abilityId in ipairs(recallAbility) do
-		local namespace = LorePlay.name .. "Recall" .. tostring(abilityId)
-		EVENT_MANAGER:RegisterForEvent(namespace, EVENT_COMBAT_EVENT, OnCombatEvent_Recall)
-		EVENT_MANAGER:AddFilterForEvent(namespace, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, abilityId)
-		EVENT_MANAGER:AddFilterForEvent(namespace, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-		EVENT_MANAGER:AddFilterForEvent(namespace, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_BEGIN or 2200)
-	end
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_TELEPORTED_LOCALLY, OnPlayerTeleportedLocally)
 end
 
 

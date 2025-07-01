@@ -133,6 +133,7 @@ local zoneIdDatabase = {	---------------------- zoneId database table for Region
 	[1414]	= { emoteKey = "ep2", 	},		-- Telvanni Peninsula
 	[1443]	= { emoteKey = "other",	},		-- West Weald
 	[1463]	= { emoteKey = "ad1",	},		-- The Scholarium
+	[1502]	= { emoteKey = "other",	},		-- Solstice
 
 }
 -- ---------
@@ -243,6 +244,8 @@ local mapIdDatabase = {	-------------------------- mapId database table for City
 	[2343]	= { emoteKey = "EP", 			}, 		-- Necrom
 	[2385]	= { emoteKey = "EP", 			}, 		-- Necrom Underways
 	[2514]	= { emoteKey = "Other", 		}, 		-- Skingrad
+	[2654]	= { emoteKey = "Other", 		}, 		-- Sunport
+	[2721]	= { emoteKey = "Other", 		}, 		-- Shor's Stand
 
 }
 -- ---------
