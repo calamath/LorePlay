@@ -1923,5 +1923,3 @@ function SmartEmotes.InitializeEmotes()
 	SmartEmotes.UpdateTTLEmoteTable(EVENT_STARTUP)
 	isMounted = IsMounted()
 end
-
-LorePlay = SmartEmotes

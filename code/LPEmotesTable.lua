@@ -1,6 +1,6 @@
 LorePlay = LorePlay or {}
 
-LPEmotesTable = {}
+LPEmotesTable = LPEmotesTable or {}
 LPEmotesTable.allEmotesTable = {}
 
 local allEmotesTable = {}

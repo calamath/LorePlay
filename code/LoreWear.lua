@@ -516,7 +516,7 @@ local function RequestChangeOutfits(eventCode)
 		end
 	elseif eventCode == EVENT_PLAYER_SWIMMING then
 		if controlTable.duringSwimming == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE then
-			if isPlayerInCombat == false then									-- --- start swimming in non-combat
+			if not isPlayerInCombat and not isPlayerMounted then	-- --------------- start swimming in non-combat and non-mounted
 --				LorePlay.LDL:Debug("[RequestChangeOutfits] : EVENT_PLAYER_SWIMMING")
 				selectUsage = LW_USAGE_ID_SWIMMING	-- wet suit
 			end
@@ -544,7 +544,7 @@ local function RequestChangeOutfits(eventCode)
 	if selectUsage == nil then
 		if controlTable.whileMounted == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE and isPlayerMounted then
 			selectUsage = LW_USAGE_ID_RIDING	-- riding clothes
-		elseif controlTable.duringSwimming == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE and isPlayerSwimming then
+		elseif controlTable.duringSwimming == LW_BEHAVIOR_ID_USE_SPECIFIED_ONE and isPlayerSwimming and not isPlayerMounted then
 			if isPlayerInCombat == false then
 				selectUsage = LW_USAGE_ID_SWIMMING	-- wet suit
 			end

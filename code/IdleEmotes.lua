@@ -1,4 +1,5 @@
-LorePlay = LorePlay or {}
+local LorePlay = LorePlay or {}
+
 -- --- definitions : local event codes for LibEventHandler
 local EVENT_ACTIVE_EMOTE = "EVENT_ACTIVE_EMOTE"
 local EVENT_ON_IDLE_EMOTE = "EVENT_ON_IDLE_EMOTE"
@@ -20,6 +21,104 @@ local didIdleEmote = false
 local isActiveEmoting = false
 local isFastTraveling = false
 
+-- idle emotes table definitions
+local idleEmotesTable = {}
+idleEmotesTable["Zone"] = {
+    99,     -- /sit                     Sit ground
+    119,    -- /sit2                    Sit ground 2
+    120,    -- /sit3                    Sit ground 3
+    121,    -- /sit4                    Sit ground 4
+    123,    -- /sit6                    Sit ground 6
+    102,    -- /kneel                   Kneel
+    200,    -- /drink3                  Drinking from bottle
+    15,     -- /armscrossed             Arms crossed
+    10,     -- /read                    Read book
+    38,     -- /handsonhips             Hands on hips
+    190,    -- /idle2                   Idle royalty
+}
+idleEmotesTable["City"] = {
+    201,    -- /eat4                    Eat from bowl
+    107,    -- /prov                    Stir Bowl
+    194,    -- /juggleflame             Juggle flame
+    8,      -- /drink                   Drinking from flagon
+    173,    -- /drink2                  Drinking from chalice
+    100,    -- /sitchair                Sit chair
+    38,     -- /handsonhips             Hands on hips
+    168,    -- /eat                     Eat turkey
+    9,      -- /eat2                    Eat bread quickly
+    190,    -- /idle2                   Idle royalty
+    198,    -- /idle5                   Idle heroic
+}
+idleEmotesTable["Dungeon"] = {
+    194,    -- /juggleflame             Juggle flame
+    1,      -- /torch                   Set fire with torch
+    153,    -- /impatient               Impatient
+    1,      -- /torch                   Set fire with torch
+    1,      -- /torch                   Set fire with torch
+    122,    -- /sit5                    Sit ground 5
+    101,    -- /crouch                  Crouch
+}
+idleEmotesTable["Housing"] = {
+    10,     -- /read                    Read book
+    10,     -- /read                    Read book
+    99,     -- /sit                     Sit ground
+    119,    -- /sit2                    Sit ground 2
+    191,    -- /rake                    Rake
+    191,    -- /rake                    Rake
+    192,    -- /sweep                   Sweeping
+    192,    -- /sweep                   Sweeping
+    9,      -- /eat2                    Eat bread quickly
+    177,    -- /eat3                    Eat apple
+    207,    -- /pie                     Eat pie
+    208,    -- /soupbowl                Eat soup
+    125,    -- /write                   Write
+    125,    -- /write                   Write
+    118,    -- /sleep2                  Sleep back
+    116,    -- /sleep                   Sleep side
+}
+
+idleEmotesTable["Drunk"] = {
+    8,      -- /drink                   Drinking from flagon
+    8,      -- /drink                   Drinking from flagon
+    139,    -- /drunk                   Drunk
+    139,    -- /drunk                   Drunk
+    162,    -- /faint                   Faint
+    162,    -- /faint                   Faint
+    79,     -- /dancedrunk              Dance drunk
+    79,     -- /dancedrunk              Dance drunk
+    115,    -- /playdead                Play dead
+    153,    -- /impatient               Impatient
+}
+idleEmotesTable["Worship"] = {
+    104,    -- /kneelpray               Kneel praying
+    52,     -- /pray                    Pray
+    171,    -- /blessing                Blessing
+}
+idleEmotesTable["Exercise"] = {
+    84,     -- /jumpingjacks            Jumping jacks
+    85,     -- /pushups                 Push-ups strong
+    113,    -- /situps                  Situps
+}
+idleEmotesTable["Dance"] = {
+    72,     -- /dance                   Dance
+    189,    -- /danceredguard           Dance Redguard
+    181,    -- /dancealtmer             Dance Altmer
+    182,    -- /danceargonian           Dance Argonian
+    183,    -- /dancebosmer             Dance Bosmer
+    180,    -- /dancebreton             Dance Breton
+    206,    -- /dancedarkelf            Dance Dark Elf
+    185,    -- /danceimperial           Dance Imperial
+    186,    -- /dancekhajiit            Dance Khajiit
+    187,    -- /dancenord               Dance Nord
+    188,    -- /danceorc                Dance Orc
+}
+idleEmotesTable["Instruments"] = {
+    5,      -- /lute                    Play lute
+    6,      -- /flute                   Play flute
+    7,      -- /drum                    Play drum
+}
+LPEmotesTable.idleEmotesTable = idleEmotesTable
+
 
 
 function IdleEmotes.CreateEventIdleEmotesTable()
@@ -39,193 +138,29 @@ function IdleEmotes.CreateEventIdleEmotesTable()
 	}
 end
 
-
-local function AddDrunkToCities()
-	local numOfEmotes = #defaultIdleTable["City"]
-	local drunkTable = {
-		[1] = 8,
-		[2] = 8,
-		[3] = 139,
-		[4] = 139,
-		[5] = 162,
-		[6] = 162,
-		[7] = 79,
-		[8] = 79,
-		[9] = 115,
-		[10] = 90,
-	}
-	local numOfDrunks = #drunkTable
-	for i = 1, numOfDrunks, 1 do
-		defaultIdleTable["City"][numOfEmotes + i] = drunkTable[i]
-	end
-end
-
-
-local function AddWorshipToDungeons()
-	local numOfEmotes = #defaultIdleTable["Dungeon"]
-	local worshipTable = {
-		[1] = 104,
-		[2] = 52,
-		[3] = 171,
-	}
-	local numOfWorships = #worshipTable
-	for i = 1, numOfWorships, 1 do
-		defaultIdleTable["Dungeon"][numOfEmotes + i] = worshipTable[i]
-	end
-end
-
-
-local function AddWorshipToCities()
-	local numOfEmotes = #defaultIdleTable["City"]
-	local worshipTable = {
-		[1] = 104,
-		[2] = 52,
-		[3] = 171,
-	}
-	local numOfWorships = #worshipTable
-	for i = 1, numOfWorships, 1 do
-		defaultIdleTable["City"][numOfEmotes + i] = worshipTable[i]
-	end
-end
-
-
-local function AddWorshipToZone()
-	local numOfEmotes = #defaultIdleTable["Zone"]
-	local worshipTable = {
-		[1] = 104,
-		[2] = 52,
-		[3] = 171,
-	}
-	local numOfWorships = #worshipTable
-	for i = 1, numOfWorships, 1 do
-		defaultIdleTable["Zone"][numOfEmotes + i] = worshipTable[i]
-	end
-end
-
-
-local function AddExercisesToZone()
-	local numOfEmotes = #defaultIdleTable["Zone"]
-	local exerciseTable = {
-		[1] = 84,
-		[2] = 85,
-		[3] = 113,
-	}
-	local numOfExercises = #exerciseTable
-	for i = 1, numOfExercises, 1 do
-		defaultIdleTable["Zone"][numOfEmotes + i] = exerciseTable[i]
-	end
-end
-
-
-local function AddDancesToCities()
-	local numOfEmotes = #defaultIdleTable["City"]
-	local danceTable = {
-		[1] = 72,
-		[2] = 189,
-		[3] = 181,
-		[4] = 182,
-		[5] = 183,
-		[6] = 180,
-		[7] = 206,
-		[8] = 185,
-		[9] = 186,
-		[10] = 187,
-		[11] = 188,
-	}
-	local numOfDances = #danceTable
-	for i = 1, numOfDances, 1 do
-		defaultIdleTable["City"][numOfEmotes + i] = danceTable[i]
-	end
-end
-
-
-local function AddInstrumentsToCities()
-	local numOfEmotes = #defaultIdleTable["City"]
-	local instrumentsTable = {
-		[1] = 5,
-		[2] = 6,
-		[3] = 7,
-	}
-	local numOfInstruments = #instrumentsTable
-	for i = 1, numOfInstruments, 1 do
-		defaultIdleTable["City"][numOfEmotes + i] = instrumentsTable[i]
-	end
-end
-
-
 function IdleEmotes.CreateDefaultIdleEmotesTable()
-	defaultIdleTable = {
-		["Zone"] = {
-			[1] = 99,
-			[2] = 119,
-			[3] = 120,
-			[4] = 121,
-			[5] = 123,
-			[6] = 102,
-			[7] = 200,
-			[8] = 15,
-			[9] = 10,
-			[10] = 38,
-			[11] = 190,
-		},
-		["City"] = {
-			[1] = 201,
-			[2] = 107,
-			[3] = 194,
-			[4] = 8,
-			[5] = 173,
-			[6] = 100,
-			[7] = 38,
-			[8] = 168,
-			[9] = 9,
-			[10] = 190,
-			[11] = 198,
-		},
-		["Dungeon"] = {
-			[1] = 194,
-			[2] = 1,
-			[3] = 153,
-			[4] = 1,
-			[5] = 1,
-			[6] = 122,
-			[7] = 101,
-		},
-		["Housing"] = {
-			[1] = 10,
-			[2] = 10,
-			[3] = 99,
-			[4] = 119,
-			[5] = 191,
-			[6] = 191,
-			[7] = 192,
-			[8] = 192,
-			[9] = 9,
-			[10] = 177,
-			[11] = 207,
-			[12] = 208,
-			[13] = 125,
-			[14] = 125,
-			[15] = 118,
-			[16] = 116,
-		}
-	}
+	defaultIdleTable = {}
+	defaultIdleTable["Zone"] = ZO_ShallowNumericallyIndexedTableCopy(idleEmotesTable["Zone"])
+	defaultIdleTable["City"] = ZO_ShallowNumericallyIndexedTableCopy(idleEmotesTable["City"])
+	defaultIdleTable["Dungeon"] = ZO_ShallowNumericallyIndexedTableCopy(idleEmotesTable["Dungeon"])
+	defaultIdleTable["Housing"] = ZO_ShallowNumericallyIndexedTableCopy(idleEmotesTable["Housing"])
 
 	if LorePlay.db.canPlayInstrumentsInCities then
-		AddInstrumentsToCities()
+		ZO_CombineNumericallyIndexedTables(defaultIdleTable["City"], idleEmotesTable["Instruments"])	-- AddInstrumentsToCities()
 	end
 	if LorePlay.db.canDanceInCities then
-		AddDancesToCities()
+		ZO_CombineNumericallyIndexedTables(defaultIdleTable["City"], idleEmotesTable["Dance"])	-- AddDancesToCities()
 	end
 	if LorePlay.db.canExerciseInZone then
-		AddExercisesToZone()
+		ZO_CombineNumericallyIndexedTables(defaultIdleTable["Zone"], idleEmotesTable["Exercise"])	-- AddExercisesToZone()
 	end
 	if LorePlay.db.canWorship then
-		AddWorshipToZone()
-		AddWorshipToCities()
-		AddWorshipToDungeons()
+		ZO_CombineNumericallyIndexedTables(defaultIdleTable["Zone"], idleEmotesTable["Worship"])	-- AddWorshipToZone()
+		ZO_CombineNumericallyIndexedTables(defaultIdleTable["City"], idleEmotesTable["Worship"])	-- AddWorshipToCities()
+		ZO_CombineNumericallyIndexedTables(defaultIdleTable["Dungeon"], idleEmotesTable["Worship"])	-- AddWorshipToDungeons()
 	end
 	if LorePlay.db.canBeDrunkInCities then
-		AddDrunkToCities()
+		ZO_CombineNumericallyIndexedTables(defaultIdleTable["City"], idleEmotesTable["Drunk"])	-- AddDrunkToCities()
 	end
 end
 
@@ -496,5 +431,3 @@ function IdleEmotes.InitializeIdle()
 	currentPlayerX, currentPlayerY = GetMapPlayerPosition("player")
 	IdleEmotes.RegisterIdleEvents()
 end
-
-LorePlay = IdleEmotes

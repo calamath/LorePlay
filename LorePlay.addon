@@ -1,29 +1,29 @@
 ## Title: LorePlay Forever
 ## Description: Adds immersion through intelligent, contextual emotes and outfits.
-## Version: 1.6.96
-## AddOnVersion: 10696
-## APIVersion: 101046
+## Version: 1.6.97
+## AddOnVersion: 10697
+## APIVersion: 101047
 ## Author: Justinon, Calamath
 ## SavedVariables: LorePlaySavedVars
-## DependsOn: LibAddonMenu-2.0>=40 LibEventHandler>=1309
+## DependsOn: LibAddonMenu-2.0>=40 LibEventHandler>=1310
 ## OptionalDependsOn: LibDebugLogger>=268
 
-code\locales\en.lua
-code\locales\$(language).lua
+code/locales/en.lua
+code/locales/$(language).lua
 
-code\LPCategoryStrings.lua
-code\LPUtilities.lua
-code\LPEmotesTable.lua
-code\LPEmoteHandler.lua
-code\LPSettings.lua
+code/LPCategoryStrings.lua
+code/LPUtilities.lua
+code/LPEmotesTable.lua
+code/LPEmoteHandler.lua
+code/LPSettings.lua
 LorePlay.lua
-code\SmartEmotesIndicator.xml
-code\SmartEmotes.lua
-code\IdleEmotes.lua
-code\LoreWear.lua
-bindings\bindings.xml
-bindings\bindings.lua
-
+code/SmartEmotesIndicator.xml
+code/SmartEmotes.lua
+code/IdleEmotes.lua
+code/LoreWear.lua
+bindings/bindings.xml
+bindings/bindings.lua
+../LorePlayUserData/IdleEmoteCustomize.lua
 
 ; DISCLOSURE:
 ; This Add-on is not created by, affiliated with or sponsored by ZeniMax

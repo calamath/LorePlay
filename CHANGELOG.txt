@@ -5,6 +5,18 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.97 : by Calamath
+[LorePlay]:
+- Updated bundled LibEventHandler version to 1.3.10 (AddOnVersion: 1310).
+- Updated API version to 101047 (ESO 11.1.x : Feast of Shadows)
+
+[IdleEmotes]
+- Provided a way to manually customize the idle emotes tables. no in-game UI for configuration.
+- If you're interested, please refer to the file 'IdleEmoteCustomize.lua' for details.
+
+[LoreWear]
+- Players will no longer change into swimsuits when mount swimming.
+
 Version 1.6.96 : by Calamath
 [LorePlay]:Seasons of the Worm Cult support
 - In the wilderness of Solstice, the add-on automatically recognizes you are in the adventure zone.

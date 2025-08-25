@@ -5,6 +5,9 @@ https://www.esoui.com/downloads/info1452-LibEventHandler.html
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.3.10: (Calamath)
+- Updated API version to 101047 (ESO 11.1.x : Feast of Shadows)
+
 Version 1.3.9: (Calamath)
 - Updated API version to 101046 (ESO 11.0.x : Seasons of the Worm Cult Part 1)
 
