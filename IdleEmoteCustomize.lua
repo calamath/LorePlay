@@ -23,108 +23,108 @@ local customIdleEmotesTable = LPEmotesTable.idleEmotesTable or {}
 -- * This file and modified versions thereof shall not be bound by the license of this add-on. Enjoy!  -- Calamath
 
 -- -----------------------------------
--- Emote Index List based on Update 47
+-- Emote Index List based on Update 50
 -- -----------------------------------
 --[[
-    1,      -- /torch                   Set fire with torch
-    2,      -- /wand2                   Use wand
-    3,      -- /whistle                 Whistle
-    4,      -- /horn                    Blow horn
-    5,      -- /lute                    Play lute
-    6,      -- /flute                   Play flute
-    7,      -- /drum                    Play drum
-    8,      -- /drink                   Drinking from flagon
-    9,      -- /eat2                    Eat bread quickly
-    10,     -- /read                    Read book
-    11,     -- /potion                  Drink potion
-    12,     -- /angry                   Angry
-    13,     -- /applaud                 Applaud
-    14,     -- /approve                 Approve
-    15,     -- /armscrossed             Arms crossed
-    16,     -- /beckon                  Beckon
-    17,     -- /comehere                Come here
-    18,     -- /come                    Beckon
-    19,     -- /plead                   Plead
-    20,     -- /bless                   Bless
-    21,     -- /kiss                    Blow Kiss
-    22,     -- /shout                   Shout
-    23,     -- /boo                     Booing
-    24,     -- /bow                     Bow
-    25,     -- /cheer                   Cheer
-    26,     -- /fistpump                Fistpump
-    27,     -- /cower                   Cower
-    28,     -- /cuckoo                  Cuckoo
-    29,     -- /disapprove              Disapprove
-    30,     -- /disgust                 Disgust
-    31,     -- /downcast                Downcast
-    32,     -- /exasperated             Exasperated
-    33,     -- /facepalm                Facepalm
-    34,     -- /followme                Follow me
-    35,     -- /give                    Give
-    36,     -- /take                    Take
-    37,     -- /stop                    Stop
-    38,     -- /handsonhips             Hands on hips
-    39,     -- /handtoheart             Hand to heart
-    40,     -- /headscratch             Scratch head
-    41,     -- /laugh                   Laugh
-    42,     -- /yes                     Yes
-    43,     -- /no                      No
-    44,     -- /payme                   Pay me
-    45,     -- /point                   Point forward
-    46,     -- /pointb                  Point behind
-    47,     -- /pointd                  Point down
-    48,     -- /pointl                  Point left
-    49,     -- /pointr                  Point right
-    50,     -- /self                    Point to self
-    51,     -- /poke                    Poke
-    52,     -- /pray                    Pray
-    53,     -- /push                    Push
-    54,     -- /rubhands                Rub hands
-    55,     -- /rude                    Rude gesture
-    56,     -- /salute                  Salute 1
-    57,     -- /salute2                 Salute 2
-    58,     -- /salute3                 Salute 3
-    59,     -- /saluteloop              Salute Loop 1
-    60,     -- /saluteloop2             Salute Loop 2
-    61,     -- /saluteloop3             Salute Loop 3
-    62,     -- /shakefist               Shake fist
-    63,     -- /scared                  Scared
-    64,     -- /cold                    Shiver cold
-    65,     -- /shh                     Shush
-    66,     -- /welcome                 Welcome
-    67,     -- /surprised               Surprised
-    68,     -- /threaten                Threaten
-    69,     -- /thumbsdown              Thumbs down
-    70,     -- /wave                    Waving
-    71,     -- /crying                  Weep
-    72,     -- /dance                   Dance
-    73,     -- /dismiss                 Dismiss 1
-    74,     -- /goaway                  Dismiss 2
-    75,     -- /leaveme                 Dismiss 3
-    76,     -- /beg                     Beg
-    77,     -- /nod                     Nod head
-    78,     -- /brushoff                Brush off shoulder
-    79,     -- /dancedrunk              Dance drunk
-    80,     -- /dustoff                 Dust off
-    81,     -- /shrug                   Shrug
-    82,     -- /preen                   Preening
-    83,     -- /scratch                 Head scratch
-    84,     -- /jumpingjacks            Jumping jacks
-    85,     -- /pushups                 Push-ups strong
-    86,     -- /pushup                  Push-ups weak
-    87,     -- /you                     You
-    88,     -- /knock                   Knock on door
-    89,     -- /pour                    Pour
-    90,     -- /sick                    Sickened
-    91,     -- /stretch                 Stretch
-    92,     -- /tilt                    Tilt head
-    93,     -- /wagfinger               Wag finger
-    94,     -- /whisper                 Whisper
-    95,     -- /phew                    Wipe brow
-    96,     -- /yawn                    Yawn
-    97,     -- /celebrate               Celebration
-    98,     -- /ritual                  Ritual
-    99,     -- /sit                     Sit ground
+    1  ,    -- /torch                   Set fire with torch
+    2  ,    -- /wand2                   Use wand
+    3  ,    -- /whistle                 Whistle
+    4  ,    -- /horn                    Blow horn
+    5  ,    -- /lute                    Play lute
+    6  ,    -- /flute                   Play flute
+    7  ,    -- /drum                    Play drum
+    8  ,    -- /drink                   Drinking from flagon
+    9  ,    -- /eat2                    Eat bread quickly
+    10 ,    -- /read                    Read book
+    11 ,    -- /potion                  Drink potion
+    12 ,    -- /angry                   Angry
+    13 ,    -- /applaud                 Applaud
+    14 ,    -- /approve                 Approve
+    15 ,    -- /armscrossed             Arms crossed
+    16 ,    -- /beckon                  Beckon
+    17 ,    -- /comehere                Come here
+    18 ,    -- /come                    Beckon
+    19 ,    -- /plead                   Plead
+    20 ,    -- /bless                   Bless
+    21 ,    -- /kiss                    Blow Kiss
+    22 ,    -- /shout                   Shout
+    23 ,    -- /boo                     Booing
+    24 ,    -- /bow                     Bow
+    25 ,    -- /cheer                   Cheer
+    26 ,    -- /fistpump                Fistpump
+    27 ,    -- /cower                   Cower
+    28 ,    -- /cuckoo                  Cuckoo
+    29 ,    -- /disapprove              Disapprove
+    30 ,    -- /disgust                 Disgust
+    31 ,    -- /downcast                Downcast
+    32 ,    -- /exasperated             Exasperated
+    33 ,    -- /facepalm                Facepalm
+    34 ,    -- /followme                Follow me
+    35 ,    -- /give                    Give
+    36 ,    -- /take                    Take
+    37 ,    -- /stop                    Stop
+    38 ,    -- /handsonhips             Hands on hips
+    39 ,    -- /handtoheart             Hand to heart
+    40 ,    -- /headscratch             Scratch head
+    41 ,    -- /laugh                   Laugh
+    42 ,    -- /yes                     Yes
+    43 ,    -- /no                      No
+    44 ,    -- /payme                   Pay me
+    45 ,    -- /point                   Point forward
+    46 ,    -- /pointb                  Point behind
+    47 ,    -- /pointd                  Point down
+    48 ,    -- /pointl                  Point left
+    49 ,    -- /pointr                  Point right
+    50 ,    -- /self                    Point to self
+    51 ,    -- /poke                    Poke
+    52 ,    -- /pray                    Pray
+    53 ,    -- /push                    Push
+    54 ,    -- /rubhands                Rub hands
+    55 ,    -- /rude                    Rude gesture
+    56 ,    -- /salute                  Salute 1
+    57 ,    -- /salute2                 Salute 2
+    58 ,    -- /salute3                 Salute 3
+    59 ,    -- /saluteloop              Salute Loop 1
+    60 ,    -- /saluteloop2             Salute Loop 2
+    61 ,    -- /saluteloop3             Salute Loop 3
+    62 ,    -- /shakefist               Shake fist
+    63 ,    -- /scared                  Scared
+    64 ,    -- /cold                    Shiver cold
+    65 ,    -- /shh                     Shush
+    66 ,    -- /welcome                 Welcome
+    67 ,    -- /surprised               Surprised
+    68 ,    -- /threaten                Threaten
+    69 ,    -- /thumbsdown              Thumbs down
+    70 ,    -- /wave                    Waving
+    71 ,    -- /crying                  Weep
+    72 ,    -- /dance                   Dance
+    73 ,    -- /dismiss                 Dismiss 1
+    74 ,    -- /goaway                  Dismiss 2
+    75 ,    -- /leaveme                 Dismiss 3
+    76 ,    -- /beg                     Beg
+    77 ,    -- /nod                     Nod head
+    78 ,    -- /brushoff                Brush off shoulder
+    79 ,    -- /dancedrunk              Dance drunk
+    80 ,    -- /dustoff                 Dust off
+    81 ,    -- /shrug                   Shrug
+    82 ,    -- /preen                   Preening
+    83 ,    -- /scratch                 Head scratch
+    84 ,    -- /jumpingjacks            Jumping jacks
+    85 ,    -- /pushups                 Push-ups strong
+    86 ,    -- /pushup                  Push-ups weak
+    87 ,    -- /you                     You
+    88 ,    -- /knock                   Knock on door
+    89 ,    -- /pour                    Pour
+    90 ,    -- /sick                    Sickened
+    91 ,    -- /stretch                 Stretch
+    92 ,    -- /tilt                    Tilt head
+    93 ,    -- /wagfinger               Wag finger
+    94 ,    -- /whisper                 Whisper
+    95 ,    -- /phew                    Wipe brow
+    96 ,    -- /yawn                    Yawn
+    97 ,    -- /celebrate               Celebration
+    98 ,    -- /ritual                  Ritual
+    99 ,    -- /sit                     Sit ground
     100,    -- /sitchair                Sit chair
     101,    -- /crouch                  Crouch
     102,    -- /kneel                   Kneel
@@ -278,17 +278,17 @@ local customIdleEmotesTable = LPEmotesTable.idleEmotesTable or {}
     250,    -- /greetdeadwater          Greeting Dead-Water
     251,    -- /greetbrightthroat       Greeting Bright-Throat
     252,    -- /greetmurkmire           Greeting Murkmire
-    253,    -- /carve   Whittle         Wood
+    253,    -- /carve                   Carve Knickknack
     254,    -- /communehist             Commune with Hist
-    255,    -- /teebadribble            Juggle Teeba-Hatsei 1
-    256,    -- /teebawarmup             Juggle Teeba-Hatsei 2
-    257,    -- /teebaready              Juggle Teeba-Hatsei 3
+    255,    -- /teebadribble            Teeba Dribble
+    256,    -- /teebawarmup             Teeba Warm-Up
+    257,    -- /teebaready              Teeba Ready Position
     258,    -- /catcontemplation        Cat Contemplation
     259,    -- /felinehygiene           Feline Hygiene
     260,    -- /pedlarbeckoning         Pedlar Beckoning
     261,    -- /cardsharp               Cardsharp
     262,    -- /gladiatortaunt          Gladiator Taunt
-    263,    -- /mimetugofwar            Mime Rope Pull
+    263,    -- /mimetugofwar            Pantomime Tug-of-War
     264,    -- /handpuppet              Hand Puppet
     265,    -- /guarstomp               Guar Stomp
     266,    -- /warmhands               Warm Hands
@@ -303,7 +303,7 @@ local customIdleEmotesTable = LPEmotesTable.idleEmotesTable or {}
     275,    -- /goutfang                Goutfang Kata
     276,    -- /whisperingclaw          Whispering Claw Kata
     277,    -- /desertrain              Desert Rain Kata
-    278,    -- /brightmoonsgreeting     Khaajit Greet
+    278,    -- /brightmoonsgreeting     Khajiit Greet
     279,    -- /banneraldmeri           Holding Banner AD
     280,    -- /bannercovenant          Holding Banner DC
     281,    -- /chaosballvictory        Chaos Ball Victory Dance
@@ -465,7 +465,27 @@ local customIdleEmotesTable = LPEmotesTable.idleEmotesTable or {}
     437,    -- /sneezeattack            Sneaky Sneeze Attack
     438,    -- /light                   Brandish Lantern
     439,    -- /snakesidekick           Snake Sidekick
-    440,    -- /skullblocks             Valenwood Skull Blocks
+    440,    -- /alliancebanner          Alliance Banner
+    441,    -- /skullblocks             Valenwood Skull Blocks
+    442,    -- /releasedoves            Release the Doves
+    443,    -- /ringdance               Traditional Ring Dance
+    444,    -- /heartsdaykiss           Heart's Day Kiss
+    445,    -- /twirl                   Elegant Twirl
+    446,    -- /chairslam               Chair Slam
+    447,    -- /spittake                Spit Take
+    448,    -- /featofstrength          Feat of Strength!
+    449,    -- /crouch                  Crouch
+    450,    -- /sabersparring           Saber Sparring
+    451,    -- /warriorwavedance        Warrior Wave Celebration Dance
+    452,    -- /navigator               Confident Navigator
+    453,    -- /nodeal                  Deal Breaker
+    454,    -- /intavasname             In Tava's Name
+    455,    -- /notmycoins              Not My Coins!
+    456,    -- /orderharp               Harp of Harmonious Order
+    457,    -- /playtocrowd             Play to the Crowd
+    458,    -- /channelduality          Channel Duality
+    459,    -- /cheesestatue            Sheogorath's Blessed Cheese
+    460,    -- /sick                    Sickened
 ]]
 
 -- ----------------------------------------------------------------------------

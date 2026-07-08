@@ -256,6 +256,7 @@ local subZoneIdDatabase = {	---------------------- subZoneId database table for 
 		--	 emoteKey indicates which region the subzone belongs to. SmartEmote feature uses this data to select the emote table.
 		--
 	[279]	= { emoteKey = "DC", 			}, 		-- Camlorn
+	[9240]	= { emoteKey = "Wayrest", 		}, 		-- Undaunted Enclave (Wayrest)
 	[7829]	= { emoteKey = "DC", 			}, 		-- Elinhir
 	[10941]	= { emoteKey = "DC", 			}, 		-- Elinhir
 --	[8006]	= { emoteKey = "DC", 			}, 		-- Elinhir Wayshrine

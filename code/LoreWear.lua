@@ -48,7 +48,8 @@ local toggleTable = {}
 local isCooldown = false
 local pendingPresetIndex
 local currentOutfitUsageCategory = LW_USAGE_ID_NOT_USED
-
+local isCollectibleAlreadyQueued = false
+local suppressCollectibleAlreadyQueuedAlert = false
 
 local function BuildToggleTable()
 	for _, v in pairs(LorePlay.collectibleType) do
@@ -282,7 +283,8 @@ end
 
 local function EquipUserStylePreset(presetIndex)
 	local noErr = true
-	local outfitIndex
+	local currentOutfitIndex
+	local desiredOutfitIndex
 	local currentCollectibleId
 	local desiredCollectibleId
 	if not presetIndex then return noErr end
@@ -291,13 +293,14 @@ local function EquipUserStylePreset(presetIndex)
 		return noErr
 	end
 	if LorePlay.db.isUsingOutfit then
-		outfitIndex = LorePlay.db.stylePreset[presetIndex].outfitIndex
-		if outfixIndex == -1 then
+		currentOutfitIndex = GetEquippedOutfitIndex(GAMEPLAY_ACTOR_CATEGORY_PLAYER) or 0
+		desiredOutfitIndex = LorePlay.db.stylePreset[presetIndex].outfitIndex or 0
+		if desiredOutfitIndex == -1 then
 			-- [-1 : don't care]
-		elseif outfitIndex == 0 or outfitIndex == nil then
+		elseif desiredOutfitIndex == 0 and currentOutfitIndex ~= 0 then
 			UnequipOutfit(GAMEPLAY_ACTOR_CATEGORY_PLAYER)
-		else
-			EquipOutfit(GAMEPLAY_ACTOR_CATEGORY_PLAYER, outfitIndex)
+		elseif desiredOutfitIndex ~= 0 and currentOutfitIndex == 0 then
+			EquipOutfit(GAMEPLAY_ACTOR_CATEGORY_PLAYER, desiredOutfitIndex)
 		end
 	end
 	for k, v in pairs(LorePlay.collectibleType) do
@@ -307,9 +310,19 @@ local function EquipUserStylePreset(presetIndex)
 			if desiredCollectibleId == -1 then
 				-- [-1 : don't care]
 			elseif desiredCollectibleId ~= 0 and currentCollectibleId ~= desiredCollectibleId and GetCollectibleBlockReason(desiredCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
-				noErr = SafeUseCollectible(desiredCollectibleId) and noErr
+				if isCollectibleAlreadyQueued then
+					-- Here, we should skip the same retry that Vanilla UI just finished on the queue.
+					isCollectibleAlreadyQueued = false
+				else
+					noErr = SafeUseCollectible(desiredCollectibleId) and noErr
+				end
 			elseif desiredCollectibleId == 0 and currentCollectibleId ~= 0 and GetCollectibleBlockReason(currentCollectibleId) == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
-				noErr = SafeUseCollectible(currentCollectibleId) and noErr
+				if isCollectibleAlreadyQueued then
+					-- Here, we should skip the same retry that Vanilla UI just finished on the queue.
+					isCollectibleAlreadyQueued = false
+				else
+					noErr = SafeUseCollectible(currentCollectibleId) and noErr
+				end
 			end
 		end
 	end
@@ -434,6 +447,19 @@ local function UpdatePreJumpPosition(eventId)
 	_, preJumpPosition.rx, preJumpPosition.ry, preJumpPosition.rz = GetUnitRawWorldPosition("player")
 end
 
+-- anomaly spot database : [zoneId] = [ x, y, z, th }
+local anomalySpot = {
+	[3] = {
+		{ 110023, 12485, 331888, 300000, }, -- Bank of Daggerfall, 2nd floor
+	}, 
+	[19] = {
+		{ 236235, 13330, 243882, 3240000, }, -- Western gate in Wayrest
+		{ 235716, 13378, 245070, 3240000, }, 
+	}, 
+	[1011] = {
+		{ 153903, 16437, 324216, 640000, }, -- Near the stables in Arinor
+	}, 
+}
 local function IsValidSubZoneChange()
 --	LorePlay.LDL:Debug("IsValidSubZoneChange:")
 	local zoneId, x, y, z = GetUnitWorldPosition("player")
@@ -446,6 +472,19 @@ local function IsValidSubZoneChange()
 --			LorePlay.LDL:Debug("deltaY:%s, squaredLength:%s(%s)", tostring(deltaY), tostring(squaredLength), tostring(zo_round(zo_sqrt(squaredLength))))
 			if zo_abs(deltaY) > 2000 and squaredLength < 1440000 then
 				return false
+			end
+			
+			if anomalySpot[zoneId] then
+				for _, location in pairs(anomalySpot[zoneId]) do
+					local spotX, spotY, spotZ, spotTh = unpack(location)
+					squaredLength = (x - spotX) * (x - spotX) + (z - spotZ) * (z - spotZ)
+					if squaredLength < spotTh then
+						LorePlay.LDL:Debug("Ignored by anomaly spot: %d (%d, %d, %d) squaredLength:%s", zoneId, spotX, spotY, spotZ, tostring(squaredLength))
+						return false
+					else
+						LorePlay.LDL:Debug("not anomaly spot: %d (%d, %d, %d) squaredLength:%s", zoneId, spotX, spotY, spotZ, tostring(squaredLength))
+					end
+				end
 			end
 		else
 			return false
@@ -591,8 +630,12 @@ local function RequestChangeOutfits(eventCode)
 	if stylePresetIndex == 0 then return end
 
 	if selectUsage == currentOutfitUsageCategory then		-- cancel change request : if there is no change in the outfit usage category to protect manual appearance changes.
---		LorePlay.LDL:Debug("Outfit change request canceled : same outfit usage category")
-		return
+		if eventCode ~= EVENT_COLLECTIBLE_USE_RESULT then
+			LorePlay.LDL:Debug("Outfit change request canceled : same outfit usage category")
+			return
+		else
+			LorePlay.LDL:Debug("Retry queued outfit change even if same outfit usage category")
+		end
 	end
 	currentOutfitUsageCategory = selectUsage
 	RegisterChangeStylePreset(stylePresetIndex)
@@ -672,7 +715,8 @@ local function OnLinkedWorldPositionChanged(eventCode)
 end
 
 local function OnPlayerIsActivated(eventCode, initial)
-	LorePlay.LDL:Debug("EVENT_PLAYER_ACTIVATED : initial =", initial, ", isFirstTime =", isFirstTimePlayerActivated)
+	local _, isWeaponPairLocked = GetActiveWeaponPairInfo()
+	LorePlay.LDL:Debug("EVENT_PLAYER_ACTIVATED : initial =", initial, ", isFirstTime =", isFirstTimePlayerActivated, ", weaponPairLocked =", isWeaponPairLocked)
 	isLoadingProcess = false
 
 	CorrectMapMismatch()
@@ -706,6 +750,10 @@ local function OnPlayerIsActivated(eventCode, initial)
 				LorePlay.db.specificPOINameNearby = nil
 --				RequestChangeOutfits(eventCode) -- "", 0
 --				return
+			end
+
+			if isWeaponPairLocked then
+				suppressCollectibleAlreadyQueuedAlert = true
 			end
 			RequestChangeOutfits(eventCode)
 		else		-- --------------------------------- after login
@@ -796,11 +844,36 @@ end
 
 local function OnPlayerTeleportedLocally(eventCode)
 	local isPlayerSwimming = IsUnitSwimming("player")
---	LorePlay.LDL:Debug("EVENT_PLAYER_TELEPORTED_LOCALLY :")
 	LorePlay.LDL:Debug("EVENT_PLAYER_TELEPORTED_LOCALLY : isSwimming=%s", tostring(isPlayerSwimming))
 	if GetCurrentZoneHouseId() ~= 0 then
 		LorePlay.LDL:Debug("Fail-safe in case of warp out to the same house while swimming")
 		RequestChangeOutfits(isPlayerSwimming and EVENT_PLAYER_SWIMMING or EVENT_PLAYER_NOT_SWIMMING)
+	end
+end
+
+local function OnCollectibleUseResult(eventCode, result, isAttemptingActivation)
+	if result == COLLECTIBLE_USAGE_BLOCK_REASON_COLLECTIBLE_ALREADY_QUEUED then
+		LorePlay.LDL:Warn("detected COLLECTIBLE_USAGE_BLOCK_REASON_COLLECTIBLE_ALREADY_QUEUED (%d) %s", result, tostring(isAttemptingActivation))
+		isCollectibleAlreadyQueued = true
+		-- Cancel the fail-safe processing scheduled to occur 1sec after the api call that caused this result.
+		-- It is necessary to ensure that the add-on retries in the same frame as the vanilla UI's retry after dequeuing.
+		EVENT_MANAGER:UnregisterForUpdate("LorePlayCollectibleCooldown")
+		isCooldown = false
+	elseif result == COLLECTIBLE_USAGE_BLOCK_REASON_NOT_BLOCKED then
+		suppressCollectibleAlreadyQueuedAlert = false
+		if isCollectibleAlreadyQueued then
+			LorePlay.LDL:Warn("Detected dequeuing of collectible. (%d) %s", result, tostring(isAttemptingActivation))
+			RequestChangeOutfits(eventCode)
+		end
+	end
+end
+
+local function OnWeaponPairLockChanged(eventCode, locked)
+	LorePlay.LDL:Debug("EVENT_WEAPON_PAIR_LOCK_CHANGED : locked = %s", tostring(locked))
+	if locked then
+		suppressCollectibleAlreadyQueuedAlert = true
+	else
+		suppressCollectibleAlreadyQueuedAlert = false
 	end
 end
 
@@ -838,6 +911,8 @@ local function UnregisterLoreWearEvents()
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_REINCARNATED, OnPlayerReincarnated)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraPledge)
 	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_PLAYER_TELEPORTED_LOCALLY, OnPlayerTeleportedLocally)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_COLLECTIBLE_USE_RESULT, OnCollectibleUseResult)
+	LPEventHandler:UnregisterForEvent(LorePlay.name, EVENT_WEAPON_PAIR_LOCK_CHANGED, OnWeaponPairLockChanged)
 end
 LorePlay.UnregisterLoreWearEvents = UnregisterLoreWearEvents
 
@@ -854,6 +929,8 @@ local function RegisterLoreWearEvents()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_REINCARNATED, OnPlayerReincarnated)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLEDGE_OF_MARA_RESULT_MARRIAGE, OnPlayerMaraPledge)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_TELEPORTED_LOCALLY, OnPlayerTeleportedLocally)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_COLLECTIBLE_USE_RESULT, OnCollectibleUseResult)
+	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_WEAPON_PAIR_LOCK_CHANGED, OnWeaponPairLockChanged)
 end
 
 
@@ -866,6 +943,12 @@ local function InitializeLoreWear()
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_LINKED_WORLD_POSITION_CHANGED, OnLinkedWorldPositionChanged)
 	LPEventHandler:RegisterForEvent(LorePlay.name, EVENT_PLAYER_ACTIVATED, OnPlayerIsActivated)
 	-- ----------------------------------------------------------------------------------------------------------------
+	ZO_PreHook(ZO_AlertText_GetHandlers(), EVENT_COLLECTIBLE_USE_RESULT, function(result, isAttemptingActivation)
+		if suppressCollectibleAlreadyQueuedAlert and result == COLLECTIBLE_USAGE_BLOCK_REASON_COLLECTIBLE_ALREADY_QUEUED then
+--			LorePlay.LDL:Debug("suppress USAGE_BLOCK_REASON_COLLECTIBLE_ALREADY_QUEUED alert")
+			return true
+		end
+	end)
 	if not LorePlay.db.isLoreWearOn then return end
 	BuildToggleTable()
 	RegisterLoreWearEvents()
