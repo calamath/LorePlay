@@ -299,7 +299,7 @@ local function EquipUserStylePreset(presetIndex)
 			-- [-1 : don't care]
 		elseif desiredOutfitIndex == 0 and currentOutfitIndex ~= 0 then
 			UnequipOutfit(GAMEPLAY_ACTOR_CATEGORY_PLAYER)
-		elseif desiredOutfitIndex ~= 0 and currentOutfitIndex == 0 then
+		elseif desiredOutfitIndex ~= 0 and currentOutfitIndex ~= desiredOutfitIndex then
 			EquipOutfit(GAMEPLAY_ACTOR_CATEGORY_PLAYER, desiredOutfitIndex)
 		end
 	end
@@ -456,6 +456,13 @@ local anomalySpot = {
 		{ 236235, 13330, 243882, 3240000, }, -- Western gate in Wayrest
 		{ 235716, 13378, 245070, 3240000, }, 
 	}, 
+	[381] = {
+		{ 243126, 10641, 395290, 7840000, }, -- Northern entrance of Vulkhel Guard in Auridon
+		{ 238962, 10821, 396238, 7840000, },
+		{ 239932, 10858, 392863, 7840000, },
+		{ 243315, 10751, 392636, 640000, },
+		{ 232678, 11065, 393120, 25000000, },
+	}, 
 	[1011] = {
 		{ 153903, 16437, 324216, 640000, }, -- Near the stables in Arinor
 	}, 
@@ -473,21 +480,20 @@ local function IsValidSubZoneChange()
 			if zo_abs(deltaY) > 2000 and squaredLength < 1440000 then
 				return false
 			end
-			
-			if anomalySpot[zoneId] then
-				for _, location in pairs(anomalySpot[zoneId]) do
-					local spotX, spotY, spotZ, spotTh = unpack(location)
-					squaredLength = (x - spotX) * (x - spotX) + (z - spotZ) * (z - spotZ)
-					if squaredLength < spotTh then
-						LorePlay.LDL:Debug("Ignored by anomaly spot: %d (%d, %d, %d) squaredLength:%s", zoneId, spotX, spotY, spotZ, tostring(squaredLength))
-						return false
-					else
-						LorePlay.LDL:Debug("not anomaly spot: %d (%d, %d, %d) squaredLength:%s", zoneId, spotX, spotY, spotZ, tostring(squaredLength))
-					end
-				end
-			end
 		else
 			return false
+		end
+	end
+	if anomalySpot[zoneId] then
+		for _, location in pairs(anomalySpot[zoneId]) do
+			local spotX, spotY, spotZ, spotTh = unpack(location)
+			squaredLength = (x - spotX) * (x - spotX) + (z - spotZ) * (z - spotZ)
+			if squaredLength < spotTh then
+				LorePlay.LDL:Debug("Ignored by anomaly spot: %d (%d, %d, %d) squaredLength:%s", zoneId, spotX, spotY, spotZ, tostring(squaredLength))
+				return false
+			else
+				LorePlay.LDL:Debug("not anomaly spot: %d (%d, %d, %d) squaredLength:%s", zoneId, spotX, spotY, spotZ, tostring(squaredLength))
+			end
 		end
 	end
 	return true
@@ -869,7 +875,7 @@ local function OnCollectibleUseResult(eventCode, result, isAttemptingActivation)
 end
 
 local function OnWeaponPairLockChanged(eventCode, locked)
-	LorePlay.LDL:Debug("EVENT_WEAPON_PAIR_LOCK_CHANGED : locked = %s", tostring(locked))
+--	LorePlay.LDL:Debug("EVENT_WEAPON_PAIR_LOCK_CHANGED : locked = %s", tostring(locked))
 	if locked then
 		suppressCollectibleAlreadyQueuedAlert = true
 	else
