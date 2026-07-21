@@ -5,6 +5,9 @@ original version : https://www.esoui.com/downloads/info1412-LorePlay-EmotesOutfi
 
 NOTE : this modified version is still under the Artistic License 2.0
 
+Version 1.6.98-3 : by Calamath
+-  Adjusted the camera spin disabler to address issues where you could not preview rewards for several new features.
+
 Version 1.6.98-2 : by Calamath
 - Fixed a bug related to changing outfits in the previous version.
 
